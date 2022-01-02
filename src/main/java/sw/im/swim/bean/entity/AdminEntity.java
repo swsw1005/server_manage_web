@@ -1,27 +1,15 @@
 package sw.im.swim.bean.entity;
 
-import java.util.Calendar;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import sw.im.swim.bean.enums.Authority;
 
+import javax.persistence.*;
+
 @Getter
-@Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity(name = "admin_info")
 @Table(name = "admin_info")
 public class AdminEntity extends EntityBase {
 
