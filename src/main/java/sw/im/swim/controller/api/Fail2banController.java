@@ -167,6 +167,7 @@ public class Fail2banController {
                 country = "UNDEFIENED";
             }
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         log.info("\n\n\n");
@@ -196,6 +197,7 @@ public class Fail2banController {
         try {
             output = request.getParameter(key);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return output;
     }

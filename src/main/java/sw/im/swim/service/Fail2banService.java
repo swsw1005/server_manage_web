@@ -7,10 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import sw.im.swim.config.GeneralConfig;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class Fail2banService {
 
     public int SEND(String server, String ip, String country, String job) {

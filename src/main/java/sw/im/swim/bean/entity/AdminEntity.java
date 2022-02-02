@@ -1,6 +1,9 @@
 package sw.im.swim.bean.entity;
 
 import lombok.*;
+import sw.im.swim.bean.dto.AdminEntityDto;
+import sw.im.swim.bean.entity.base.EntityBase;
+import sw.im.swim.bean.entity.base.EntityInterface;
 import sw.im.swim.bean.enums.Authority;
 
 import javax.persistence.*;
@@ -26,18 +29,6 @@ public class AdminEntity extends EntityBase {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Authority authority = Authority.ROLE_WAIT;
-
-    @Transient
-    @Setter
-    private String HASHCODE;
-
-    // @Column(name = "hash",
-    // nullable = false,
-    // updatable = false,
-    // unique = true
-    // )
-    // @Builder.Default
-    // private String hash = UUID.randomUUID().toString().substring(0, 10);
 
     ///////////////////////////////////////////////////
 

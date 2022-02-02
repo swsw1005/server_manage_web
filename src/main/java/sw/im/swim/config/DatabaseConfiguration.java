@@ -1,8 +1,11 @@
 package sw.im.swim.config;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.jpa.HibernateQuery;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 @Slf4j
@@ -26,6 +31,11 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"sw.im.swim"})
 public class DatabaseConfiguration {
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.hikari")

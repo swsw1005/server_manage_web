@@ -29,6 +29,7 @@ public class LocaleCheckFilter implements HandlerInterceptor {
         String id = null;
         try {
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         if (id == null || id.length() < 2) { // 로그인이 안되었다

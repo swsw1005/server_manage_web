@@ -2,6 +2,7 @@ package sw.im.swim.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.view.JstlView;
 import sw.im.swim.interceptor.ApiCheckFilter;
 import sw.im.swim.interceptor.LocaleCheckFilter;
 import sw.im.swim.interceptor.ViewFilter;
+
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
@@ -69,6 +72,14 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        CacheControl control = CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic();
+
+//        registry.addResourceHandler("/resources/image/**").addResourceLocations("/WEB-INF/resources/image/").setCacheControl(control);
+//        registry.addResourceHandler("/resources/font/**").addResourceLocations("/WEB-INF/resources/font/").setCacheControl(control);
+//        registry.addResourceHandler("/resources/css/**").addResourceLocations("/WEB-INF/resources/css/").setCacheControl(control);
+//        registry.addResourceHandler("/resources/script/**").addResourceLocations("/WEB-INF/resources/script/").setCacheControl(control);
+
         registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
         WebMvcConfigurer.super.addResourceHandlers(registry);

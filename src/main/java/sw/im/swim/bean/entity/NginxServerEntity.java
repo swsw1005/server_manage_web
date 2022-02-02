@@ -2,6 +2,7 @@ package sw.im.swim.bean.entity;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.base.EntityBase;
 
 import javax.persistence.*;
 
@@ -14,30 +15,34 @@ import javax.persistence.*;
 public class NginxServerEntity extends EntityBase {
 
     @Column(nullable = false, length = 60)
-    private String serverName;
+    private String name;
 
-    @Column(nullable = false, length = 60)
-    private String faviconPath;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "nginx_policy_sid")
+//    @Setter
+//    private NginxPolicyEntity nginxPolicyEntity;
 
-    @Column(nullable = false, length = 60)
-    @Enumerated(EnumType.STRING)
-    private HTTP http = HTTP.http;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "domain_info_sid")
+    @Setter
+    private DomainEntity domainEntity;
 
-    @Column(nullable = false, length = 60)
-    private String destIp;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "web_server_info_sid")
+    @Setter
+    private WebServerEntity webServerEntity;
 
-    @Column(nullable = false, length = 60)
-    private Integer destPort;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "favicon_info_sid")
+    @Setter
+    private FaviconEntity faviconEntity;
 
     @Column(nullable = false, length = 60)
     @Builder.Default
-    private boolean seperateAccessLog = true;
+    private boolean seperateLog = true;
 
-    @Column(nullable = false, length = 60)
-    private boolean seperateErrorLog = true;
-
-    public enum HTTP {
-        http, https
+    public NginxServerEntity(long sid) {
+        super();
+        this.sid = sid;
     }
-
 }

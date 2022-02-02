@@ -41,5 +41,14 @@ public class HomeController {
         return mav;
     }
 
+    @RequestMapping("/nginx")
+    public ModelAndView nginx(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("common/main");
+        
+        mav.addObject("title", "nginx 관리");
+        mav.addObject("mainPageUrl", "/nginx/main");
+        return mav;
+    }
+
 
 }
