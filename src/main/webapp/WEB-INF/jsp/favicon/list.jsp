@@ -10,22 +10,18 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content">
-                <%--            <div>--%>
-                <%--                    ${dto.sid}--%>
-                <%--            </div>--%>
+        <div class="list_row_item list_row_content_">
             <div>
                     ${dto.path}
             </div>
-
-
+            
             <div class="list_row_date">
                     ${dto.created }
             </div>
 
         </div>
 
-        <div class="list_row_item list_row_del" data-sid="${dto.sid}">
+        <div class="list_row_item list_row_del" onclick="deleteListItem('${dto.sid}', '${contextPath}/api/v1/favicon')">
             <i class="fas fa-trash-alt"></i>
         </div>
     </div>

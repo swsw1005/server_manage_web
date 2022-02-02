@@ -12,8 +12,6 @@ public class DomainEntityDto implements Serializable {
     private Calendar createdAt;
     private String domain;
 
-
-
     public String getCreated() {
         try {
             createdAt.setTimeZone(GeneralConfig.TIME_ZONE);

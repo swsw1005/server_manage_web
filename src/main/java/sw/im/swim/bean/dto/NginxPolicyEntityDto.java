@@ -18,6 +18,22 @@ public class NginxPolicyEntityDto implements Serializable {
     private int workerConnections;
     private List<NginxServerEntityDto> nginxServerEntities;
 
+    private String nginxServerSids = "";
+
+    public String getNginxServerSids() {
+        if (nginxServerSids == null) {
+            this.nginxServerSids = "";
+        }
+        return nginxServerSids;
+    }
+
+    public void setNginxServerSids(String nginxServerSids) {
+        this.nginxServerSids = nginxServerSids;
+        if (nginxServerSids == null) {
+            this.nginxServerSids = "";
+        }
+    }
+
     public String getCreated() {
         try {
             createdAt.setTimeZone(GeneralConfig.TIME_ZONE);

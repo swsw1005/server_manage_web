@@ -103,7 +103,7 @@ input[type=radio] {
     width: 100vw;
     height: 100vh;
     color: white;
-    background: #CCCCCC55;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .navFadeIn {
@@ -266,7 +266,7 @@ input[type=radio] {
     height: 100vh;
     margin: 0;
     padding: 0;
-    background: #CCCCCC55;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-form-head {
@@ -289,6 +289,11 @@ input[type=radio] {
     margin: 10px 10px 0px 10px;
 }
 
+.form-row-horizontal {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+}
+
 
 .list_row {
     display: flex;
@@ -305,6 +310,10 @@ input[type=radio] {
 .list_row_content {
     display: flex;
     align-items: center;
+}
+
+.list_row_content_{
+    flex-grow: 1;
 }
 
 .list_row_date {
@@ -324,4 +333,48 @@ input[type=radio] {
     font-size: 24px;
     /*margin-top: 11px;*/
     margin-right: 5px;
+}
+
+#nginx-server-selected-location {
+    border: 1px solid #222;
+    background: #888888;
+    color: white;
+    height: 40vh;
+    overflow-y: scroll;
+    scrollbar-track-color: yellow;
+    padding: 5px;
+}
+
+.nginx-policy-form-list-row {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    border: 1px solid #FFFFFF;
+    margin-bottom: 5px;
+    background: #222;
+}
+
+.list-row-item {
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+}
+
+.list-row-item div {
+    margin: 3px;
+}
+
+
+div::-webkit-scrollbar {
+    width: 10px;
+}
+div::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+div::-webkit-scrollbar-track {
+    /*background-color: grey;*/
+    border-radius: 10px;
+    /*box-shadow: inset 0px 0px 5px white;*/
 }

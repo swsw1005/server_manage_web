@@ -1,22 +1,21 @@
 package sw.im.swim.service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import sw.im.swim.bean.dto.NginxServerEntityDto;
-import sw.im.swim.bean.entity.*;
-import sw.im.swim.bean.entity.NginxServerEntity;
-import sw.im.swim.repository.NginxPolicyServerEntityRepository;
-import sw.im.swim.repository.NginxServerEntityRepository;
-import sw.im.swim.repository.NginxServerEntityRepository;
-import sw.im.swim.service.querydsl.NginxServerQueryDsl;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.bean.entity.DomainEntity;
+import sw.im.swim.bean.entity.FaviconEntity;
+import sw.im.swim.bean.entity.NginxServerEntity;
+import sw.im.swim.bean.entity.WebServerEntity;
+import sw.im.swim.repository.NginxPolicyServerEntityRepository;
+import sw.im.swim.repository.NginxServerEntityRepository;
+import sw.im.swim.service.querydsl.NginxServerQueryDsl;
 
 @Slf4j
 @Service

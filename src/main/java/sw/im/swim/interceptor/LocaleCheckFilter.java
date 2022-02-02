@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+import sw.im.swim.bean.dto.AdminEntityDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * <PRE>
@@ -21,27 +24,31 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class LocaleCheckFilter implements HandlerInterceptor {
 
-    private static final Gson gson = new Gson();
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        String id = null;
+        log.warn("login check");
+        HttpSession session = request.getSession();
+
+        final String contextPath = request.getContextPath();
+
+        boolean sessionAdmin = false;
         try {
+            AdminEntityDto adminEntityDto = (AdminEntityDto) session.getAttribute("admin");
+            if (adminEntityDto.getSid() > 0) {
+                sessionAdmin = true;
+            }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
 
-        if (id == null || id.length() < 2) { // 로그인이 안되었다
-            // 로그인이 아니되었으니 로그인폼페이지로 강제 이동시켜겠다
-            response.sendRedirect("/login/requiredNotify");
+        if (!sessionAdmin) {
+            response.sendRedirect(contextPath);
+            log.warn("need login");
             return false;
-        } else {// 로그인이 되었다
-            return true;
         }
 
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        return false;
+        log.warn("you are admin");
+        return true;
 
 //        return HandlerInterceptor.super.preHandle(request, response, handler);
     }

@@ -31,6 +31,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
         // WebMvcConfigurer.super.addInterceptors(registry);
 
         final String[] resourcePatterns = {
+                "static/**",
                 "resources/**",
                 "resource/**",
                 "**/favicon.ico",
@@ -39,8 +40,20 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
         };
 
         final String[] viewPatterns = {
-                "/view/*",
-                "/view/**",
+                "/domain/*",
+                "/domain/**",
+                "/favicon/*",
+                "/favicon/**",
+                "/nginx/*",
+                "/nginx/**",
+                "/nginxserver/*",
+                "/nginxserver/**",
+                "/nginxpolicy/*",
+                "/nginxpolicy/**",
+                "/webserver/*",
+                "/webserver/**",
+                "/database/*",
+                "/database/**",
         };
 
         final String[] apiPatterns = {
@@ -51,19 +64,25 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
         final String[] loginPatterns = {
                 "/login/**",
                 "/logout/*",
-                "test/**"
         };
 
 
-        registry.addInterceptor(new ApiCheckFilter())
-                .addPathPatterns(apiPatterns)
-                .excludePathPatterns(viewPatterns)
-                .excludePathPatterns(resourcePatterns)
-                .excludePathPatterns(loginPatterns);
+//        registry.addInterceptor(new ApiCheckFilter())
+//                .addPathPatterns(apiPatterns)
+//                .excludePathPatterns(viewPatterns)
+//                .excludePathPatterns(resourcePatterns)
+//                .excludePathPatterns(loginPatterns);
 
-        registry.addInterceptor(new ViewFilter())
+//        registry.addInterceptor(new ViewFilter())
+//                .addPathPatterns(viewPatterns)
+//                .excludePathPatterns(apiPatterns)
+//                .excludePathPatterns(resourcePatterns)
+//                .excludePathPatterns(loginPatterns);
+
+        registry.addInterceptor(new LocaleCheckFilter())
                 .addPathPatterns(viewPatterns)
-                .excludePathPatterns(apiPatterns)
+                .addPathPatterns(apiPatterns)
+                .excludePathPatterns("/")
                 .excludePathPatterns(resourcePatterns)
                 .excludePathPatterns(loginPatterns);
 

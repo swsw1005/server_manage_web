@@ -1,0 +1,366 @@
+function showSideNav() {
+    document.querySelector("#nav-side").style.display = "flex";
+    document.querySelector("#nav-side").classList.add("navFadeIn");
+    document.querySelector("#nav-side").classList.remove("navFadeOut");
+    // document.querySelector("#nav-button").setAttribute("data-display", "1");
+    // navBarShowFlag = true;
+}
+
+function hideSideNav() {
+    document.querySelector("#nav-side").style.display = "none";
+    document.querySelector("#nav-side").classList.add("navFadeOut");
+    document.querySelector("#nav-side").classList.remove("navFadeIn");
+    // document.querySelector("#nav-button").setAttribute("data-display", "0");
+    // navBarShowFlag = false;
+}
+
+
+function openInputModal(formId, url, sid) {
+
+    $.ajax({
+        type: "get",
+        url: url,
+        contentType: false,
+        // processData: false,
+        data: {sid: sid}
+        ,
+        success: function (result, status, statusCode) {
+            document.getElementById(formId).innerHTML = result;
+
+            document.getElementById(formId).style.display = "flex";
+            document.getElementById(formId).classList.add("modalFadeIn");
+            document.getElementById(formId).classList.remove("modalFadeOut");
+
+            nginxServerString2Set();
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                'form 호출 에러',
+                result.responseJSON.error_msg,
+                'error'
+            );
+            console.log(result);
+        }
+    });
+
+}
+
+function closeInputModal(formId) {
+    document.getElementById(formId).style.display = "none";
+    document.getElementById(formId).classList.add("modalFadeOut");
+    document.getElementById(formId).classList.remove("modalFadeIn");
+    document.getElementById(formId).innerHTML = "";
+
+    callList();
+
+    try {
+        nginxServerSidSet.clear();
+    } catch (e) {
+    }
+}
+
+function callList() {
+    $.ajax({
+        type: "get",
+        url: "./list",
+        contentType: false,
+        processData: false,
+        data: {}
+        ,
+        success: function (result, status, statusCode) {
+            document.getElementById("listLocation").innerHTML = result;
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                'error',
+                result.responseJSON.error_msg,
+                'error'
+            );
+        }
+    });
+}
+
+function submitFormAjax(formId, modalId, URL, successCallBack, errorCallBack) {
+
+    console.log(formId, modalId, URL);
+
+    var submitFormData = new FormData(document.getElementById(formId));
+
+    $.ajax({
+        type: "post",
+        url: URL,
+        contentType: false,
+        processData: false,
+        data: submitFormData
+        ,
+        success: function (result, status, statusCode) {
+            if (successCallBack == null) {
+                Notify(
+                    'success',
+                    formId + ' 저장 성공',
+                    'success'
+                );
+                closeInputModal(modalId);
+            } else {
+                successCallBack();
+            }
+        },
+        error: function (result, status, statusCode) {
+            console.log(result);
+            if (errorCallBack == null) {
+                Notify(
+                    'error',
+                    result.responseJSON.error_msg,
+                    'error'
+                );
+                closeInputModal(modalId);
+            } else {
+                errorCallBack();
+            }
+        }
+    });
+}
+
+
+function Notify(title, content, type) {
+    Notification({
+        title: title,
+        message: content,
+        theme: type
+    });
+}
+
+
+const Notification = window.createNotification({
+    // options here
+    // close on click
+    closeOnClick: true,
+    // displays close button
+    displayCloseButton: false,
+    // nfc-top-left
+    // nfc-bottom-right
+    // nfc-bottom-left
+    positionClass: 'nfc-bottom-right',
+    // callback
+    // onclick: false,
+    // timeout in milliseconds
+    showDuration: 5000,
+    // success, info, warning, error, and none
+    // theme: 'success'
+});
+
+// Notification({
+//     title: 'success',
+//     message: 'Notification Message',
+//     theme: 'success'
+// });
+
+// Notification({
+//     title: 'info',
+//     message: 'Notification Message',
+//     theme: 'info'
+// });
+
+// Notification({
+//     title: 'warning',
+//     message: 'Notification Message',
+//     theme: 'warning'
+// });
+
+// Notification({
+//     title: 'error',
+//     message: 'Notification Message',
+//     theme: 'error'
+// });
+
+
+function deleteListItem(sid, URL) {
+    $.ajax({
+        type: "delete",
+        url: URL,
+        // contentType: false,
+        // processData: false,
+        data: {
+            sid: sid
+        }
+        ,
+        success: function (result, status, statusCode) {
+            callList();
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                '삭제 실패',
+                result.responseJSON.error_msg,
+                'error'
+            );
+        }
+    });
+}
+
+
+var nginxServerSidSet = new Set();
+
+/**
+ *
+ */
+function insertNewNginxServer() {
+    var e = document.getElementById("nginxServerSelector").value;
+
+    if (e > -1) {
+        nginxServerSidSet.add(e);
+        nginxServerSidSet.add(e.toString());
+    }
+    // console.log(nginxServerSidSet);
+    nginxServerSet2String();
+}
+
+/**
+ *
+ */
+function deleteNginxServer(e) {
+    nginxServerSidSet.delete(e);
+    nginxServerSidSet.delete(e.toString());
+
+    // console.log(nginxServerSidSet);
+
+    nginxServerSet2String();
+}
+
+/**
+ * set() 값 > 문자열로 변환
+ */
+function nginxServerSet2String() {
+
+    var newVal = '';
+    nginxServerSidSet.forEach(function (value) {
+
+        if (value.trim() != '') {
+            newVal += value + ", ";
+        }
+    });
+    newVal += ",";
+    newVal = newVal.replace(", ,", "");
+    document.getElementById("nginxServerSidString").value = newVal;
+    if (newVal.trim() == ",") {
+        document.getElementById("nginxServerSidString").value = '';
+    }
+
+    nginxServerString2Set();
+}
+
+/**
+ * 문자열값 > set() 세팅
+ */
+function nginxServerString2Set() {
+    console.log("===========================")
+    try {
+        var idCartTypeValueArr = document.getElementById("nginxServerSidString").value.split(",");
+        for (let i = 0; i < idCartTypeValueArr.length; i++) {
+            if (idCartTypeValueArr[i].trim() != '') {
+                nginxServerSidSet.add(idCartTypeValueArr[i].trim());
+            }
+        }
+        nginxServerSidSet2Label();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * set에서 라벨 만들어주는 function
+ */
+function nginxServerSidSet2Label() {
+
+    var htmlLocation = document.getElementById("nginx-server-selected-location");
+
+    var optionArr = document.getElementById("nginxServerSelector").querySelectorAll("option");
+
+    htmlLocation.innerText = '';
+    var htmlStr = '';
+    nginxServerSidSet.forEach(function (value) {
+
+        var sid_ = "";
+        var name_ = "";
+        var domain_ = "";
+        var ip_ = "";
+        var port_ = "";
+        var favicon_ = "";
+        var log_ = "";
+        var https_ = "";
+
+        for (let i = 0; i < optionArr.length; i++) {
+            var option_ = optionArr[i];
+            if (option_.value == value) {
+                sid_ = option_.value;
+                name_ = option_.getAttribute("data-name");
+                domain_ = option_.getAttribute("data-domain");
+                ip_ = option_.getAttribute("data-ip");
+                port_ = option_.getAttribute("data-port");
+                favicon_ = option_.getAttribute("data-favicon");
+                log_ = option_.getAttribute("data-log");
+                https_ = option_.getAttribute("data-https");
+                break;
+            }
+        } // for i end
+
+        htmlStr += '<div class="nginx-policy-form-list-row">';
+        htmlStr += '<div class="list-row-item">';
+
+        htmlStr += '<div class="">';
+        htmlStr += name_;
+        htmlStr += '</div>';
+        htmlStr += '<div class="">';
+        htmlStr += domain_;
+        htmlStr += '</div>';
+        htmlStr += '<div class="">';
+        if (https_ == 'true') {
+            htmlStr += "https://" + ip_ + ":" + port_;
+        } else {
+            htmlStr += "http://" + ip_ + ":" + port_;
+        }
+        htmlStr += '</div>';
+        htmlStr += '<div class="">';
+        if (log_ == 'true') {
+            htmlStr += "로그분리  " + favicon_;
+        } else {
+            htmlStr += "로그통합  " + favicon_;
+        }
+        htmlStr += '</div>';
+
+        htmlStr += '</div>';
+        htmlStr += '<div class="list_row_del" onclick="deleteNginxServer(' + sid_ + ')">';
+        htmlStr += '<i class="far fa-trash-alt"></i>';
+        htmlStr += '</div>';
+        htmlStr += '</div>';
+    });
+
+    htmlLocation.innerHTML = htmlStr;
+}
+
+
+function adjustNginxSetting(policySid, URL){
+    $.ajax({
+        type: "PATCH",
+        url: URL,
+        // contentType: false,
+        // processData: false,
+        data: {
+            sid: policySid
+        }
+        ,
+        success: function (result, status, statusCode) {
+            Notify(
+                '적용 성공',
+                'success'
+            );
+            callList();
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                '적용 실패',
+                result.responseJSON.error_msg,
+                'error'
+            );
+        }
+    });
+}

@@ -1,22 +1,34 @@
 package sw.im.swim.controller.view;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
+import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.bean.dto.WebServerEntityDto;
+import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.service.NginxPolicyService;
+import sw.im.swim.service.NginxServerService;
+import sw.im.swim.service.WebServerService;
+import sw.im.swim.util.nginx.NginxServiceControllUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/nginxpolicy")
 @RequiredArgsConstructor
 public class NginxPolicyViewController {
 
     private final NginxPolicyService nginxPolicyService;
+
+    private final NginxServerService nginxServerService;
 
     @GetMapping("/home")
     public ModelAndView nginxpolicy(HttpServletRequest request) {
@@ -44,8 +56,36 @@ public class NginxPolicyViewController {
     }
 
     @GetMapping("/form")
-    public ModelAndView form(HttpServletRequest request) {
+    public ModelAndView form(
+            @RequestParam(name = "sid", required = false, defaultValue = "-1") final String policySid,
+            HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("nginxpolicy/form");
+
+        List<NginxServerEntityDto> nginxServerList = nginxServerService.getAll();
+        mav.addObject("nginxServerList", nginxServerList);
+
+        String nginxServerSidString = "";
+        NginxPolicyEntityDto nginxPolicy = null;
+        boolean insert = true;
+        try {
+            nginxPolicy = nginxPolicyService.get(Long.parseLong(policySid));
+            if (nginxPolicy.getDeletedAt() != null) {
+                throw new Exception();
+            }
+            insert = false;
+
+            mav.addObject("nginxPolicy", nginxPolicy);
+
+            List<Long> linkedNginxServerList = nginxPolicyService.getNginxServers(Long.parseLong(policySid));
+            for (int i = 0; i < linkedNginxServerList.size(); i++) {
+                nginxServerSidString += linkedNginxServerList.get(i) + ",";
+            }
+            mav.addObject("nginxServerSidString", nginxServerSidString);
+
+        } catch (Exception e) {
+        }
+        mav.addObject("insert", insert);
+
         return mav;
     }
 

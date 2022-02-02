@@ -26,10 +26,7 @@ public class NginxPolicyController {
     private final NginxPolicyService nginxPolicyService;
 
     @RequestMapping(value = "/nginxpolicys", method = {RequestMethod.GET})
-    public Map<String, Object> nginxpolicys(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    public Map<String, Object> nginxpolicys(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
             List<NginxPolicyEntityDto> list = nginxPolicyService.getAll();
@@ -47,9 +44,7 @@ public class NginxPolicyController {
     @RequestMapping(value = "/nginxpolicy/{sid}", method = {RequestMethod.GET})
     public Map<String, Object> getNginxpolicy(
             @PathVariable(name = "sid") final String sidStr,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+            HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
             NginxPolicyEntityDto dto = nginxPolicyService.getAll(Long.parseLong(sidStr));
@@ -66,12 +61,13 @@ public class NginxPolicyController {
 
     @RequestMapping(value = "/nginxpolicy", method = {RequestMethod.POST})
     public Map<String, Object> insertNginxPolicy(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+            @RequestParam(name = "name", required = false, defaultValue = "") final String name,
+            @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
+            @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
+            HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
-            NginxPolicyEntityDto dto = nginxPolicyService.insertNew();
+            NginxPolicyEntityDto dto = nginxPolicyService.insertNew(name, Integer.parseInt(workerConnections), Integer.parseInt(workerProcessed));
             map.put("entity", dto);
             map.put("code", 0);
         } catch (Exception e) {
@@ -83,16 +79,23 @@ public class NginxPolicyController {
         return map;
     }
 
-    @RequestMapping(value = "/nginxpolicy/add", method = {RequestMethod.POST})
-    public Map<String, Object> updateNginxPolicyAdd(
-            @RequestParam(name = "policySid", required = false, defaultValue = "") final String policySid,
-            @RequestParam(name = "nginxServerSid", required = false, defaultValue = "") final String nginxServerSid,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    @RequestMapping(value = "/nginxpolicyUpdate", method = {RequestMethod.POST})
+    public Map<String, Object> nginxpolicyUpdate(
+            @RequestParam(name = "name", required = false, defaultValue = "") final String name,
+            @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
+            @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
+            @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString,
+            @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
+            HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
-            nginxPolicyService.addNginxServer(Long.parseLong(policySid), Long.parseLong(nginxServerSid), true);
+            NginxPolicyEntityDto dto = nginxPolicyService.update(name,
+                    Integer.parseInt(workerProcessed),
+                    Integer.parseInt(workerConnections),
+                    nginxServerSidString,
+                    Long.parseLong(sid)
+            );
+            map.put("entity", dto);
             map.put("code", 0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -103,36 +106,69 @@ public class NginxPolicyController {
         return map;
     }
 
-    @RequestMapping(value = "/nginxpolicy/remove", method = {RequestMethod.POST})
-    public Map<String, Object> updateNginxPolicyRemove(
-            @RequestParam(name = "policySid", required = false, defaultValue = "") final String policySid,
-            @RequestParam(name = "nginxServerSid", required = false, defaultValue = "") final String nginxServerSid,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            nginxPolicyService.addNginxServer(Long.parseLong(policySid), Long.parseLong(nginxServerSid), false);
-            map.put("code", 0);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            map.put("code", -1);
-            map.put("error_msg", e.getMessage());
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-        }
-        return map;
-    }
+
+
+
+
+//    @RequestMapping(value = "/nginxpolicy/add", method = {RequestMethod.POST})
+//    public Map<String, Object> updateNginxPolicyAdd(
+//            @RequestParam(name = "policySid", required = false, defaultValue = "") final String policySid,
+//            @RequestParam(name = "nginxServerSid", required = false, defaultValue = "") final String nginxServerSid,
+//            HttpServletRequest request, HttpServletResponse response) {
+//        Map<String, Object> map = new HashMap<>();
+//        try {
+//            nginxPolicyService.addNginxPolicy(Long.parseLong(policySid), Long.parseLong(nginxServerSid), true);
+//            map.put("code", 0);
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            map.put("code", -1);
+//            map.put("error_msg", e.getMessage());
+//            response.setStatus(HttpStatus.BAD_REQUEST.value());
+//        }
+//        return map;
+//    }
+//
+//    @RequestMapping(value = "/nginxpolicy/remove", method = {RequestMethod.POST})
+//    public Map<String, Object> updateNginxPolicyRemove(
+//            @RequestParam(name = "policySid", required = false, defaultValue = "") final String policySid,
+//            @RequestParam(name = "nginxServerSid", required = false, defaultValue = "") final String nginxServerSid,
+//            HttpServletRequest request, HttpServletResponse response) {
+//        Map<String, Object> map = new HashMap<>();
+//        try {
+//            nginxPolicyService.addNginxPolicy(Long.parseLong(policySid), Long.parseLong(nginxServerSid), false);
+//            map.put("code", 0);
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            map.put("code", -1);
+//            map.put("error_msg", e.getMessage());
+//            response.setStatus(HttpStatus.BAD_REQUEST.value());
+//        }
+//        return map;
+//    }
 
 
     @RequestMapping(value = "/nginxpolicy", method = {RequestMethod.DELETE})
-    public Map<String, Object> deleteNginxPolicy(
-            @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    public Map<String, Object> deleteNginxPolicy(@RequestParam(name = "sid", required = false, defaultValue = "") final String sid, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
             nginxPolicyService.delete(Long.parseLong(sid));
+            map.put("code", 0);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            map.put("code", -1);
+            map.put("error_msg", e.getMessage());
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/nginxpolicy", method = {RequestMethod.PATCH})
+    public Map<String, Object> adjustNginxPolicy(
+            @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
+            HttpServletRequest request, HttpServletResponse response
+    ) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            nginxPolicyService.ADJUST_NGINX_POLICY(Long.parseLong(sid));
             map.put("code", 0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

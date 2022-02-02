@@ -10,13 +10,14 @@ import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.FaviconEntity;
 import sw.im.swim.repository.DomainEntityRepository;
 import sw.im.swim.repository.FaviconEntityRepository;
-import sw.im.swim.repository.WebServerEntityRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class NginxServerSubService {
 
@@ -24,12 +25,12 @@ public class NginxServerSubService {
 
     private final DomainEntityRepository domainEntityRepository;
 
-    private final WebServerEntityRepository webServerEntityRepository;
+//    private final WebServerEntityRepository webServerEntityRepository;
 
     private final ModelMapper modelMapper;
 
     public List<DomainEntityDto> getAllDomains() {
-        List<DomainEntity> list = domainEntityRepository.findAll();
+        List<DomainEntity> list = domainEntityRepository.getAllDomains();
         List<DomainEntityDto> result = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {

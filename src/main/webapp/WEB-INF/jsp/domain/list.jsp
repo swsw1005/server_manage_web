@@ -24,7 +24,7 @@
 
         </div>
 
-        <div class="list_row_item list_row_del" data-sid="${dto.sid}">
+        <div class="list_row_item list_row_del" onclick="deleteListItem('${dto.sid}', '${contextPath}/api/v1/domain')">
             <i class="fas fa-trash-alt"></i>
         </div>
     </div>

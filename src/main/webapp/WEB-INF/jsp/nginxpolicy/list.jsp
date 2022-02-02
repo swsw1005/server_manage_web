@@ -10,7 +10,8 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content">
+        <div class="list_row_item list_row_content_ list_row_update"
+             onclick="openInputModal('simple-modal-form', '${contextPath }/nginxpolicy/form', '${dto.sid}')">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
@@ -21,10 +22,13 @@
             <div class="list_row_date">
                     ${dto.created }
             </div>
+            <div class="list_row_date">
+                    ${dto.updated }
+            </div>
 
         </div>
 
-        <div class="list_row_item list_row_del" data-sid="${dto.sid}">
+        <div class="list_row_item list_row_del" onclick="deleteListItem('${dto.sid}', '${contextPath}/api/v1/nginxpolicy')">
             <i class="fas fa-trash-alt"></i>
         </div>
     </div>

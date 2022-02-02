@@ -9,10 +9,10 @@
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
-    <artifactId>servermanager</artifactId>
+    <artifactId>server-manager</artifactId>
     <packaging>war</packaging>
     <version>1.0.0</version>
-    <name>servermanager</name>
+    <name>server-manager</name>
     <description>서버 관리 UI</description>
 
     <properties>
@@ -95,7 +95,6 @@
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

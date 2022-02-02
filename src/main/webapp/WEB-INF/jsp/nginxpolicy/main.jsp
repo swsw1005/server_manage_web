@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<div id="insert-button" data-display="0" onclick="openInputModal('simple-modal-form', 'nginxpolicy/form')">
+<div id="insert-button" data-display="0" onclick="openInputModal('simple-modal-form', '${contextPath }/nginxpolicy/form')">
     <i class="fas fa-plus"></i>
 </div>
 
@@ -16,3 +16,8 @@
 <div id="listLocation">
 
 </div>
+
+
+<script>
+
+</script>

@@ -22,8 +22,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.List;
 
-;
-
 @Repository
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class NginxServerQueryDsl {
 
     private final JPAQueryFactory queryFactory;
 
-    private final EntityManager entityManager;
+//    private final EntityManager entityManager;
 
     public List<NginxServerEntity> getAll() {
 
@@ -45,6 +43,7 @@ public class NginxServerQueryDsl {
                 .leftJoin(qNginxServerEntity.domainEntity, qDomainEntity).fetchJoin()
                 .leftJoin(qNginxServerEntity.faviconEntity, qFaviconEntity).fetchJoin()
                 .where(qNginxServerEntity.deletedAt.isNull())
+                .orderBy(qWebServerEntity.ip.asc(), qWebServerEntity.port.asc())
                 .fetch();
 
         return list;

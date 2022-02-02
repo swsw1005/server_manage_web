@@ -13,10 +13,21 @@ public class WebServerEntityDto implements Serializable {
     private Calendar updatedAt;
     private Calendar deletedAt;
     private String name;
-    private String faviconPath;
     private boolean https;
     private String ip;
     private Integer port;
+
+    public String getAddress() {
+        return ip + ":" + port;
+    }
+
+    public String HTTPS_PREFIX() {
+        if (https) {
+            return "https://";
+        } else {
+            return "http://";
+        }
+    }
 
     public String getCreated() {
         try {
