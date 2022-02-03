@@ -1,0 +1,171 @@
+package sw.im.swim.worker.nginx;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import sw.im.swim.bean.dto.NginxPolicyEntityDto;
+import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.util.date.DateFormatUtil;
+import sw.im.swim.util.nginx.NginxConfCreateUtil;
+import sw.im.swim.util.nginx.NginxServiceControllUtil;
+
+import java.io.File;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Slf4j
+@RequiredArgsConstructor
+public class NginxWorker implements Runnable {
+
+    private final NginxPolicyEntityDto policyEntityDto;
+    private final List<NginxServerEntityDto> nginxServerEntityList;
+
+//    private String OLD_NGINX_CONF_FILE_PATH = "";
+
+    private static final String NGINX_CONF_DIR = "/etc/nginx";
+    private static final String NGINX_CONF_FILE = "nginx.conf";
+
+
+    @Override
+    public void run() {
+
+        boolean RESTORE_NEED = false;
+        String OLD_CONF_BACKUP_FILE = "";
+        File NGINX_CONF_ORIGIN = null;
+
+        try {
+
+            Thread.sleep(5000);
+
+            log.info("\n" + "=======================================" + "\n" + "START NGINX JOB !!!!!!" + "\n" + "=======================================");
+
+            NGINX_CONF_ORIGIN = new File(NGINX_CONF_DIR + "/" + NGINX_CONF_FILE);
+
+            if (NGINX_CONF_ORIGIN.exists() && NGINX_CONF_ORIGIN.isFile()) {
+                log.info(NGINX_CONF_ORIGIN.getAbsolutePath() + " => " + NGINX_CONF_ORIGIN.exists());
+            } else {
+                log.error("NGINX_CONF_ORIGIN not EXIST...");
+                throw new Exception("nginx conf file not exist");
+            }
+
+            final String TIMESTAMP = DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss.format(new Date());
+
+            OLD_CONF_BACKUP_FILE = NGINX_CONF_DIR + "/" + NGINX_CONF_FILE + "_" + TIMESTAMP;
+
+            final File confBackup = new File(OLD_CONF_BACKUP_FILE);
+
+            FileUtils.moveFile(NGINX_CONF_ORIGIN, confBackup);
+
+            Thread.sleep(5555);
+
+            if (confBackup.exists() && confBackup.isFile()) {
+                log.info(confBackup.getAbsolutePath() + " => " + confBackup.exists());
+                RESTORE_NEED = true;
+            } else {
+                log.error("nginx conf file backup not exist");
+                throw new Exception("nginx conf file backup not exist");
+            }
+
+            Thread.sleep(5555);
+
+            final File newConfFile = new File(NGINX_CONF_DIR + "/" + NGINX_CONF_FILE);
+
+            boolean createNewConfFile = newConfFile.createNewFile();
+
+            log.info("createNewConfFile | " + createNewConfFile);
+
+            Thread.sleep(5555);
+
+            List<String> newConfFileText = NginxConfCreateUtil.CREATE_NEW_CONF_TEXT(policyEntityDto, nginxServerEntityList);
+
+            FileUtils.writeLines(newConfFile, newConfFileText, System.lineSeparator());
+
+            Thread.sleep(5555);
+
+            log.info("new File Write Complete");
+
+            try {
+                NginxServiceControllUtil.NGINX_STOP();
+            } catch (Exception e) {
+            }
+
+            Thread.sleep(5555);
+
+            boolean nginxStartSuccess = NginxServiceControllUtil.NGINX_START();
+
+            log.info("nginxStartSuccess | " + nginxStartSuccess);
+
+            Thread.sleep(5555);
+
+            if (nginxStartSuccess) {
+                RESTORE_NEED = false;
+            } else {
+                log.info("nginx conf swap Fail");
+                throw new Exception("nginx conf swap Fail");
+            }
+
+            Thread.sleep(5555);
+
+            String ROOT_DOMAIN = "";
+
+            Set<String> domains = new HashSet<>();
+
+            for (int i = 0; i < nginxServerEntityList.size(); i++) {
+                NginxServerEntityDto dto = nginxServerEntityList.get(i);
+                String domain = dto.getDomainEntity().getDomain();
+
+                if (ROOT_DOMAIN.length() == 0) {
+                    ROOT_DOMAIN = domain;
+                }
+
+                if (ROOT_DOMAIN.length() > domain.length()) {
+                    ROOT_DOMAIN = domain;
+                }
+                domains.add(domain);
+            }
+
+            boolean certbotSuccess = NginxServiceControllUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
+
+            log.info("certbotSuccess | " + certbotSuccess);
+
+        } catch (Exception e) {
+            log.error(e.getMessage() + " | " + e.getLocalizedMessage());
+
+            if (RESTORE_NEED) {
+                log.error(" ===== NGINX_BACKUP_START ===== ");
+                try {
+                    try {
+                        NGINX_CONF_ORIGIN.delete();
+                    } catch (Exception ex) {
+                        log.error(e.getMessage());
+                    }
+
+                    FileUtils.copyFile(new File(OLD_CONF_BACKUP_FILE), NGINX_CONF_ORIGIN);
+
+                    try {
+                        NginxServiceControllUtil.NGINX_STOP();
+                    } catch (Exception ex) {
+                        log.error(e.getMessage());
+                    }
+
+                    boolean nginxRestoreStatus = NginxServiceControllUtil.NGINX_START();
+
+                    log.error(" nginxRestoreStatus | " + nginxRestoreStatus);
+
+                } catch (Exception ex) {
+                    log.error(ex.getMessage());
+                }
+
+            }
+
+        } finally {
+
+            log.info("\n" + "=======================================" + "\n" + "FINALIZE NGINX JOB !!!!!!" + "\n" + "=======================================");
+        }
+
+    }
+
+
+}

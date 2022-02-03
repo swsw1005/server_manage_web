@@ -17,8 +17,11 @@ import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
 import sw.im.swim.service.querydsl.NginxServerQueryDsl;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class NginxServerService {
 
@@ -72,6 +75,7 @@ public class NginxServerService {
 
             nginxPolicyServerEntityRepository.deleteAllByNginxServerEntityEquals(sid);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             throw new Exception();
         }
     }

@@ -27,7 +27,7 @@ public class LocaleCheckFilter implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        log.warn("login check");
+        log.debug("login check");
         HttpSession session = request.getSession();
 
         final String contextPath = request.getContextPath();
@@ -43,11 +43,11 @@ public class LocaleCheckFilter implements HandlerInterceptor {
 
         if (!sessionAdmin) {
             response.sendRedirect(contextPath);
-            log.warn("need login");
+            log.debug("need login");
             return false;
         }
 
-        log.warn("you are admin");
+        log.debug("you are admin");
         return true;
 
 //        return HandlerInterceptor.super.preHandle(request, response, handler);

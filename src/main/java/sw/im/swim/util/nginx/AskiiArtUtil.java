@@ -1,14 +1,15 @@
 package sw.im.swim.util.nginx;
 
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AskiiArtUtil {
 
     private final static String sharp_bar = "###########################################################################################################\n#";
 
-    public static final String CREATE_NGINX_BANNER(String input) throws Exception {
+    public static final List<String> CREATE_NGINX_BANNER(String input) throws Exception {
         String[] arr = input.split("\\.");
         input = " ";
         for (int i = 0; i < arr.length; i++) {
@@ -17,13 +18,13 @@ public class AskiiArtUtil {
             }
             input += arr[i];
         }
-        return CREATE_WITH_TEXT(sharp_bar, "#", input, 11);
+        return CREATE_WITH_TEXT(sharp_bar, "#", input, 15);
     }
 
 
-    public static final String CREATE_WITH_TEXT(final String PREFIX_BOX, final String PREFIX_LINE, String input, final int height) throws Exception {
+    public static final List<String> CREATE_WITH_TEXT(final String PREFIX_BOX, final String PREFIX_LINE, String input, final int height) throws Exception {
 
-        ArrayList<String> stringList = new ArrayList<>();
+        List<String> stringList = new ArrayList<>();
 
         if (PREFIX_BOX != null) {
             stringList.add(PREFIX_BOX);
@@ -42,12 +43,12 @@ public class AskiiArtUtil {
             //BufferedImage image = ImageIO.read(new File("/Users/mkyong/Desktop/logo.jpg"));
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics g = image.getGraphics();
-            g.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, height));
+            g.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, height - 3));
 
             Graphics2D graphics = (Graphics2D) g;
             graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                     RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-            graphics.drawString(input, 1, height);
+            graphics.drawString(input, 1, height - 1);
 
             //save this image
             //ImageIO.write(image, "png", new File("/users/mkyong/ascii-art.png"));
@@ -72,6 +73,11 @@ public class AskiiArtUtil {
 
             }
 
+            if (PREFIX_LINE == null) {
+            } else {
+                stringList.add(PREFIX_LINE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception();
@@ -82,14 +88,19 @@ public class AskiiArtUtil {
             output += stringList.get(i);
             output += "\n";
         }
-        return output;
+        return stringList;
     }
 
 
     public static void main(String[] args) {
 
         try {
-            System.out.println(AskiiArtUtil.CREATE_NGINX_BANNER("192.168.125.253"));
+            List<String> list = AskiiArtUtil.CREATE_NGINX_BANNER("192.168.255.231");
+
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(list.get(i));
+            }
+            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }

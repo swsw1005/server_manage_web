@@ -39,7 +39,7 @@ public class DatabaseConfiguration {
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
     public HikariConfig hikariConfig() {
-        log.error("INIT");
+        log.debug("INIT");
         return new HikariConfig();
     }
 
@@ -47,7 +47,7 @@ public class DatabaseConfiguration {
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() throws Exception {
-        log.error("INIT");
+        log.debug("INIT");
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig());
         return hikariDataSource;
     }
@@ -55,14 +55,14 @@ public class DatabaseConfiguration {
     @Primary
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, @Qualifier("dataSource") DataSource dataSource) {
-        log.error("INIT");
+        log.debug("INIT");
         return builder.dataSource(dataSource).packages("sw.im.swim").build();
     }
 
     @Primary
     @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        log.error("INIT");
+        log.debug("INIT");
         return new JpaTransactionManager(entityManagerFactory);
     }
 

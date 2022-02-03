@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.*;
 import sw.im.swim.bean.entity.NginxPolicyEntity;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
@@ -12,9 +11,10 @@ import sw.im.swim.bean.entity.NginxServerEntity;
 import sw.im.swim.repository.NginxPolicyEntityRepository;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
-import sw.im.swim.worker.NginxWorker;
+import sw.im.swim.worker.nginx.NginxWorker;
 import sw.im.swim.worker.context.ThreadWorkderPoolContext;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@Transactional(value = "transactionManager", rollbackFor = Exception.class)
+@Transactional
 @RequiredArgsConstructor
 public class NginxPolicyService {
 
@@ -38,11 +38,7 @@ public class NginxPolicyService {
 
     public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections) {
 
-        NginxPolicyEntity entity = NginxPolicyEntity.builder()
-                .name(name)
-                .workerProcessed(workerProcessed)
-                .workerConnections(workerConnections)
-                .build();
+        NginxPolicyEntity entity = NginxPolicyEntity.builder().name(name).workerProcessed(workerProcessed).workerConnections(workerConnections).build();
 
         NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
         return modelMapper.map(entity_, NginxPolicyEntityDto.class);
@@ -84,10 +80,7 @@ public class NginxPolicyService {
 
                 tempNginxServer.getName();
 
-                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder()
-                        .nginxPolicyEntity(entity_)
-                        .nginxServerEntity(tempNginxServer)
-                        .build();
+                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_).nginxServerEntity(tempNginxServer).build();
 
                 nginxServerEntities.add(tempNginxServer);
                 n_p_s_e_list.add(npse);
@@ -159,13 +152,7 @@ public class NginxPolicyService {
     public String ADJUST_NGINX_POLICY(long policySid) {
         String msg = "";
         try {
-
             log.error("============================================");
-            try {
-                Thread.sleep(1500);
-            } catch (Exception e) {
-            }
-
             msg = "NO NGINX_POLICY";
 
             // 기본 nginx_policy 구하기
@@ -179,10 +166,6 @@ public class NginxPolicyService {
 
 
             log.error("============================================");
-            try {
-                Thread.sleep(1500);
-            } catch (Exception e) {
-            }
             msg = "NO NGINX_SERVERS";
 
             List<Long> linkedNginxServerList = getNginxServers(policySid);
@@ -191,10 +174,6 @@ public class NginxPolicyService {
 
 
             log.error("============================================");
-            try {
-                Thread.sleep(1500);
-            } catch (Exception e) {
-            }
 
             /**
              * -----------------------

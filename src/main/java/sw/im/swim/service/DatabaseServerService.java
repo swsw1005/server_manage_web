@@ -8,11 +8,13 @@ import sw.im.swim.bean.dto.DatabaseServerEntityDto;
 import sw.im.swim.bean.entity.DatabaseServerEntity;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DatabaseServerService {
 

@@ -10,11 +10,13 @@ import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.repository.WebServerEntityRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class WebServerService {
 
