@@ -58,7 +58,9 @@ public class NginxServiceControllUtil {
             certCommand += " --non-interactive --agree-tos --redirect  --expand  -m swsw1005@gmail.com ";
             certCommand += " --pre-hook \"systemctl stop nginx\" --post-hook \"systemctl start nginx\" ";
 
-            String commandResult = ProcessExecUtil.RUN_READ_COMMAND(certCommand);
+            String[] CERTBOT_EXEC = new String[]{"sh", "-c", certCommand};
+
+            String commandResult = ProcessExecUtil.RUN_READ_COMMAND(CERTBOT_EXEC);
 
             log.error("\t certCommand \n--------------------------------------\n"
                     + certCommand + "\n============================\n");
