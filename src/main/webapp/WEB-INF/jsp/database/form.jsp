@@ -22,13 +22,6 @@
 
         <div class="modal-form-row">
             <div>
-                이름
-            </div>
-            <input type="text" name="name">
-        </div>
-
-        <div class="modal-form-row">
-            <div>
                 IP
             </div>
             <input type="text" name="ip">
@@ -41,18 +34,26 @@
             <input type="text" name="port">
         </div>
 
+
         <div class="modal-form-row">
             <div>
-                id
+                DB 이름
             </div>
-            <input type="text" name="id">
+            <input type="text" name="name">
         </div>
 
         <div class="modal-form-row">
             <div>
-                password
+                DB id
             </div>
-            <input type="password" name="password">
+            <input type="text" name="db_id">
+        </div>
+
+        <div class="modal-form-row">
+            <div>
+                DB password
+            </div>
+            <input type="password" name="db_pw">
         </div>
 
         <div class="modal-form-row">

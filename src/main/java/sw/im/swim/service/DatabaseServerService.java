@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
 import sw.im.swim.bean.entity.DatabaseServerEntity;
+import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
 
 import javax.transaction.Transactional;
@@ -39,4 +40,35 @@ public class DatabaseServerService {
         }
     }
 
+    public boolean delete(final long sid) {
+        try {
+            DatabaseServerEntity entity = databaseServerEntityRepository.getById(sid);
+            entity.delete();
+            databaseServerEntityRepository.save(entity);
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
+    }
+
+    public DatabaseServerEntity insertNew(String name, String ip, Integer port, String id, String password, DbType dbType) throws Exception {
+
+        try {
+            DatabaseServerEntity entity = DatabaseServerEntity.builder()
+                    .name(name)
+                    .ip(ip)
+                    .id(id)
+                    .password(password)
+                    .dbType(dbType)
+                    .port(port)
+                    .build();
+            DatabaseServerEntity entity_ = databaseServerEntityRepository.save(entity);
+            entity_.getCreatedAt();
+            return entity_;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+    }
 }
