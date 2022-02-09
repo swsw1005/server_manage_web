@@ -10,19 +10,32 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content_">
+        <div class="list_row_item list_row_content">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
-            <div>
+            <div class="list_row_name">
                     ${dto.name}
             </div>
-            <div style="padding-left: 10px;">
-                    ${dto.ip} : ${dto.port}
+            <div class="list_row_ip">
+                <c:choose>
+                    <c:when test="${dto.https}">
+                        https://${dto.ip}:${dto.port}
+                    </c:when>
+                    <c:otherwise>
+                        http://${dto.ip}:${dto.port}
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="list_row_date">
-                    ${dto.created }
+                    c: ${dto.created }
+            </div>
+            <div class="list_row_date">
+                    u: ${dto.updated }
+            </div>
+            <div class="list_row_date">
+                    d: ${dto.deleted }
             </div>
 
         </div>

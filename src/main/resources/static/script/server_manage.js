@@ -27,7 +27,7 @@ function openInputModal(formId, url, sid) {
         success: function (result, status, statusCode) {
             document.getElementById(formId).innerHTML = result;
 
-            document.getElementById(formId).style.display = "flex";
+            document.getElementById(formId).style.display = "grid";
             document.getElementById(formId).classList.add("modalFadeIn");
             document.getElementById(formId).classList.remove("modalFadeOut");
 
@@ -363,4 +363,8 @@ function adjustNginxSetting(policySid, URL){
             );
         }
     });
+}
+
+function NO_ACTION() {
+
 }

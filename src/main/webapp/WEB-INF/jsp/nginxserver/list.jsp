@@ -10,32 +10,36 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content_">
+        <div class="list_row_item list_row_content">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
-            <div>
+            <div class="list_row_name">
                     ${dto.name}
             </div>
-            <div style="padding-left: 10px;">
+            <div class="list_row_name">
                     ${dto.domainEntity.domain}
             </div>
-            <div style="padding-left: 10px;">
+            <div class="list_row_name">
                     ${dto.faviconEntity.path}
             </div>
-            <div style="padding-left: 10px;">
+            <div class="list_row_ip">
                 <c:if test="${dto.webServerEntity.https}">
-                    https://
+                    https://${dto.webServerEntity.ip}:${dto.webServerEntity.port}
                 </c:if>
                 <c:if test="${!dto.webServerEntity.https}">
-                    http://
+                    http://${dto.webServerEntity.ip}:${dto.webServerEntity.port}
                 </c:if>
-
-                    ${dto.webServerEntity.ip}:${dto.webServerEntity.port}
             </div>
 
             <div class="list_row_date">
-                    ${dto.created }
+                c: ${dto.created }
+            </div>
+            <div class="list_row_date">
+                u: ${dto.updated }
+            </div>
+            <div class="list_row_date">
+                d: ${dto.deleted }
             </div>
 
         </div>

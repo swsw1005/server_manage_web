@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.dto.WebServerEntityDto;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
+import sw.im.swim.service.NginxServerSubService;
 import sw.im.swim.service.WebServerService;
 import sw.im.swim.util.nginx.NginxServiceControllUtil;
 
@@ -29,6 +31,9 @@ public class NginxPolicyViewController {
     private final NginxPolicyService nginxPolicyService;
 
     private final NginxServerService nginxServerService;
+
+    private final NginxServerSubService nginxServerSubService;
+
 
     @GetMapping("/home")
     public ModelAndView nginxpolicy(HttpServletRequest request) {
@@ -85,6 +90,8 @@ public class NginxPolicyViewController {
         } catch (Exception e) {
         }
         mav.addObject("insert", insert);
+        List<DomainEntityDto> linkedNginxServerList = nginxServerSubService.getAllDomains();
+        mav.addObject("domainList", linkedNginxServerList);
 
         return mav;
     }

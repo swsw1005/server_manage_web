@@ -10,16 +10,16 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content_">
+        <div class="list_row_item list_row_content">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
-            <div>
+            <div class="list_row_name" style="font-size: 1.2em;">
                     ${dto.domain}
             </div>
 
             <div class="list_row_date">
-                    ${dto.created }
+                c: ${dto.created }
             </div>
 
         </div>

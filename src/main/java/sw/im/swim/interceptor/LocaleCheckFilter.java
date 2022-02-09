@@ -30,7 +30,11 @@ public class LocaleCheckFilter implements HandlerInterceptor {
         log.debug("login check");
         HttpSession session = request.getSession();
 
-        final String contextPath = request.getContextPath();
+        String contextPath = request.getContextPath();
+
+        if (contextPath == null || contextPath.equals("")) {
+            contextPath = "/";
+        }
 
         boolean sessionAdmin = false;
         try {
@@ -43,7 +47,7 @@ public class LocaleCheckFilter implements HandlerInterceptor {
 
         if (!sessionAdmin) {
             response.sendRedirect(contextPath);
-            log.debug("need login");
+            log.debug("need login  =>  " + contextPath);
             return false;
         }
 

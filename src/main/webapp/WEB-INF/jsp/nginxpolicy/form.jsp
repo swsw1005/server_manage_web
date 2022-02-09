@@ -8,6 +8,9 @@
 <div class="modal-form-head" onclick="closeInputModal('simple-modal-form')">
 </div>
 
+<div class="modal-form-left" onclick="closeInputModal('simple-modal-form')">
+</div>
+
 <div class="modal-form-body">
 
     <form id="simple-form">
@@ -17,7 +20,12 @@
 
         <div class="modal-form-row form-row-horizontal">
             <h3>
-                nginx 정책 등록
+                <c:if test="${insert}">
+                    nginx 정책 등록
+                </c:if>
+                <c:if test="${!insert}">
+                    nginx 정책 편집
+                </c:if>
             </h3>
 
             <c:if test="${!insert}">
@@ -33,14 +41,9 @@
 
         <div class="modal-form-row">
             <div>
-                이름 ${insert}
+                이름
             </div>
-            <c:if test="${insert}">
-                <input type="text" name="name" value="">
-            </c:if>
-            <c:if test="${!insert}">
-                <input type="text" name="name" value="${nginxPolicy.name}">
-            </c:if>
+            <input type="text" name="name" value="${nginxPolicy.name}">
 
         </div>
 
@@ -99,6 +102,19 @@
             </select>
         </div>
 
+        <div class="modal-form-row">
+            <div>
+                ROOT 도메인
+            </div>
+            <select name="domainInfoSid" class="w3-select">
+                <c:forEach var="dto" items="${domainList}">
+                    <option value="${dto.sid}">
+                            ${dto.domain}
+                    </option>
+                </c:forEach>
+            </select>
+        </div>
+
 
     </form>
 
@@ -123,4 +139,7 @@
         </button>
     </div>
 
+</div>
+
+<div class="modal-form-right" onclick="closeInputModal('simple-modal-form')">
 </div>

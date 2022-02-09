@@ -13,13 +13,23 @@ import java.util.Set;
 @Slf4j
 public class NginxServiceControllUtil {
 
-    private static final String[] NGINX_SERVICE_START = new String[]{"sh", "-c", "systemctl start nginx"};
-    private static final String[] NGINX_SERVICE_STOP = new String[]{"sh", "-c", "systemctl stop nginx"};
-    private static final String[] NGINX_SERVICE_STATUS = new String[]{"sh", "-c", "systemctl status nginx"};
-
-    private static final String[] NGINX_STATUS_ACTIVE_INDICATORS = new String[]{"nginx.service", "Loaded: loaded", "Active: active (running)", "Main PID:"};
-
-    private static final String[] NGINX_STATUS_DEAD_INDICATORS = new String[]{"nginx.service", "Loaded: loaded", "Active: inactive", "Main PID:"};
+    private static final String[] NGINX_SERVICE_START = new String[] { "sh", "-c", "systemctl start nginx" };
+    private static final String[] NGINX_SERVICE_STOP = new String[] { "sh", "-c", "systemctl stop nginx" };
+    private static final String[] NGINX_SERVICE_STATUS = new String[] { "sh", "-c", "systemctl status nginx" };
+    private static final String[] NGINX_STATUS_ACTIVE_INDICATORS = new String[] { 
+            "nginx.service",
+            "Loaded: loaded",
+            "Active: active (running)",
+            "Main PID:" };
+    private static final String[] NGINX_STATUS_DEAD_INDICATORS = new String[] { 
+            "nginx.service",
+            "Loaded: loaded",
+            "Active: inactive",
+            "Main PID:" };
+    private static final String[] CERTBOT_RESULT_INDICATORS = new String[] { 
+            "Congratulations",
+            "fullchain.pem",
+            "privkey.pem" };
 
     public static final boolean NGINX_START() {
         return NGINX_JOB(true);
@@ -44,32 +54,50 @@ public class NginxServiceControllUtil {
 
     public static final boolean CERTBOT_INIT(final String hostDomain, Set<String> domains) {
         try {
-
             domains.remove(hostDomain);
-
             String certCommand = "";
-            certCommand += " certbot --authenticator standalone --installer nginx ";
-            certCommand += (" -d " + "swfa.pw" + " ");
-            certCommand += (" -d " + hostDomain + " ");
+            certCommand = certCommand + " certbot --authenticator standalone --installer nginx ";
+            certCommand = certCommand + " -d " + hostDomain + " ";
+
             for (String domain : domains) {
-                certCommand += (" -d " + domain + " ");
+                certCommand += ("  -d " + domain);
             }
 
             certCommand += " --non-interactive --agree-tos --redirect  --expand  -m swsw1005@gmail.com ";
             certCommand += " --pre-hook \"systemctl stop nginx\" --post-hook \"systemctl start nginx\" ";
+            
+            String[] CERTBOT_EXEC = new String[] { "sh", "-c", certCommand };
 
-            String[] CERTBOT_EXEC = new String[]{"sh", "-c", certCommand};
+            log.error("\t certCommand \n--------------------------------------\n" + certCommand
+                    + "\n============================\n");
 
             String commandResult = ProcessExecUtil.RUN_READ_COMMAND(CERTBOT_EXEC);
+            log.error("\t commandResult \n--------------------------------------\n" + commandResult
+                    + "\n============================\n");
 
-            log.error("\t certCommand \n--------------------------------------\n"
-                    + certCommand + "\n============================\n");
-            log.error("\t commandResult \n--------------------------------------\n"
-                    + commandResult + "\n============================\n");
+            int ARR_LENGTH = CERTBOT_RESULT_INDICATORS.length;
+            int[] INDEX_ARR = new int[ARR_LENGTH];
 
-        } catch (Exception e) {
+            int pre_idx;
+            for(pre_idx = 0; pre_idx < ARR_LENGTH; ++pre_idx) {
+                INDEX_ARR[pre_idx] = commandResult.indexOf(CERTBOT_RESULT_INDICATORS[pre_idx]);
+            }
+
+            pre_idx = -1;
+
+            for(int i = 0; i < ARR_LENGTH; ++i) {
+                int idx = INDEX_ARR[i];
+                if (pre_idx >= idx) {
+                    return false;
+                }
+
+                pre_idx = idx;
+            }
+
+            return true;
+        } catch (Exception var10) {
+            return false;
         }
-        return false;
     }
 
 

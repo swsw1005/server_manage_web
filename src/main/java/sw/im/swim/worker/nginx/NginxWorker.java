@@ -37,7 +37,7 @@ public class NginxWorker implements Runnable {
 
         try {
 
-            Thread.sleep(5000);
+            // Thread.sleep(111);
 
             log.info("\n" + "=======================================" + "\n" + "START NGINX JOB !!!!!!" + "\n" + "=======================================");
 
@@ -58,7 +58,7 @@ public class NginxWorker implements Runnable {
 
             FileUtils.moveFile(NGINX_CONF_ORIGIN, confBackup);
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             if (confBackup.exists() && confBackup.isFile()) {
                 log.info(confBackup.getAbsolutePath() + " => " + confBackup.exists());
@@ -68,7 +68,7 @@ public class NginxWorker implements Runnable {
                 throw new Exception("nginx conf file backup not exist");
             }
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             final File newConfFile = new File(NGINX_CONF_DIR + "/" + NGINX_CONF_FILE);
 
@@ -76,13 +76,13 @@ public class NginxWorker implements Runnable {
 
             log.info("createNewConfFile | " + createNewConfFile);
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             List<String> newConfFileText = NginxConfCreateUtil.CREATE_NEW_CONF_TEXT(policyEntityDto, nginxServerEntityList);
 
             FileUtils.writeLines(newConfFile, newConfFileText, System.lineSeparator());
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             log.info("new File Write Complete");
 
@@ -91,13 +91,13 @@ public class NginxWorker implements Runnable {
             } catch (Exception e) {
             }
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             boolean nginxStartSuccess = NginxServiceControllUtil.NGINX_START();
 
             log.info("nginxStartSuccess | " + nginxStartSuccess);
 
-            Thread.sleep(5555);
+            // Thread.sleep(111);
 
             if (nginxStartSuccess) {
                 RESTORE_NEED = false;
@@ -106,29 +106,25 @@ public class NginxWorker implements Runnable {
                 throw new Exception("nginx conf swap Fail");
             }
 
-            Thread.sleep(5555);
-
-            String ROOT_DOMAIN = "";
+            // Thread.sleep(111);
 
             Set<String> domains = new HashSet<>();
 
-            for (int i = 0; i < nginxServerEntityList.size(); i++) {
-                NginxServerEntityDto dto = nginxServerEntityList.get(i);
+            for(int i = 0; i < this.nginxServerEntityList.size(); ++i) {
+                NginxServerEntityDto dto = (NginxServerEntityDto)this.nginxServerEntityList.get(i);
                 String domain = dto.getDomainEntity().getDomain();
-
-                if (ROOT_DOMAIN.length() == 0) {
-                    ROOT_DOMAIN = domain;
-                }
-
-                if (ROOT_DOMAIN.length() > domain.length()) {
-                    ROOT_DOMAIN = domain;
-                }
                 domains.add(domain);
             }
 
+            String ROOT_DOMAIN = this.policyEntityDto.getDomainEntity().getDomain();
             boolean certbotSuccess = NginxServiceControllUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
-
             log.info("certbotSuccess | " + certbotSuccess);
+            if (!certbotSuccess) {
+                log.info("CERTBOT Fail");
+                throw new Exception("CERTBOT Fail");
+            }
+
+            RESTORE_NEED = false;
 
         } catch (Exception e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());

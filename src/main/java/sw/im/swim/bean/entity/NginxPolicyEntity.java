@@ -25,6 +25,11 @@ public class NginxPolicyEntity extends EntityBase {
     @Builder.Default
     private int workerProcessed = 8;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "domain_info_sid")
+    @Setter
+    private DomainEntity domainEntity;
+
     @Column(nullable = false, length = 60)
     @Builder.Default
     private int workerConnections = 768;

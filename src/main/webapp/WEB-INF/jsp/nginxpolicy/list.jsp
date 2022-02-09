@@ -10,20 +10,32 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content_ list_row_update"
+        <div class="list_row_item list_row_content list_row_update"
              onclick="openInputModal('simple-modal-form', '${contextPath }/nginxpolicy/form', '${dto.sid}')">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
-            <div>
-                    ${dto.name}
+            <div class="list_row_name">
+                ${dto.name}
+            </div>
+            <div class="list_row_name">
+                &nbsp;${dto.domainEntity.domain}
+            </div>
+            <div class="list_row_short">
+                worker : ${dto.workerProcessed}
+            </div>
+            <div class="list_row_short">
+                conn : ${dto.workerConnections}
             </div>
 
             <div class="list_row_date">
-                    ${dto.created }
+                c: ${dto.created }
             </div>
             <div class="list_row_date">
-                    ${dto.updated }
+                u: ${dto.updated }
+            </div>
+            <div class="list_row_date">
+                d: ${dto.deleted }
             </div>
 
         </div>

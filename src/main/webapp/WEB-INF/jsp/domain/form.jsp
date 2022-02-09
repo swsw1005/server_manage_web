@@ -8,6 +8,9 @@
 <div class="modal-form-head" onclick="closeInputModal('simple-modal-form')">
 </div>
 
+<div class="modal-form-left" onclick="closeInputModal('simple-modal-form')">
+</div>
+
 <div class="modal-form-body">
 
     <form id="simple-form">
@@ -37,3 +40,5 @@
 
 </div>
 
+<div class="modal-form-right" onclick="closeInputModal('simple-modal-form')">
+</div>

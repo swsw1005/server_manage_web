@@ -1,0 +1,14 @@
+
+[Unit]
+Description=server_manager spring boot
+After=postgres.service
+
+[Service]
+ExecStart=/bin/bash -c "exec java -jar /usr/local/server-manager/server-manager.war  --spring.config.additional-location=file:///usr/local/server-manager/application.properties"
+Restart=always
+RestartSec=3
+
+
+[Install]
+WantedBy=multi-user.target
+
