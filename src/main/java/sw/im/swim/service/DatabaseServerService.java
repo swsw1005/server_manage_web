@@ -52,7 +52,7 @@ public class DatabaseServerService {
         return false;
     }
 
-    public DatabaseServerEntity insertNew(String name, String ip, Integer port, String id, String password, DbType dbType) throws Exception {
+    public DatabaseServerEntityDto insertNew(String name, String ip, Integer port, String id, String password, DbType dbType) throws Exception {
 
         try {
             DatabaseServerEntity entity = DatabaseServerEntity.builder()
@@ -65,7 +65,7 @@ public class DatabaseServerService {
                     .build();
             DatabaseServerEntity entity_ = databaseServerEntityRepository.save(entity);
             entity_.getCreatedAt();
-            return entity_;
+            return modelMapper.map(entity_, DatabaseServerEntityDto.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

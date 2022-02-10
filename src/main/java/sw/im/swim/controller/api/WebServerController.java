@@ -55,7 +55,7 @@ public class WebServerController {
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            WebServerEntity entity = webServerService.insertNew(name, https, ip, port);
+            WebServerEntityDto entity = webServerService.insertNew(name, https, ip, port);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {

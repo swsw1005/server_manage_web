@@ -74,7 +74,7 @@ public class NginxServerSubController {
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            DomainEntity entity = nginxServerSubService.insertDomain(domain);
+            DomainEntityDto entity = nginxServerSubService.insertDomain(domain);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class NginxServerSubController {
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            FaviconEntity entity = nginxServerSubService.insertFavicon(path, description);
+            FaviconEntityDto entity = nginxServerSubService.insertFavicon(path, description);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {

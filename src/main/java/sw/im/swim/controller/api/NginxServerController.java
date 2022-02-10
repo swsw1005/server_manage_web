@@ -56,7 +56,7 @@ public class NginxServerController {
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            NginxServerEntity entity = nginxServerService.insertNew(
+            NginxServerEntityDto entity = nginxServerService.insertNew(
                     name,
                     seperateLog,
                     Long.parseLong(domainInfoSid),

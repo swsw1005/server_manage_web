@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
@@ -11,7 +13,7 @@ import sw.im.swim.bean.entity.FaviconEntity;
 import sw.im.swim.repository.DomainEntityRepository;
 import sw.im.swim.repository.FaviconEntityRepository;
 
-import javax.transaction.Transactional;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class NginxServerSubService {
         return result;
     }
 
-    public DomainEntity insertDomain(String domain) throws Exception {
+    public DomainEntityDto insertDomain(String domain) throws Exception {
         try {
 
             domain = domain.replace(" ", "");
@@ -53,7 +55,7 @@ public class NginxServerSubService {
                     .domain(domain)
                     .build();
             DomainEntity newEntity = domainEntityRepository.save(entity);
-            return newEntity;
+            return modelMapper.map(newEntity, DomainEntityDto.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
@@ -81,7 +83,7 @@ public class NginxServerSubService {
         return result;
     }
 
-    public FaviconEntity insertFavicon(final String path, String description) throws Exception {
+    public FaviconEntityDto insertFavicon(final String path, String description) throws Exception {
         try {
 
             if (description == null) {
@@ -90,15 +92,25 @@ public class NginxServerSubService {
 
             if (path.length() > 8 && description.length() >= 0) {
             } else {
-                throw new Exception();
+                throw new Exception("path validaion error | " + path);
             }
+
+            File file = new File(path);
+
+            if (file.isFile() && file.canRead()) {
+
+            } else {
+                throw new Exception("ico file not exist | " + path);
+            }
+
 
             FaviconEntity entity = FaviconEntity.builder()
                     .path(path)
                     .description(description)
                     .build();
             FaviconEntity newEntity = faviconEntityRepository.save(entity);
-            return newEntity;
+
+            return modelMapper.map(newEntity, FaviconEntityDto.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
@@ -114,6 +126,54 @@ public class NginxServerSubService {
             log.error(e.getMessage(), e);
         }
         return false;
+    }
+
+
+    /**
+     * <PRE>
+     * 해당경로의 favicon 찾아서 자동 등록한다.
+     * </PRE>
+     *
+     * @param path
+     */
+    public void autoInsertFavicon(String path) {
+
+        try {
+
+            File originFile = new File(path);
+
+            File originDir = originFile.getParentFile();
+
+            File[] files = originDir.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+                File tempFile = files[i];
+                try {
+                    String tempFilePath = tempFile.getAbsolutePath();
+
+                    if (tempFile.canRead() && tempFile.isFile()) {
+                        if (tempFilePath.endsWith(".ico")) {
+                            insertSingle(path);
+                        }
+                    }
+                } catch (Exception e) {
+                } // try catch end
+            } // for i end
+
+        } catch (Exception e) {
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void insertSingle(String path) {
+        try {
+            FaviconEntity entity = FaviconEntity.builder()
+                    .path(path)
+                    .description("AUTO FOUND...")
+                    .build();
+            FaviconEntity newEntity = faviconEntityRepository.save(entity);
+        } catch (Exception e) {
+        }
     }
 
 

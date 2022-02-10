@@ -1,13 +1,9 @@
 package sw.im.swim.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.FaviconEntity;
@@ -18,6 +14,8 @@ import sw.im.swim.repository.NginxServerEntityRepository;
 import sw.im.swim.service.querydsl.NginxServerQueryDsl;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -44,7 +42,7 @@ public class NginxServerService {
         return result;
     }
 
-    public NginxServerEntity insertNew(String name, boolean seperateLog, long domainInfoSid, long faviconInfoSid, long webServerInfoSid) throws Exception {
+    public NginxServerEntityDto insertNew(String name, boolean seperateLog, long domainInfoSid, long faviconInfoSid, long webServerInfoSid) throws Exception {
 
         try {
             DomainEntity domainEntity = new DomainEntity(domainInfoSid);
@@ -60,7 +58,7 @@ public class NginxServerService {
                     .build();
             NginxServerEntity entity_ = nginxServerEntityRepository.save(entity);
             entity_.getCreatedAt();
-            return entity_;
+            return modelMapper.map(entity_, NginxServerEntityDto.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());

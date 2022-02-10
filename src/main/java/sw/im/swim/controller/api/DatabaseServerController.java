@@ -58,7 +58,7 @@ public class DatabaseServerController {
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            DatabaseServerEntity entity = databaseServerService.insertNew(name, ip, port, id, password, dbType);
+            DatabaseServerEntityDto entity = databaseServerService.insertNew(name, ip, port, id, password, dbType);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {
