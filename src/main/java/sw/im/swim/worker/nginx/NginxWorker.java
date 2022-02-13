@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.service.AdminLogService;
+import sw.im.swim.service.AdminService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
 import sw.im.swim.util.nginx.NginxServiceControllUtil;
@@ -21,12 +23,15 @@ public class NginxWorker implements Runnable {
 
     private final NginxPolicyEntityDto policyEntityDto;
     private final List<NginxServerEntityDto> nginxServerEntityList;
+    private final AdminLogService adminLogService;
 
 //    private String OLD_NGINX_CONF_FILE_PATH = "";
 
     private static final String NGINX_CONF_DIR = "/etc/nginx";
     private static final String NGINX_CONF_FILE = "nginx.conf";
 
+    private static final String UPDATE_TITLE = "NGINX UPDATE";
+    private static final String RESTORE_TITLE = "NGINX RESTORE";
 
     @Override
     public void run() {
@@ -34,6 +39,8 @@ public class NginxWorker implements Runnable {
         boolean RESTORE_NEED = false;
         String OLD_CONF_BACKUP_FILE = "";
         File NGINX_CONF_ORIGIN = null;
+
+        int WORK_STAGE = 0;
 
         try {
 
@@ -47,6 +54,7 @@ public class NginxWorker implements Runnable {
                 log.info(NGINX_CONF_ORIGIN.getAbsolutePath() + " => " + NGINX_CONF_ORIGIN.exists());
             } else {
                 log.error("NGINX_CONF_ORIGIN not EXIST...");
+                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "ORIGIN CONF FILE NOT EXIST");
                 throw new Exception("nginx conf file not exist");
             }
 
@@ -65,6 +73,7 @@ public class NginxWorker implements Runnable {
                 RESTORE_NEED = true;
             } else {
                 log.error("nginx conf file backup not exist");
+                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "nginx conf file backup not exist");
                 throw new Exception("nginx conf file backup not exist");
             }
 
@@ -103,6 +112,7 @@ public class NginxWorker implements Runnable {
                 RESTORE_NEED = false;
             } else {
                 log.info("nginx conf swap Fail");
+                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "nginx conf swap Fail");
                 throw new Exception("nginx conf swap Fail");
             }
 
@@ -110,21 +120,24 @@ public class NginxWorker implements Runnable {
 
             Set<String> domains = new HashSet<>();
 
-            for(int i = 0; i < this.nginxServerEntityList.size(); ++i) {
-                NginxServerEntityDto dto = (NginxServerEntityDto)this.nginxServerEntityList.get(i);
+            for (int i = 0; i < nginxServerEntityList.size(); ++i) {
+                NginxServerEntityDto dto = nginxServerEntityList.get(i);
                 String domain = dto.getDomainEntity().getDomain();
                 domains.add(domain);
             }
 
-            String ROOT_DOMAIN = this.policyEntityDto.getDomainEntity().getDomain();
+            String ROOT_DOMAIN = policyEntityDto.getDomainEntity().getDomain();
             boolean certbotSuccess = NginxServiceControllUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
             log.info("certbotSuccess | " + certbotSuccess);
             if (!certbotSuccess) {
                 log.info("CERTBOT Fail");
+                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "CERTBOT Fail");
                 throw new Exception("CERTBOT Fail");
             }
 
             RESTORE_NEED = false;
+
+            adminLogService.insertLog(UPDATE_TITLE, "SUCCESS", "NGINX UPDATE END");
 
         } catch (Exception e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());
@@ -150,8 +163,11 @@ public class NginxWorker implements Runnable {
 
                     log.error(" nginxRestoreStatus | " + nginxRestoreStatus);
 
+                    adminLogService.insertLog(RESTORE_TITLE, "SUCCESS", "NGINX RESTORE END");
+
                 } catch (Exception ex) {
                     log.error(ex.getMessage());
+                    adminLogService.insertLog(RESTORE_TITLE, "FAIL", "NGINX RESTORE FAIL | " + ex.getMessage());
                 }
 
             }

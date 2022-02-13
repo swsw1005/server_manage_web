@@ -11,8 +11,8 @@ import sw.im.swim.bean.entity.NginxServerEntity;
 import sw.im.swim.repository.NginxPolicyEntityRepository;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
+import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.nginx.NginxWorker;
-import sw.im.swim.worker.context.ThreadWorkderPoolContext;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ public class NginxPolicyService {
     private final NginxPolicyServerEntityRepository nginxPolicyServerEntityRepository;
 
     private final NginxServerService nginxServerService;
+
+    private final AdminLogService adminLogService;
 
     public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections) {
 
@@ -223,8 +225,8 @@ public class NginxPolicyService {
                 FAVICON_SET.add(favicon_);
             } // for i end
 
-            NginxWorker nginxWorker = new NginxWorker(policyEntityDto, nginxServerEntityList);
-            ThreadWorkderPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
+            NginxWorker nginxWorker = new NginxWorker(policyEntityDto, nginxServerEntityList, adminLogService);
+            ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
 
         } catch (Exception e) {
         }
@@ -232,4 +234,44 @@ public class NginxPolicyService {
     }
 
 
+    public String getRootDomain() {
+
+        try {
+            List<NginxPolicyEntity> list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
+
+            NginxPolicyEntity nginxPolicyEntity = null;
+
+            long time = 1L;
+
+            for (int i = 0; i < list.size(); i++) {
+
+                NginxPolicyEntity temp = list.get(i);
+
+                long created = -1;
+                try {
+                    created = temp.getCreatedAt().getTimeInMillis();
+                } catch (Exception e) {
+                }
+
+                long updated = -1;
+                try {
+                    updated = temp.getUpdatedAt().getTimeInMillis();
+                } catch (Exception e) {
+                }
+
+                long tempTime = Math.max(created, updated);
+
+                if (tempTime >= time) {
+                    nginxPolicyEntity = temp;
+                    time = tempTime;
+                }
+            }
+
+            return nginxPolicyEntity.getDomainEntity().getDomain();
+
+        } catch (Exception e) {
+        }
+
+        return null;
+    }
 }

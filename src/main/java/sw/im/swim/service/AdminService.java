@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminEntityDto;
 import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.enums.Authority;
 import sw.im.swim.repository.AdminEntityRepository;
-
-import javax.transaction.Transactional;
 
 @Slf4j
 @Service

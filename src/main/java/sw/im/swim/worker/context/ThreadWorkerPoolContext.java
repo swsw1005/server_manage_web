@@ -8,36 +8,40 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
-public class ThreadWorkderPoolContext {
+public class ThreadWorkerPoolContext {
 
     public ExecutorService NOTI_WORKER;
     public ExecutorService NGINX_WORKER;
-    public ExecutorService DB_WORKER;
+    public ExecutorService DB_SERVER_WORKER;
+    public ExecutorService DB_DUMP_WORKER;
 
-    private ThreadWorkderPoolContext() {
+    private ThreadWorkerPoolContext() {
 
         final ThreadFactory[] namedThreadFactorys = {
                 new ThreadFactoryBuilder().setNameFormat("NOTI_WORKER-%d")
                         .build(),
                 new ThreadFactoryBuilder().setNameFormat("NGINX_WORKER-%d")
                         .build(),
-                new ThreadFactoryBuilder().setNameFormat("DB_WORKER-%d")
+                new ThreadFactoryBuilder().setNameFormat("DB_SERVER_WORKER-%d")
+                        .build(),
+                new ThreadFactoryBuilder().setNameFormat("DB_DUMP_WORKER-%d")
                         .build()
         };
 
         NOTI_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[0]);
         NGINX_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[1]);
-        DB_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[2]);
+        DB_SERVER_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[2]);
+        DB_DUMP_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[3]);
 
         log.debug("WORKER POOL init complete !");
 
     }
 
     private static class SingleTone {
-        public static final ThreadWorkderPoolContext INSTANCE = new ThreadWorkderPoolContext();
+        public static final ThreadWorkerPoolContext INSTANCE = new ThreadWorkerPoolContext();
     }
 
-    public static ThreadWorkderPoolContext getInstance() {
+    public static ThreadWorkerPoolContext getInstance() {
         return SingleTone.INSTANCE;
     }
 
