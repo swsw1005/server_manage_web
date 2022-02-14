@@ -13,7 +13,7 @@ import java.util.Calendar;
 @AllArgsConstructor
 @Entity(name = "admin_log")
 @Table(name = "admin_log")
-public class AdminLogEntity extends EntityBase {
+public class AdminLogEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

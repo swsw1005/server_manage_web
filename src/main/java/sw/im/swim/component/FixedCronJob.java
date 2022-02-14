@@ -18,6 +18,7 @@ import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerSubService;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
+import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.database.DbServerWorker;
 
 import java.io.File;
@@ -118,47 +119,9 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0 0 0/3 * * *")
+    @Scheduled(cron = "0/5 * * * * *")
     public void databaseServerBackup() {
-        try {
-            Thread.sleep(1111);
-        } catch (Exception e) {
-        }
-
-        try {
-            new File(DatabaseServerUtil.DB_DUMP_FILE_TMP).mkdirs();
-        } catch (Exception e) {
-        }
-
-        File pgpass = DatabaseServerUtil.PG_PASS_DELETE();
-
-        try {
-            List<DatabaseServerEntityDto> databaseServerList = databaseServerService.getAll();
-
-            HashSet<String> pgpassList = new HashSet<>();
-            // ip:port:database:id:password
-            for (DatabaseServerEntityDto dto : databaseServerList) {
-                final DbType dbType = dto.getDbType();
-
-                if (dbType.equals(DbType.POSTGRESQL)) {
-                    final String ip = dto.getIp();
-                    final String port = String.valueOf(dto.getPort());
-                    final String database = "postgres";
-                    final String id = dto.getId();
-                    final String password = dto.getPassword();
-                    String pgpassLine = ip + ":" + port + ":" + database + ":" + id + ":" + password;
-                    DatabaseServerUtil.ADD_PG_PASS(pgpassLine);
-                }
-            } // for end
-
-            for (DatabaseServerEntityDto dto : databaseServerList) {
-                ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DbServerWorker(adminLogService, dto));
-            }
-
-        } catch (Exception e) {
-            adminLogService.insertLog("DB_BACKUP", "FAIL", e.getLocalizedMessage());
-        }
-
+        ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
     }
 
 

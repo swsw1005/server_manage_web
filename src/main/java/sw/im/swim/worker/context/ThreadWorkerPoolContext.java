@@ -3,12 +3,16 @@ package sw.im.swim.worker.context;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
 public class ThreadWorkerPoolContext {
+
+    public Queue<Integer> DB_SERVER_QUEUE;
 
     public ExecutorService NOTI_WORKER;
     public ExecutorService NGINX_WORKER;
@@ -16,6 +20,8 @@ public class ThreadWorkerPoolContext {
     public ExecutorService DB_DUMP_WORKER;
 
     private ThreadWorkerPoolContext() {
+
+        DB_SERVER_QUEUE = new LinkedBlockingQueue<>();
 
         final ThreadFactory[] namedThreadFactorys = {
                 new ThreadFactoryBuilder().setNameFormat("NOTI_WORKER-%d")
