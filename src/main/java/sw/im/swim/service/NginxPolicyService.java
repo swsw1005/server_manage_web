@@ -1,10 +1,12 @@
 package sw.im.swim.service;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.*;
+import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.NginxPolicyEntity;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
@@ -38,9 +40,14 @@ public class NginxPolicyService {
 
     private final AdminLogService adminLogService;
 
-    public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections) {
+    public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections, long domainInfoSid) {
 
-        NginxPolicyEntity entity = NginxPolicyEntity.builder().name(name).workerProcessed(workerProcessed).workerConnections(workerConnections).build();
+        NginxPolicyEntity entity = NginxPolicyEntity.builder()
+                .name(name)
+                .workerProcessed(workerProcessed)
+                .workerConnections(workerConnections)
+                .domainEntity(new DomainEntity(domainInfoSid))
+                .build();
 
         NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
         return modelMapper.map(entity_, NginxPolicyEntityDto.class);
@@ -159,7 +166,9 @@ public class NginxPolicyService {
 
             // 기본 nginx_policy 구하기
             NginxPolicyEntity nginxPolicyEntity = nginxPolicyEntityRepository.getById(policySid);
-            nginxPolicyEntity.getName();
+            String nginxPolicyName = nginxPolicyEntity.getName();
+
+            log.warn("nginxPolicyName => " + nginxPolicyName);
 
             /**
              * ------------------
@@ -171,9 +180,16 @@ public class NginxPolicyService {
             msg = "NO NGINX_SERVERS";
 
             List<Long> linkedNginxServerList = getNginxServers(policySid);
+
+            log.warn("linkedNginxServerList => " + new Gson().toJson(linkedNginxServerList));
+
             List<NginxServerEntityDto> dtos = nginxServerService.getAll();
+
+            log.warn("List<NginxServerEntityDto> => " + dtos.size());
+
             Set<Long> nginxServerSet = new HashSet<>(linkedNginxServerList);
 
+            log.warn("nginxServerSet => " + new Gson().toJson(nginxServerSet));
 
             log.error("============================================");
 

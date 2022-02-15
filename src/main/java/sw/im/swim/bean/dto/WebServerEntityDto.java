@@ -14,11 +14,12 @@ public class WebServerEntityDto implements Serializable {
     private Calendar deletedAt;
     private String name;
     private boolean https;
-    private String ip;
+    private ServerInfoEntityDto serverInfoEntity;
     private Integer port;
+    private String healthCheckUrl = "/";
 
     public String getAddress() {
-        return ip + ":" + port;
+        return serverInfoEntity.getIp() + ":" + port;
     }
 
     public String HTTPS_PREFIX() {
@@ -56,5 +57,11 @@ public class WebServerEntityDto implements Serializable {
         return "-";
     }
 
+    public boolean isAlive() {
+        if (deletedAt == null) {
+            return true;
+        }
+        return false;
+    }
 
 }

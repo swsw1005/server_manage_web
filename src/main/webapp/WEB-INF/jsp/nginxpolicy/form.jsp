@@ -83,11 +83,14 @@
             </div>
             <select id="nginxServerSelector" class="w3-select" style="font-size: 0.6em;"
                     onchange="insertNewNginxServer()">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${nginxServerList}">
                     <option value="${dto.sid}"
                             data-name="${dto.name}"
                             data-domain="${dto.domainEntity.domain}"
-                            data-ip="${dto.webServerEntity.ip}"
+                            data-ip="${dto.webServerEntity.serverInfoEntity.ip}"
                             data-port="${dto.webServerEntity.port}"
                             data-favicon="${dto.faviconEntity.path}"
                             data-log="${dto.seperateLog}"
@@ -95,7 +98,7 @@
                     >
                             ${dto.name}
                         | ${dto.domainEntity.domain}
-                        | ${dto.webServerEntity.ip}
+                        | ${dto.webServerEntity.serverInfoEntity.ip}
                         | ${dto.webServerEntity.port}
                     </option>
                 </c:forEach>
@@ -107,6 +110,9 @@
                 ROOT 도메인
             </div>
             <select name="domainInfoSid" class="w3-select">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${domainList}">
                     <option value="${dto.sid}">
                             ${dto.domain}

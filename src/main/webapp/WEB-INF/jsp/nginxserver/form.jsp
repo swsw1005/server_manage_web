@@ -24,7 +24,7 @@
             <div>
                 이름
             </div>
-            <input type="text" name="name">
+            <input type="text" name="name" id="nginx-server-name">
         </div>
 
         <div class="modal-form-row">
@@ -50,6 +50,9 @@
                 domain
             </div>
             <select name="domainInfoSid" class="w3-select">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${domainList}">
                     <option value="${dto.sid}">
                             ${dto.domain}
@@ -63,6 +66,9 @@
                 favicon
             </div>
             <select name="faviconInfoSid" class="w3-select">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${faviconList}">
                     <option value="${dto.sid}">
                             ${dto.path}
@@ -75,10 +81,15 @@
             <div>
                 web server
             </div>
-            <select name="webServerInfoSid" class="w3-select">
+            <select name="webServerInfoSid" class="w3-select" onchange="nameInherite(this, 'nginx-server-name')">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${webServerList}">
-                    <option value="${dto.sid}">
-                            ${dto.name} | ${dto.ip}:${dto.port}
+                    <option value="${dto.sid}"
+                            data-name="${dto.name}"
+                    >
+                            ${dto.name} | ${dto.serverInfoEntity.ip}:${dto.port}
                     </option>
                 </c:forEach>
             </select>

@@ -29,7 +29,7 @@ public class DbBackupWorker implements Callable<String> {
     @Override
     public String call() throws Exception {
 
-        final String ip = databaseServerEntityDto.getIp();
+        final String ip = databaseServerEntityDto.getServerInfoEntity().getIp();
         final String port = String.valueOf(databaseServerEntityDto.getPort());
         final String id = databaseServerEntityDto.getId();
         final String password = databaseServerEntityDto.getPassword();

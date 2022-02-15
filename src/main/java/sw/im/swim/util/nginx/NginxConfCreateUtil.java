@@ -36,7 +36,7 @@ public class NginxConfCreateUtil {
         try {
 
             final String NAME = nginxServerEntityDto.getName();
-            final String IP = nginxServerEntityDto.getWebServerEntity().getIp();
+            final String IP = nginxServerEntityDto.getWebServerEntity().getServerInfoEntity().getIp();
             final String HTTPS = nginxServerEntityDto.getWebServerEntity().HTTPS_PREFIX();
             final String ADDRESS = nginxServerEntityDto.getWebServerEntity().getAddress();
             final String DOMAIN = nginxServerEntityDto.getDomainEntity().getDomain();
@@ -125,7 +125,7 @@ public class NginxConfCreateUtil {
             list.add("");
             NginxServerEntityDto nginxServerEntity = nginxServerEntityList.get(i);
 
-            String tempIp = nginxServerEntity.getWebServerEntity().getIp();
+            String tempIp = nginxServerEntity.getWebServerEntity().getServerInfoEntity().getIp();
             if (!tempIp.equals(pre_ip)) {
                 list.add("");
                 list.add("");

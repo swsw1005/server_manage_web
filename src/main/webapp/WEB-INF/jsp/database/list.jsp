@@ -16,7 +16,7 @@
                 <%--            </div>--%>
 
             <div class="list_row_name">
-                    ${dto.ip}:${dto.port}
+                    ${dto.serverInfoEntity.ip}:${dto.port}
             </div>
 
             <div class="list_row_name" style="font-size: 1.2em;">

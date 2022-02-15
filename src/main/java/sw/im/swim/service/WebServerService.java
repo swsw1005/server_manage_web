@@ -8,10 +8,12 @@ import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.WebServerEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
+import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
+import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
 
 import javax.transaction.Transactional;
@@ -31,10 +33,12 @@ public class WebServerService {
 
     private final NginxPolicyServerEntityRepository nginxPolicyServerEntityRepository;
 
+    private final ServerInfoEntityRepository serverInfoEntityRepository;
+
     private final ModelMapper modelMapper;
 
     public List<WebServerEntityDto> getAll() {
-        List<WebServerEntity> list = webServerEntityRepository.getAllByDeletedAtIsNullOrderByIpAscPortAscHttpsAscCreatedAtDesc();
+        List<WebServerEntity> list = webServerEntityRepository.getAll();
         List<WebServerEntityDto> result = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
@@ -43,14 +47,17 @@ public class WebServerService {
         return result;
     }
 
-    public WebServerEntityDto insertNew(String name, boolean https, String ip, Integer port) throws Exception {
+    public WebServerEntityDto insertNew(String name, boolean https, Integer port, Long serverSid, String healthCheckUrl) throws Exception {
 
         try {
+            ServerInfoEntity server = serverInfoEntityRepository.getById(serverSid);
+
             WebServerEntity entity = WebServerEntity.builder()
+                    .serverInfoEntity(server)
                     .name(name)
                     .https(https)
-                    .ip(ip)
                     .port(port)
+                    .healthCheckUrl(healthCheckUrl)
                     .build();
             WebServerEntity entity_ = webServerEntityRepository.save(entity);
             entity_.getCreatedAt();
@@ -63,10 +70,11 @@ public class WebServerService {
 
     /**
      * <PRE>
-     *     웹서버 삭제
-     *     -> 웹서버 엮인 nginx서버 삭제
-     *     -> 해당 nginx-policy에서 삭제
+     * 웹서버 삭제
+     * -> 웹서버 엮인 nginx서버 삭제
+     * -> 해당 nginx-policy에서 삭제
      * </PRE>
+     *
      * @param sid
      * @return
      */

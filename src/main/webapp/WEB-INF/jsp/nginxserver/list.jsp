@@ -25,10 +25,10 @@
             </div>
             <div class="list_row_ip">
                 <c:if test="${dto.webServerEntity.https}">
-                    https://${dto.webServerEntity.ip}:${dto.webServerEntity.port}
+                    https://${dto.webServerEntity.serverInfoEntity.ip}:${dto.webServerEntity.port}
                 </c:if>
                 <c:if test="${!dto.webServerEntity.https}">
-                    http://${dto.webServerEntity.ip}:${dto.webServerEntity.port}
+                    http://${dto.webServerEntity.serverInfoEntity.ip}:${dto.webServerEntity.port}
                 </c:if>
             </div>
 

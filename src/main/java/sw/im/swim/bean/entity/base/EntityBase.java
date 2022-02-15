@@ -52,7 +52,7 @@ public abstract class EntityBase {
      *
      * @return
      */
-    public boolean alive() {
+    public boolean isAlive() {
         if (deletedAt == null) {
             return true;
         }

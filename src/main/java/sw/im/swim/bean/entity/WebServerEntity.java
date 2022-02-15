@@ -3,9 +3,7 @@ package sw.im.swim.bean.entity;
 import lombok.*;
 import sw.im.swim.bean.entity.base.EntityBase;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Builder
@@ -26,8 +24,10 @@ public class WebServerEntity extends EntityBase {
     @Builder.Default
     private boolean https = false;
 
-    @Column(nullable = false, length = 60)
-    private String ip;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "server_info_sid")
+    @Setter
+    private ServerInfoEntity serverInfoEntity;
 
     @Column(nullable = false, length = 60)
     private Integer port;

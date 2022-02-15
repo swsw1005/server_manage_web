@@ -16,59 +16,57 @@
     <form id="simple-form">
         <div class="modal-form-row">
             <h3>
-                webserver 등록
+                server 등록
             </h3>
         </div>
 
         <div class="modal-form-row">
             <div>
-                이름
+                서버 이름
             </div>
             <input type="text" name="name">
         </div>
 
         <div class="modal-form-row">
-            <label for="https_false" class="w3-tooltip">
-                http
-            </label>
-            <input type="radio" name="https" value="false" id="https_false" class="w3-radio" checked>
-
-            <label for="https_true" class="w3-tooltip">
-                https
-            </label>
-            <input type="radio" name="https" value="true" id="https_true" class="w3-radio">
+            <div>
+                IP
+            </div>
+            <input type="text" name="ip">
         </div>
 
         <div class="modal-form-row">
             <div>
-                서버
+                 ssh id
             </div>
-            <select name="serverInfoSid" class="w3-select">
-                <option value="null">
-                    ----- 선택 -----
-                </option>
-                <c:forEach var="dto" items="${serverList}">
-                    <option value="${dto.sid}">
-                            ${dto.ip} / ${dto.name}
-                        <c:if test="${!dto.alive}">
-                            &nbsp;&nbsp;&nbsp;&nbsp;(삭제됨)
-                        </c:if>
-                    </option>
-                </c:forEach>
-            </select>
+            <input type="text" name="id">
         </div>
 
         <div class="modal-form-row">
             <div>
-                Port
+                ssh password
             </div>
-            <input type="text" name="port">
+            <input type="password" name="password">
         </div>
+
+        <div class="modal-form-row">
+            <div>
+                ssh 내부 port
+            </div>
+            <input type="number" name="innerSSHPort">
+        </div>
+
+        <div class="modal-form-row">
+            <div>
+                ssh 외부 port
+            </div>
+            <input type="number" name="outerSSHPort">
+        </div>
+
     </form>
 
     <div class="modal-form-row" style="text-align: center;">
         <button type="button" class="w3-button w3-round w3-green"
-                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath }/api/v1/webserver')">
+                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath }/api/v1/server')">
             저장
         </button>
         <button type="button" class="w3-button w3-round w3-red" onclick="closeInputModal('simple-modal-form')">

@@ -54,12 +54,12 @@ public class NginxPolicyEntity extends EntityBase {
 //        return workerConnections;
     }
 
-    @ManyToMany
-    @JoinTable(name = "nginx_policy_server_join",
-            joinColumns = @JoinColumn(name = "nginx_policy_info_sid"),
-            inverseJoinColumns = @JoinColumn(name = "nginx_server_info_sid")
-    )
-    public List<NginxServerEntity> nginxServerEntities = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(name = "nginx_policy_server_join",
+//            joinColumns = @JoinColumn(name = "nginx_policy_info_sid"),
+//            inverseJoinColumns = @JoinColumn(name = "nginx_server_info_sid")
+//    )
+//    public List<NginxServerEntity> nginxServerEntities = new ArrayList<>();
 
     public NginxPolicyEntity(long sid) {
         super();

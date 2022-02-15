@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
+import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.service.DatabaseServerService;
+import sw.im.swim.service.ServerInfoService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 public class DatabaseViewController {
 
     private final DatabaseServerService databaseServerService;
+
+    private final ServerInfoService serverInfoService;
 
     @GetMapping("/home")
     public ModelAndView database(HttpServletRequest request) {
@@ -56,6 +60,9 @@ public class DatabaseViewController {
         }
 
         mav.addObject("dbTypes", list);
+
+        List<ServerInfoEntityDto> serverList = serverInfoService.getAll();
+        mav.addObject("serverList", serverList);
 
         return mav;
     }

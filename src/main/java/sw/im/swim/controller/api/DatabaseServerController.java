@@ -48,17 +48,17 @@ public class DatabaseServerController {
     @RequestMapping(value = "/database", method = {RequestMethod.POST})
     public Map<String, Object> insertDatabase(
             @RequestParam(name = "name", required = false, defaultValue = "") final String name,
-            @RequestParam(name = "ip", required = false, defaultValue = "") final String ip,
             @RequestParam(name = "port", required = false, defaultValue = "") final Integer port,
             @RequestParam(name = "db_id", required = false, defaultValue = "") final String id,
             @RequestParam(name = "db_pw", required = false, defaultValue = "") final String password,
             @RequestParam(name = "dbType", required = false, defaultValue = "") final DbType dbType,
+            @RequestParam(name = "serverInfoSid", required = false, defaultValue = "") final Long serverInfoSid,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            DatabaseServerEntityDto entity = databaseServerService.insertNew(name, ip, port, id, password, dbType);
+            DatabaseServerEntityDto entity = databaseServerService.insertNew(name, port, id, password, dbType, serverInfoSid);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {

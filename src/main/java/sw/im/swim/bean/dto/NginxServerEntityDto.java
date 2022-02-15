@@ -45,5 +45,11 @@ public class NginxServerEntityDto implements Serializable {
         return "-";
     }
 
+    public boolean isAlive() {
+        if (deletedAt == null) {
+            return true;
+        }
+        return false;
+    }
 
 }

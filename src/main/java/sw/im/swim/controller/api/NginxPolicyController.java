@@ -64,10 +64,11 @@ public class NginxPolicyController {
             @RequestParam(name = "name", required = false, defaultValue = "") final String name,
             @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
             @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
+            @RequestParam(name = "domainInfoSid", required = false, defaultValue = "") final Long domainInfoSid,
             HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
-            NginxPolicyEntityDto dto = nginxPolicyService.insertNew(name, Integer.parseInt(workerConnections), Integer.parseInt(workerProcessed));
+            NginxPolicyEntityDto dto = nginxPolicyService.insertNew(name, Integer.parseInt(workerConnections), Integer.parseInt(workerProcessed), domainInfoSid);
             map.put("entity", dto);
             map.put("code", 0);
         } catch (Exception e) {

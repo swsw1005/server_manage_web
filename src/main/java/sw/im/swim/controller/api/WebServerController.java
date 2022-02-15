@@ -48,14 +48,15 @@ public class WebServerController {
     public Map<String, Object> insertWebserver(
             @RequestParam(name = "name", required = false, defaultValue = "") final String name,
             @RequestParam(name = "https", required = false, defaultValue = "false") final boolean https,
-            @RequestParam(name = "ip", required = false, defaultValue = "") final String ip,
             @RequestParam(name = "port", required = false, defaultValue = "") final Integer port,
+            @RequestParam(name = "serverInfoSid", required = false, defaultValue = "") final Long serverInfoSid,
+            @RequestParam(name = "healthCheckUrl", required = false, defaultValue = "/") final String healthCheckUrl,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            WebServerEntityDto entity = webServerService.insertNew(name, https, ip, port);
+            WebServerEntityDto entity = webServerService.insertNew(name, https, port, serverInfoSid, healthCheckUrl);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {

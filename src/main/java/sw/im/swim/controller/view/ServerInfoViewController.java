@@ -14,34 +14,32 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/webserver")
+@RequestMapping("/server")
 @RequiredArgsConstructor
-public class WebServerViewController {
-
-    private final WebServerService webServerService;
+public class ServerInfoViewController {
 
     private final ServerInfoService serverInfoService;
 
     @GetMapping("/home")
-    public ModelAndView database(HttpServletRequest request) {
+    public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
-        mav.addObject("title", "webserver 관리");
-        mav.addObject("mainPageUrl", "/webserver/main");
+        mav.addObject("title", "Server 관리");
+        mav.addObject("mainPageUrl", "/server/main");
         return mav;
     }
 
     @GetMapping("/main")
     public ModelAndView main(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("webserver/main");
+        ModelAndView mav = new ModelAndView("server/main");
         return mav;
     }
 
     @GetMapping("/list")
     public ModelAndView list(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("webserver/list");
+        ModelAndView mav = new ModelAndView("server/list");
 
-        List<WebServerEntityDto> list = webServerService.getAll();
+        List<ServerInfoEntityDto> list = serverInfoService.getAll();
         mav.addObject("list", list);
 
         return mav;
@@ -49,11 +47,7 @@ public class WebServerViewController {
 
     @GetMapping("/form")
     public ModelAndView form(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("webserver/form");
-
-        List<ServerInfoEntityDto> serverList = serverInfoService.getAll();
-        mav.addObject("serverList", serverList);
-
+        ModelAndView mav = new ModelAndView("server/form");
         return mav;
     }
 

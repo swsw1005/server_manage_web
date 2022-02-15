@@ -1,24 +1,24 @@
 package sw.im.swim.bean.dto;
 
 import lombok.Data;
-import sw.im.swim.bean.enums.Authority;
 import sw.im.swim.config.GeneralConfig;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Calendar;
 
-
 @Data
-public class AdminEntityDto implements Serializable {
+public class ServerInfoEntityDto implements Serializable {
     private Long sid;
     private Calendar createdAt;
     private Calendar updatedAt;
     private Calendar deletedAt;
     private String name;
+    private String id;
     private String password;
-    private String email;
-    private Authority authority;
-
+    private String ip;
+    private Integer innerSSHPort;
+    private Integer outerSSHPort;
 
     public String getCreated() {
         try {
@@ -53,6 +53,7 @@ public class AdminEntityDto implements Serializable {
         }
         return false;
     }
+
 
 
 }

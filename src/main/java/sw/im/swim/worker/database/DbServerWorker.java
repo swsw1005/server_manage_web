@@ -30,7 +30,7 @@ public class DbServerWorker implements Runnable {
     @Override
     public void run() {
 
-        final String ip = databaseServerEntityDto.getIp();
+        final String ip = databaseServerEntityDto.getServerInfoEntity().getIp();
         final String port = String.valueOf(databaseServerEntityDto.getPort());
         final String id = databaseServerEntityDto.getId();
         final String password = databaseServerEntityDto.getPassword();

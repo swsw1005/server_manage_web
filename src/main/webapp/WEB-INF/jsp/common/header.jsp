@@ -18,10 +18,6 @@
 
             <div class="body">
 
-                <a href="${contextPath }/database/home" class="nav_row">
-                    DB 관리
-                </a>
-
                 <a href="${contextPath }/nginxpolicy/home" class="nav_row">
                     nginx 정책 관리
                 </a>
@@ -30,8 +26,16 @@
                     nginx 서버 관리
                 </a>
 
+                <a href="${contextPath }/database/home" class="nav_row">
+                    DB 관리
+                </a>
+
                 <a href="${contextPath }/webserver/home" class="nav_row">
                     웹서버 관리
+                </a>
+
+                <a href="${contextPath }/server/home" class="nav_row">
+                    서버 관리
                 </a>
 
                 <a href="${contextPath }/domain/home" class="nav_row">
@@ -74,7 +78,7 @@
 
     setTimeout(() => {
         callList();
-    }, 436);
+    }, 222);
 
 
 

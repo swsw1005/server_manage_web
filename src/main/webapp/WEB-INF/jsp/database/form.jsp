@@ -22,9 +22,21 @@
 
         <div class="modal-form-row">
             <div>
-                IP
+                서버
             </div>
-            <input type="text" name="ip">
+            <select name="serverInfoSid" class="w3-select">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
+                <c:forEach var="dto" items="${serverList}">
+                    <option value="${dto.sid}">
+                            ${dto.ip} / ${dto.name}
+                        <c:if test="${!dto.alive}">
+                            &nbsp;&nbsp;(삭제됨)
+                        </c:if>
+                    </option>
+                </c:forEach>
+            </select>
         </div>
 
         <div class="modal-form-row">
@@ -61,6 +73,9 @@
                 DB 타입
             </div>
             <select name="dbType" class="w3-select">
+                <option value="null">
+                    ----- 선택 -----
+                </option>
                 <c:forEach var="dto" items="${dbTypes}">
                     <option value="${dto}">
                             ${dto}

@@ -15,13 +15,15 @@ import sw.im.swim.bean.enums.DbType;
 public class DatabaseServerEntity extends EntityBase {
 
     @Column(nullable = false, length = 60)
-    private String ip;
-
-    @Column(nullable = false, length = 60)
     private Integer port;
 
     @Column(nullable = false, length = 60)
     private String name;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "server_info_sid")
+    @Setter
+    private ServerInfoEntity serverInfoEntity;
 
     @Column(nullable = false, length = 60)
     private String id;

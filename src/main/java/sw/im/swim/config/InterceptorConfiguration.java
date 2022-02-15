@@ -52,6 +52,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
                 "/nginxpolicy/**",
                 "/webserver/*",
                 "/webserver/**",
+                "/server/*",
+                "/server/**",
                 "/database/*",
                 "/database/**",
         };

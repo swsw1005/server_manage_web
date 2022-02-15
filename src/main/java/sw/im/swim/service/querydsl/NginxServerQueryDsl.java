@@ -43,7 +43,7 @@ public class NginxServerQueryDsl {
                 .leftJoin(qNginxServerEntity.domainEntity, qDomainEntity).fetchJoin()
                 .leftJoin(qNginxServerEntity.faviconEntity, qFaviconEntity).fetchJoin()
                 .where(qNginxServerEntity.deletedAt.isNull())
-                .orderBy(qWebServerEntity.ip.asc(), qWebServerEntity.port.asc())
+                .orderBy(qWebServerEntity.serverInfoEntity.ip.asc(), qWebServerEntity.port.asc())
                 .fetch();
 
         return list;

@@ -48,13 +48,15 @@ public class DatabaseBackupProducer implements Runnable {
         try {
             List<DatabaseServerEntityDto> databaseServerList = databaseServerService.getAll();
 
+            log.debug("database server size => " + databaseServerList.size());
+
             HashSet<String> pgpassList = new HashSet<>();
             // ip:port:database:id:password
             for (DatabaseServerEntityDto dto : databaseServerList) {
                 final DbType dbType = dto.getDbType();
 
                 if (dbType.equals(DbType.POSTGRESQL)) {
-                    final String ip = dto.getIp();
+                    final String ip = dto.getServerInfoEntity().getIp();
                     final String port = String.valueOf(dto.getPort());
                     final String database = "postgres";
                     final String id = dto.getId();

@@ -18,7 +18,12 @@ public class AskiiArtUtil {
             }
             input += arr[i];
         }
-        return CREATE_WITH_TEXT(sharp_bar, "#", input, 15);
+        List<String> list = CREATE_WITH_TEXT(sharp_bar, "#", input, 15);
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            result.add(list.get(i).trim());
+        }
+        return result;
     }
 
 

@@ -46,7 +46,7 @@
     }
 
     setInterval(
-        loadMainPage(), 300
+        loadMainPage(), 155
     );
 
 </script>

@@ -14,7 +14,7 @@ public class DatabaseServerEntityDto implements Serializable {
     private Calendar updatedAt;
     private Calendar deletedAt;
     private String name;
-    private String ip;
+    private ServerInfoEntityDto serverInfoEntity;
     private Integer port;
     private String id;
     private String password;
@@ -47,5 +47,11 @@ public class DatabaseServerEntityDto implements Serializable {
         return "-";
     }
 
+    public boolean isAlive() {
+        if (deletedAt == null) {
+            return true;
+        }
+        return false;
+    }
 
 }

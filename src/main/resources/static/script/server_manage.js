@@ -45,6 +45,21 @@ function openInputModal(formId, url, sid) {
 
 }
 
+function nameInherite(selector, dist) {
+    let selectValue = selector.value;
+    let optionArr = selector.querySelectorAll("option");
+    var name_ = "";
+    for (let i = 0; i < optionArr.length; i++) {
+        var option_ = optionArr[i];
+        if (option_.value == selectValue) {
+            name_ = option_.getAttribute("data-name");
+            break;
+        }
+    } // for i end
+
+    document.getElementById(dist).value = name_;
+}
+
 function closeInputModal(formId) {
     document.getElementById(formId).style.display = "none";
     document.getElementById(formId).classList.add("modalFadeOut");
@@ -175,6 +190,13 @@ const Notification = window.createNotification({
 
 
 function deleteListItem(sid, URL) {
+
+    if (confirm("경고 - delete???")) {
+
+    } else {
+        return;
+    }
+
     $.ajax({
         type: "delete",
         url: URL,
@@ -338,7 +360,7 @@ function nginxServerSidSet2Label() {
 }
 
 
-function adjustNginxSetting(policySid, URL){
+function adjustNginxSetting(policySid, URL) {
     $.ajax({
         type: "PATCH",
         url: URL,
