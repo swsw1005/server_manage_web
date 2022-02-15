@@ -1,28 +1,32 @@
 package sw.im.swim.config;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
+import java.io.File;
+import java.util.Date;
+
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.component.DatabaseBackupJob;
 import sw.im.swim.repository.SettingEntityRepository;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Date;
-
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 
 @Getter
@@ -55,7 +59,7 @@ public class PostConstruct {
 
         String ip = GoogleDNSUtil.getInstance().GET_IP();
 
-        adminLogService.insertLog("START", "IP", ip);
+        adminLogService.insertLog(AdminLogType.START, "IP", ip);
 
         GeneralConfig.GOOGLE_DNS_USER_NAME = GOOGLE_DNS_USER_NAME;
         GeneralConfig.GOOGLE_DNS_PASSWORD = GOOGLE_DNS_PASSWORD;

@@ -1,19 +1,22 @@
 package sw.im.swim.worker.database;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import sw.im.swim.bean.dto.DatabaseServerEntityDto;
-import sw.im.swim.bean.enums.DatabaseServerUtil;
-import sw.im.swim.bean.enums.DbType;
-import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.service.AdminLogService;
-import sw.im.swim.util.date.DateFormatUtil;
-import sw.im.swim.util.process.ProcessExecUtil;
-
 import java.io.File;
 import java.util.Calendar;
 import java.util.concurrent.Callable;
+
+import org.apache.commons.io.FileUtils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.bean.dto.DatabaseServerEntityDto;
+import sw.im.swim.bean.enums.AdminLogType;
+import sw.im.swim.bean.enums.DatabaseServerUtil;
+import sw.im.swim.bean.enums.DbType;
+import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.exception.FileTooSmallException;
+import sw.im.swim.service.AdminLogService;
+import sw.im.swim.util.date.DateFormatUtil;
+import sw.im.swim.util.process.ProcessExecUtil;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,17 +69,19 @@ public class DbBackupWorker implements Callable<String> {
             }
 
             if (DUMP_FILE.length() < 9999) {
-                throw new Exception("FILE_TOO_SMALL | " + fileName);
+                throw new FileTooSmallException("FILE_TOO_SMALL | " + fileName);
             }
 
             log.debug("DUMP_FILE => " + DUMP_FILE.getAbsolutePath());
 
             FileUtils.moveFileToDirectory(DUMP_FILE, new File(DatabaseServerUtil.RCLONE_DIR), true);
 
-            adminLogService.insertLog("DATABASE_DUMP", "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name());
+            adminLogService.insertLog(AdminLogType.DB_BACKUP, "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name());
 
+        } catch (FileTooSmallException e) {
+            
         } catch (Exception e) {
-            adminLogService.insertLog("DATABASE_DUMP", "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage());
+            adminLogService.insertLog(AdminLogType.DB_BACKUP, "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage());
             log.error(e.getMessage(), e);
         } finally {
             try {

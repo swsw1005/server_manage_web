@@ -3,6 +3,7 @@ package sw.im.swim.worker.database;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
+import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.service.AdminLogService;
@@ -68,7 +69,7 @@ public class DatabaseBackupProducer implements Runnable {
             }
 
         } catch (Exception e) {
-            adminLogService.insertLog("DB_BACKUP", "FAIL", e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DB, "FAIL", e.getLocalizedMessage());
         }
 
     }

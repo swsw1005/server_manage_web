@@ -1,6 +1,5 @@
 package sw.im.swim.bean.entity;
 
-
 import lombok.*;
 import sw.im.swim.bean.entity.base.EntityBase;
 
@@ -32,5 +31,9 @@ public class WebServerEntity extends EntityBase {
 
     @Column(nullable = false, length = 60)
     private Integer port;
+
+    @Column(nullable = false, length = 60, name = "health_check_url")
+    @Builder.Default
+    private String healthCheckUrl = "/";
 
 }

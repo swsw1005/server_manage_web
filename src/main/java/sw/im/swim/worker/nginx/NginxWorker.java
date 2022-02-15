@@ -1,21 +1,22 @@
 package sw.im.swim.worker.nginx;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import sw.im.swim.bean.dto.NginxPolicyEntityDto;
-import sw.im.swim.bean.dto.NginxServerEntityDto;
-import sw.im.swim.service.AdminLogService;
-import sw.im.swim.service.AdminService;
-import sw.im.swim.util.date.DateFormatUtil;
-import sw.im.swim.util.nginx.NginxConfCreateUtil;
-import sw.im.swim.util.nginx.NginxServiceControllUtil;
-
 import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.bean.dto.NginxPolicyEntityDto;
+import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.bean.enums.AdminLogType;
+import sw.im.swim.service.AdminLogService;
+import sw.im.swim.util.date.DateFormatUtil;
+import sw.im.swim.util.nginx.NginxConfCreateUtil;
+import sw.im.swim.util.nginx.NginxServiceControllUtil;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class NginxWorker implements Runnable {
                 log.info(NGINX_CONF_ORIGIN.getAbsolutePath() + " => " + NGINX_CONF_ORIGIN.exists());
             } else {
                 log.error("NGINX_CONF_ORIGIN not EXIST...");
-                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "ORIGIN CONF FILE NOT EXIST");
+                adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "FAIL", "ORIGIN CONF FILE NOT EXIST");
                 throw new Exception("nginx conf file not exist");
             }
 
@@ -73,7 +74,7 @@ public class NginxWorker implements Runnable {
                 RESTORE_NEED = true;
             } else {
                 log.error("nginx conf file backup not exist");
-                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "nginx conf file backup not exist");
+                adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "FAIL", "nginx conf file backup not exist");
                 throw new Exception("nginx conf file backup not exist");
             }
 
@@ -112,7 +113,7 @@ public class NginxWorker implements Runnable {
                 RESTORE_NEED = false;
             } else {
                 log.info("nginx conf swap Fail");
-                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "nginx conf swap Fail");
+                adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "FAIL", "nginx conf swap Fail");
                 throw new Exception("nginx conf swap Fail");
             }
 
@@ -131,13 +132,13 @@ public class NginxWorker implements Runnable {
             log.info("certbotSuccess | " + certbotSuccess);
             if (!certbotSuccess) {
                 log.info("CERTBOT Fail");
-                adminLogService.insertLog(UPDATE_TITLE, "FAIL", "CERTBOT Fail");
+                adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "FAIL", "CERTBOT Fail");
                 throw new Exception("CERTBOT Fail");
             }
 
             RESTORE_NEED = false;
 
-            adminLogService.insertLog(UPDATE_TITLE, "SUCCESS", "NGINX UPDATE END");
+            adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "SUCCESS", "NGINX UPDATE END");
 
         } catch (Exception e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());
@@ -163,11 +164,11 @@ public class NginxWorker implements Runnable {
 
                     log.error(" nginxRestoreStatus | " + nginxRestoreStatus);
 
-                    adminLogService.insertLog(RESTORE_TITLE, "SUCCESS", "NGINX RESTORE END");
+                    adminLogService.insertLog(AdminLogType.NGINX_RESTORE, "SUCCESS", "NGINX RESTORE END");
 
                 } catch (Exception ex) {
                     log.error(ex.getMessage());
-                    adminLogService.insertLog(RESTORE_TITLE, "FAIL", "NGINX RESTORE FAIL | " + ex.getMessage());
+                    adminLogService.insertLog(AdminLogType.NGINX_RESTORE, "FAIL", "NGINX RESTORE FAIL | " + ex.getMessage());
                 }
 
             }

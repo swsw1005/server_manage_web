@@ -1,16 +1,17 @@
 package sw.im.swim.component;
 
-import ch.qos.logback.classic.Logger;
-import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import sw.im.swim.bean.dto.DatabaseServerEntityDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.FaviconEntityDto;
-import sw.im.swim.bean.enums.DatabaseServerUtil;
-import sw.im.swim.bean.enums.DbType;
+import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.DatabaseServerService;
@@ -19,13 +20,6 @@ import sw.im.swim.service.NginxServerSubService;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
-import sw.im.swim.worker.database.DbServerWorker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -110,11 +104,11 @@ public class FixedCronJob {
             if (currIp.equals(IP) == false) {
                 GeneralConfig.CURRENT_IP = IP;
                 DNSUtil.updateIp(nginxPolicyService.getRootDomain());
-                adminLogService.insertLog("DNS", "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
+                adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
             }
 
         } catch (Exception e) {
-            adminLogService.insertLog("DNS", "FAIL", e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DNS, "FAIL", e.getLocalizedMessage());
         }
     }
 

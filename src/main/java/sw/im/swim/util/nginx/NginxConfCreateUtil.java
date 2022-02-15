@@ -97,7 +97,13 @@ public class NginxConfCreateUtil {
 
     public final static List<String> CREATE_NEW_CONF_TEXT(NginxPolicyEntityDto policyEntityDto, List<NginxServerEntityDto> nginxServerEntityList) throws Exception {
 
-        List<String> list = AskiiArtUtil.CREATE_NGINX_BANNER(DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss.format(new Date()));
+        List<String> list = new ArrayList<>();
+        List<String> list1 = AskiiArtUtil.CREATE_NGINX_BANNER(DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(new Date()));
+        List<String> list2 = AskiiArtUtil.CREATE_NGINX_BANNER(DateFormatUtil.DATE_FORMAT_HH_mm_ss.format(new Date()));
+
+        list.addAll(list1);
+        list.addAll(list2);
+
         final int processed = policyEntityDto.getWorkerProcessed();
         final int connections = policyEntityDto.getWorkerConnections();
 
@@ -124,7 +130,7 @@ public class NginxConfCreateUtil {
                 list.add("");
                 list.add("");
                 list.add("");
-                List<String> ip_banner = AskiiArtUtil.CREATE_NGINX_BANNER(tempIp);
+                List<String> ip_banner = AskiiArtUtil.CREATE_NGINX_BANNER(tempIp.replace("192.168", "X.X"));
                 list.addAll(ip_banner);
             }
             pre_ip = tempIp;

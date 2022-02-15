@@ -1,9 +1,16 @@
 package sw.im.swim.worker.database;
 
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.google.gson.Gson;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
+import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.config.GeneralConfig;
@@ -11,11 +18,6 @@ import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.process.ProcessExecUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
-
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -86,10 +88,10 @@ public class DbServerWorker implements Runnable {
                 ThreadWorkerPoolContext.getInstance().DB_DUMP_WORKER.submit(worker);
             }
 
-            adminLogService.insertLog("DATABASE_LIST", "SUCCESS", ip + ":" + port + " " + dbType.name());
+            adminLogService.insertLog(AdminLogType.DB_LIST_UP, "SUCCESS", ip + ":" + port + " " + dbType.name());
 
         } catch (Exception e) {
-            adminLogService.insertLog("DATABASE_LIST", "ERROR", ip + ":" + port + " " + dbType.name() + " | " + e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DB_LIST_UP, "ERROR", ip + ":" + port + " " + dbType.name() + " | " + e.getLocalizedMessage());
             log.error(e.getMessage());
         }
 
