@@ -1,5 +1,6 @@
 package sw.im.swim.util.dns;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ResponseHandler;
@@ -17,10 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class GoogleDNSUtil {
 
     public static final String CHECK_IP_ADDRESS = "https://domains.google.com/checkip";
-
 
     public String GET_IP() {
 
@@ -74,6 +75,8 @@ public class GoogleDNSUtil {
                             GeneralConfig.GOOGLE_DNS_PASSWORD +
                             "@domains.google.com/nic/update";
 
+            log.info("url => " + url);
+
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; utf-8");
             List<NameValuePair> params = new ArrayList<>();
@@ -89,6 +92,8 @@ public class GoogleDNSUtil {
 
             ResponseHandler<String> handler = new BasicResponseHandler();
             String body = handler.handleResponse(response);
+
+            log.info("body => " + body);
 
         } catch (Exception e) {
             throw e;

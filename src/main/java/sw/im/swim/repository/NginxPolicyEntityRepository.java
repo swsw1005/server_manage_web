@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface NginxPolicyEntityRepository extends JpaRepository<NginxPolicyEntity, Long> {
 
-    @Query("select n from nginx_policy_info n where n.deletedAt is null")
+    @Query("select n from nginx_policy_info n where n.deletedAt is null order by n.sid desc")
     List<NginxPolicyEntity> getAllByDeletedAtIsNull();
 
 }

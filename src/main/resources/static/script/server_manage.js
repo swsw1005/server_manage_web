@@ -15,6 +15,36 @@ function hideSideNav() {
 }
 
 
+function sendAdminLogEmail(contextPath) {
+
+    let deleteSendLog = false;
+
+    if (confirm("모든 관리자 로그를 이메일로 전송 하시겠습니까?")) {
+        if (confirm("전송한 이메일을 삭제하시겠습니까?")) {
+            deleteSendLog = true;
+        } else {
+            deleteSendLog = false;
+        }
+    } else {
+        return;
+    }
+
+    $.ajax({
+        type: "get",
+        url: contextPath + "/api/v1/sendEmail",
+        contentType: false,
+        // processData: false,
+        data: {deleteSendLog: deleteSendLog}
+        ,
+        success: function (result, status, statusCode) {
+        },
+        error: function (result, status, statusCode) {
+        }
+    });
+
+}
+
+
 function openInputModal(formId, url, sid) {
 
     $.ajax({
@@ -98,6 +128,63 @@ function callList() {
 function submitFormAjax(formId, modalId, URL, successCallBack, errorCallBack) {
 
     console.log(formId, modalId, URL);
+
+    var submitFormData = new FormData(document.getElementById(formId));
+
+    $.ajax({
+        type: "post",
+        url: URL,
+        contentType: false,
+        processData: false,
+        data: submitFormData
+        ,
+        success: function (result, status, statusCode) {
+            if (successCallBack == null) {
+                Notify(
+                    'success',
+                    formId + ' 저장 성공',
+                    'success'
+                );
+                closeInputModal(modalId);
+            } else {
+                successCallBack();
+            }
+        },
+        error: function (result, status, statusCode) {
+            console.log(result);
+            if (errorCallBack == null) {
+                Notify(
+                    'error',
+                    result.responseJSON.error_msg,
+                    'error'
+                );
+                closeInputModal(modalId);
+            } else {
+                errorCallBack();
+            }
+        }
+    });
+}
+
+function submitFormAjax_NginxPolicy(formId, modalId, URL, successCallBack, errorCallBack) {
+
+    console.log(formId, modalId, URL);
+
+    const arr = document.getElementsByClassName("nginx-server-chkbox");
+    let str = "";
+
+    for (let i = 0; i < arr.length; i++) {
+        if(arr[i].checked){
+            if (str != "") {
+              str += ",";
+            }
+            str += arr[i].value;
+        }
+    }
+
+    document.getElementById("nginxServerSidString").value = str;
+
+    // nginxServerSidString
 
     var submitFormData = new FormData(document.getElementById(formId));
 
@@ -360,15 +447,14 @@ function nginxServerSidSet2Label() {
 }
 
 
-function adjustNginxSetting(policySid, URL) {
+function adjustNginxSetting(formId, URL) {
+  alert("aaaa");
     $.ajax({
         type: "PATCH",
         url: URL,
         // contentType: false,
         // processData: false,
-        data: {
-            sid: policySid
-        }
+        data: new FormData(document.getElementById(formId))
         ,
         success: function (result, status, statusCode) {
             Notify(

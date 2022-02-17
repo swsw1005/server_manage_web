@@ -1,26 +1,24 @@
 package sw.im.swim.controller.view;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
-import sw.im.swim.bean.dto.WebServerEntityDto;
-import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
-import sw.im.swim.service.WebServerService;
-import sw.im.swim.util.nginx.NginxServiceControllUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -33,7 +31,6 @@ public class NginxPolicyViewController {
     private final NginxServerService nginxServerService;
 
     private final NginxServerSubService nginxServerSubService;
-
 
     @GetMapping("/home")
     public ModelAndView nginxpolicy(HttpServletRequest request) {
@@ -52,49 +49,54 @@ public class NginxPolicyViewController {
 
     @GetMapping("/list")
     public ModelAndView list(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("nginxpolicy/list");
-
-        List<NginxPolicyEntityDto> list = nginxPolicyService.getAll();
-        mav.addObject("list", list);
-
-        return mav;
-    }
-
-    @GetMapping("/form")
-    public ModelAndView form(
-            @RequestParam(name = "sid", required = false, defaultValue = "-1") final String policySid,
-            HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("nginxpolicy/form");
 
-        List<NginxServerEntityDto> nginxServerList = nginxServerService.getAll();
-        mav.addObject("nginxServerList", nginxServerList);
-
-        String nginxServerSidString = "";
-        NginxPolicyEntityDto nginxPolicy = null;
-        boolean insert = true;
+        HashSet<Long> linkedNginxServerSet = new HashSet<>();
         try {
-            nginxPolicy = nginxPolicyService.get(Long.parseLong(policySid));
-            if (nginxPolicy.getDeletedAt() != null) {
-                throw new Exception();
+
+            String nginxServerSidString = "";
+            NginxPolicyEntityDto nginxPolicy = null;
+
+            try {
+                nginxPolicy = nginxPolicyService.get();
+            } catch (Exception e) {
+                mav.setViewName("nginxpolicy/error");
+                mav.addObject("errorMsg", "정책 생성 할 수 없음.");
+                return mav;
             }
-            insert = false;
+
+            if (nginxPolicy == null) {
+                mav.setViewName("nginxpolicy/error");
+                mav.addObject("errorMsg", "정책 없음.");
+            }
 
             mav.addObject("nginxPolicy", nginxPolicy);
 
-            List<Long> linkedNginxServerList = nginxPolicyService.getNginxServers(Long.parseLong(policySid));
+            List<Long> linkedNginxServerList = nginxPolicyService.getNginxServers(nginxPolicy.getSid());
             for (int i = 0; i < linkedNginxServerList.size(); i++) {
                 nginxServerSidString += linkedNginxServerList.get(i) + ",";
+                linkedNginxServerSet.add(linkedNginxServerList.get(i));
             }
             mav.addObject("nginxServerSidString", nginxServerSidString);
 
         } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
         }
-        mav.addObject("insert", insert);
+
+        List<NginxServerEntityDto> nginxServerList = nginxServerService.getAll();
+        for (int i = 0; i < nginxServerList.size(); i++) {
+            Long tempSid = nginxServerList.get(i).getSid();
+            log.error("tempSid = " + tempSid);
+            nginxServerList.get(i).setSelected(linkedNginxServerSet.contains(tempSid));
+        }
+        mav.addObject("nginxServerList", nginxServerList);
+        mav.addObject("nginxServerListSize", nginxServerList.size());
+
+
         List<DomainEntityDto> linkedNginxServerList = nginxServerSubService.getAllDomains();
         mav.addObject("domainList", linkedNginxServerList);
 
         return mav;
     }
-
 
 }

@@ -5,19 +5,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<div id="insert-button" data-display="0" onclick="adjustNginxSetting('simple-form', '${contextPath}/api/v1/nginxpolicy')">
+<div id="insert-button" data-display="0" onclick="sendAdminLogEmail('${contextPath}')">
     <i class="fas fa-plus"></i>
-</div> 
+</div>
 
-<!-- <div id="simple-modal-form" class="simple-modal-form" style="display: none;">
-
-</div> -->
-
-<div id="listLocation">
+<div id="simple-modal-form" class="simple-modal-form" style="display: none;">
 
 </div>
 
 
-<script>
+<div id="listLocation">
 
-</script>
+</div>

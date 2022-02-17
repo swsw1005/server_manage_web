@@ -45,6 +45,9 @@
                 <a href="${contextPath }/favicon/home" class="nav_row">
                     favicon 관리
                 </a>
+                <a href="${contextPath }/adminlog/home" class="nav_row">
+                    관리자 로그
+                </a>
 
             </div>
         </div>

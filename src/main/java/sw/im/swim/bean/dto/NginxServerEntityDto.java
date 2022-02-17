@@ -18,6 +18,8 @@ public class NginxServerEntityDto implements Serializable {
     private FaviconEntityDto faviconEntity;
     private boolean seperateLog;
 
+    private boolean selected = false;
+
     public String getCreated() {
         try {
             createdAt.setTimeZone(GeneralConfig.TIME_ZONE);

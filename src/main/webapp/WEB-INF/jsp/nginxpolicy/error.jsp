@@ -3,21 +3,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
-<div id="insert-button" data-display="0" onclick="adjustNginxSetting('simple-form', '${contextPath}/api/v1/nginxpolicy')">
-    <i class="fas fa-plus"></i>
-</div> 
+<h4>
+  nginx 정책 관리
+</h4>
 
-<!-- <div id="simple-modal-form" class="simple-modal-form" style="display: none;">
-
-</div> -->
-
-<div id="listLocation">
-
+<div>
+    ${errorMsg}
 </div>
-
-
-<script>
-
-</script>

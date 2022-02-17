@@ -34,4 +34,8 @@ public class FaviconEntity {
     @Column(nullable = true, length = 90)
     private String description;
 
+    @Column(nullable = true)
+    @Builder.Default
+    private Boolean exist = true;
+
 }

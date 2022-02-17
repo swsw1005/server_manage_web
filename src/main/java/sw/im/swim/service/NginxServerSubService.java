@@ -129,41 +129,6 @@ public class NginxServerSubService {
     }
 
 
-    /**
-     * <PRE>
-     * 해당경로의 favicon 찾아서 자동 등록한다.
-     * </PRE>
-     *
-     * @param path
-     */
-    public void autoInsertFavicon(String path) {
-
-        try {
-
-            File originFile = new File(path);
-
-            File originDir = originFile.getParentFile();
-
-            File[] files = originDir.listFiles();
-
-            for (int i = 0; i < files.length; i++) {
-                File tempFile = files[i];
-                try {
-                    String tempFilePath = tempFile.getAbsolutePath();
-
-                    if (tempFile.canRead() && tempFile.isFile()) {
-                        if (tempFilePath.endsWith(".ico")) {
-                            insertSingle(path);
-                        }
-                    }
-                } catch (Exception e) {
-                } // try catch end
-            } // for i end
-
-        } catch (Exception e) {
-        }
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void insertSingle(String path) {
         try {

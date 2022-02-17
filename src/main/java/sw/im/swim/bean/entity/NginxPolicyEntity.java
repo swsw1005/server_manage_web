@@ -1,13 +1,20 @@
 package sw.im.swim.bean.entity;
 
 
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import sw.im.swim.bean.entity.base.EntityBase;
 import sw.im.swim.util.number.NumberVaildateUtil;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder
@@ -19,7 +26,8 @@ public class NginxPolicyEntity extends EntityBase {
 
     @Setter
     @Column(nullable = false, length = 60)
-    private String name;
+    @Builder.Default
+    private String name = "기본정책";
 
     @Column(nullable = false, length = 60)
     @Builder.Default

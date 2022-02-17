@@ -10,6 +10,8 @@ import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.NginxPolicyEntity;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
+import sw.im.swim.repository.DomainEntityRepository;
+import sw.im.swim.repository.FaviconEntityRepository;
 import sw.im.swim.repository.NginxPolicyEntityRepository;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
@@ -38,6 +40,9 @@ public class NginxPolicyService {
 
     private final NginxServerService nginxServerService;
 
+    private final DomainEntityRepository domainEntityRepository;
+    private final FaviconEntityRepository faviconEntityRepository;
+
     private final AdminLogService adminLogService;
 
     public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections, long domainInfoSid) {
@@ -53,7 +58,8 @@ public class NginxPolicyService {
         return modelMapper.map(entity_, NginxPolicyEntityDto.class);
     }
 
-    public NginxPolicyEntityDto update(String name, int workerProcessed, int workerConnections, String nginxServerSidString, long sid) throws Exception {
+    public NginxPolicyEntityDto update(String name, int workerProcessed, int workerConnections,
+            String nginxServerSidString, long sid) throws Exception {
 
         try {
             log.warn("000 == " + "시작");
@@ -85,11 +91,13 @@ public class NginxPolicyService {
 
                 String tempNginxServerSid = nginxServerSidArr[i].trim();
 
-                NginxServerEntity tempNginxServer = nginxServerEntityRepository.getById(Long.parseLong(tempNginxServerSid));
+                NginxServerEntity tempNginxServer = nginxServerEntityRepository
+                        .getById(Long.parseLong(tempNginxServerSid));
 
                 tempNginxServer.getName();
 
-                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_).nginxServerEntity(tempNginxServer).build();
+                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_)
+                        .nginxServerEntity(tempNginxServer).build();
 
                 nginxServerEntities.add(tempNginxServer);
                 n_p_s_e_list.add(npse);
@@ -137,7 +145,6 @@ public class NginxPolicyService {
         }
     }
 
-
     public List<Long> getNginxServers(long parseLong) {
         List<Long> list = nginxPolicyServerEntityRepository.getNginxServers(parseLong);
         return list;
@@ -147,7 +154,6 @@ public class NginxPolicyService {
         NginxPolicyEntity entity_ = nginxPolicyEntityRepository.getById(parseLong);
         return modelMapper.map(entity_, NginxPolicyEntityDto.class);
     }
-
 
     /**
      * <PRE>
@@ -174,7 +180,6 @@ public class NginxPolicyService {
              * ------------------
              */
             NginxPolicyEntityDto policyEntityDto = modelMapper.map(nginxPolicyEntity, NginxPolicyEntityDto.class);
-
 
             log.error("============================================");
             msg = "NO NGINX_SERVERS";
@@ -249,7 +254,6 @@ public class NginxPolicyService {
         return msg;
     }
 
-
     public String getRootDomain() {
 
         try {
@@ -289,5 +293,33 @@ public class NginxPolicyService {
         }
 
         return null;
+    }
+
+    public NginxPolicyEntityDto get() throws Exception {
+
+        try {
+            List<NginxPolicyEntity> list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
+
+            if (list == null || list.size() == 0) {
+
+                List<DomainEntity> domainList = domainEntityRepository.getAllDomains();
+
+                NginxPolicyEntity tempNewEntity = NginxPolicyEntity.builder()
+                        .domainEntity(domainList.get(0))
+                        .build();
+                nginxPolicyEntityRepository.save(tempNewEntity);
+
+                list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
+            }
+
+            NginxPolicyEntity entity = list.get(0);
+
+            return modelMapper.map(entity, NginxPolicyEntityDto.class);
+
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+        throw new Exception("정책 생성 실패");
+
     }
 }

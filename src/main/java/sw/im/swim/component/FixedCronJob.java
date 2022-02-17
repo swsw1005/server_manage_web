@@ -62,7 +62,15 @@ public class FixedCronJob {
                     for (int i = 0; i < files.length; i++) {
                         File tempICO = files[i];
                         if (tempICO.getAbsolutePath().endsWith(".ico")) {
-                            fileSet.add(tempICO.getAbsolutePath());
+                            String tempPath = tempICO.getAbsolutePath();
+
+                            tempPath = tempPath.replace("C:", "");
+                            tempPath = tempPath.replace("D:", "");
+                            tempPath = tempPath.replace("E:", "");
+                            tempPath = tempPath.replace("\\", "/");
+                            tempPath = tempPath.replace("\\\\", "/");
+
+                            fileSet.add(tempPath);
                         }
                     }
 
@@ -103,7 +111,10 @@ public class FixedCronJob {
 
             if (currIp.equals(IP) == false) {
                 GeneralConfig.CURRENT_IP = IP;
-                DNSUtil.updateIp(nginxPolicyService.getRootDomain());
+
+                final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
+
+                DNSUtil.updateIp(ROOT_DOMAIN);
                 adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
             }
 
