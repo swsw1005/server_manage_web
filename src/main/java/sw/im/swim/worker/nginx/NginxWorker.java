@@ -39,6 +39,7 @@ public class NginxWorker implements Runnable {
 
         boolean RESTORE_NEED = false;
         String OLD_CONF_BACKUP_FILE = "";
+        String FAIL_CONF_BACKUP_FILE = "";
         File NGINX_CONF_ORIGIN = null;
 
         int WORK_STAGE = 0;
@@ -62,6 +63,7 @@ public class NginxWorker implements Runnable {
             final String TIMESTAMP = DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss.format(new Date());
 
             OLD_CONF_BACKUP_FILE = NGINX_CONF_DIR + "/" + NGINX_CONF_FILE + "_" + TIMESTAMP;
+            FAIL_CONF_BACKUP_FILE = NGINX_CONF_DIR + "/" + NGINX_CONF_FILE + "_" + TIMESTAMP + "_FAIL";
 
             final File confBackup = new File(OLD_CONF_BACKUP_FILE);
 
@@ -147,7 +149,7 @@ public class NginxWorker implements Runnable {
                 log.error(" ===== NGINX_BACKUP_START ===== ");
                 try {
                     try {
-                        NGINX_CONF_ORIGIN.delete();
+                        FileUtils.copyFile(NGINX_CONF_ORIGIN, new File(FAIL_CONF_BACKUP_FILE));
                     } catch (Exception ex) {
                         log.error(e.getMessage());
                     }

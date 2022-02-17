@@ -400,17 +400,23 @@ input[type="radio"] {
 }
 
 .nginx-server-wrapper {
+    cursor: pointer;
     display: grid;
     grid-template-columns: 50px 1fr;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(245, 245, 245, 0.836);
 }
 
 .nginx-server-chk-wrapper {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     padding: 5px;
 }
 
 .nginx-server-label-wrapper {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
 }

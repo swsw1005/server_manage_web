@@ -448,13 +448,15 @@ function nginxServerSidSet2Label() {
 
 
 function adjustNginxSetting(formId, URL) {
-  alert("aaaa");
+
+    var submitFormData = new FormData(document.getElementById(formId));
+
     $.ajax({
         type: "PATCH",
         url: URL,
-        // contentType: false,
-        // processData: false,
-        data: new FormData(document.getElementById(formId))
+        contentType: false,
+        processData: false,
+        data: submitFormData
         ,
         success: function (result, status, statusCode) {
             Notify(

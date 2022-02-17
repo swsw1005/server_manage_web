@@ -6,7 +6,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <div id="insert-button" data-display="0" onclick="adjustNginxSetting('simple-form', '${contextPath}/api/v1/nginxpolicy')">
-    <i class="fas fa-plus"></i>
+  <i class="fas fa-sitemap"></i>
 </div> 
 
 <!-- <div id="simple-modal-form" class="simple-modal-form" style="display: none;">
