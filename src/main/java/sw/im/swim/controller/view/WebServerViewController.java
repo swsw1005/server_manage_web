@@ -23,7 +23,7 @@ public class WebServerViewController {
     private final ServerInfoService serverInfoService;
 
     @GetMapping("/home")
-    public ModelAndView database(HttpServletRequest request) {
+    public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
         mav.addObject("title", "webserver 관리");

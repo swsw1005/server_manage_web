@@ -15,14 +15,6 @@
         value="${nginxServerSidString}" />
     <input type="hidden" name="sid" value="${nginxPolicy.sid}" />
 
-    <div class="modal-form-row">
-        <div>
-            이름
-        </div>
-        <input type="text" name="name" value="${nginxPolicy.name}">
-
-    </div>
-
     <div class="modal-form-row form-row-horizontal">
         <div>
             worker 수

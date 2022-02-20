@@ -38,8 +38,6 @@ public class HomeController {
 
             AdminEntityDto adminEntityDto = (AdminEntityDto) session.getAttribute("admin");
 
-            System.out.println("new Gson().toJson(adminEntityDto) = " + new Gson().toJson(adminEntityDto));
-
             if (adminEntityDto.getSid() > 0) {
                 rv = new RedirectView(contextPath + "/webserver/home");
             }

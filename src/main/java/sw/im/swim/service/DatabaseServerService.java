@@ -73,7 +73,7 @@ public class DatabaseServerService {
         return false;
     }
 
-    public DatabaseServerEntityDto insertNew(String name, Integer port, String id, String password, DbType dbType, Long serverSid) throws Exception {
+    public DatabaseServerEntityDto insertNew(String name, Integer port, String dbId, String dbPassword, DbType dbType, Long serverSid) throws Exception {
 
         try {
             ServerInfoEntity server = serverInfoEntityRepository.getById(serverSid);
@@ -81,8 +81,8 @@ public class DatabaseServerService {
             DatabaseServerEntity entity = DatabaseServerEntity.builder()
                     .serverInfoEntity(server)
                     .name(name)
-                    .id(id)
-                    .password(password)
+                    .dbId(dbId)
+                    .dbPassword(dbPassword)
                     .dbType(dbType)
                     .port(port)
                     .build();

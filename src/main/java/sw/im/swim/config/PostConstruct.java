@@ -1,32 +1,30 @@
 package sw.im.swim.config;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.io.File;
-import java.util.Date;
-
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.component.DatabaseBackupJob;
-import sw.im.swim.repository.SettingEntityRepository;
+import sw.im.swim.repository.AdminSettingEntityRepository;
 import sw.im.swim.service.AdminLogService;
+import sw.im.swim.service.AdminSettingService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
+
+import java.io.File;
+import java.util.Date;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 
 @Getter
@@ -49,10 +47,7 @@ public class PostConstruct {
 
     private final AdminLogService adminLogService;
 
-    private final SettingEntityRepository settingEntityRepository;
-
-//    USER_NAME=VUEKfrgtRxYM02Uh
-//            PASSWORD=HKLSuJ41rME4DwRu
+    private final AdminSettingService adminSettingService;
 
     @javax.annotation.PostConstruct
     public void INIT() throws SchedulerException {
@@ -103,6 +98,10 @@ public class PostConstruct {
             log.error(e.toString() + "\t" + e.getMessage() + " =====", e);
         }
 
+        AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
+
+        adminSettingService.update(adminSetting);
+        
 
     }
 

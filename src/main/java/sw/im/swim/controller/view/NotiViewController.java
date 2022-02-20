@@ -6,38 +6,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.DomainEntityDto;
+import sw.im.swim.bean.dto.NotiEntityDto;
 import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.service.NotiService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/domain")
+@RequestMapping("/noti")
 @RequiredArgsConstructor
-public class DomainViewController {
+public class NotiViewController {
 
-    private final NginxServerSubService nginxServerSubService;
+    private final NotiService notiService;
 
     @GetMapping("/home")
     public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
-        mav.addObject("title", "domain 관리");
-        mav.addObject("mainPageUrl", "/domain/main");
+        mav.addObject("title", "알림 채널 관리");
+        mav.addObject("mainPageUrl", "/noti/main");
         return mav;
     }
 
     @GetMapping("/main")
     public ModelAndView main(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/main");
+        ModelAndView mav = new ModelAndView("noti/main");
         return mav;
     }
 
     @GetMapping("/list")
     public ModelAndView list(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/list");
+        ModelAndView mav = new ModelAndView("noti/list");
 
-        List<DomainEntityDto> list = nginxServerSubService.getAllDomains();
+        List<NotiEntityDto> list = notiService.getAll();
         mav.addObject("list", list);
 
         return mav;
@@ -45,7 +47,7 @@ public class DomainViewController {
 
     @GetMapping("/form")
     public ModelAndView form(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/form");
+        ModelAndView mav = new ModelAndView("noti/form");
         return mav;
     }
 

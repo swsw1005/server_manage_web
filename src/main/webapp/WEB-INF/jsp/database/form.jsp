@@ -39,7 +39,7 @@
             </select>
         </div>
 
-        <div class="modal-form-row">
+        <div class="modal-form-half-row">
             <div>
                 port
             </div>
@@ -47,28 +47,28 @@
         </div>
 
 
-        <div class="modal-form-row">
+        <div class="modal-form-half-row">
             <div>
                 DB 이름
             </div>
             <input type="text" name="name">
         </div>
 
-        <div class="modal-form-row">
+        <div class="modal-form-half-row">
             <div>
                 DB id
             </div>
-            <input type="text" name="db_id">
+            <input type="text" name="db_id" autocomplete="false">
         </div>
 
-        <div class="modal-form-row">
+        <div class="modal-form-half-row">
             <div>
                 DB password
             </div>
-            <input type="password" name="db_pw">
+            <input type="password" name="db_pw" autocomplete="false">
         </div>
 
-        <div class="modal-form-row">
+        <div class="modal-form-half-row">
             <div>
                 DB 타입
             </div>

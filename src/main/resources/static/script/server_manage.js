@@ -1,15 +1,17 @@
 function showSideNav() {
-    document.querySelector("#nav-side").style.display = "flex";
-    document.querySelector("#nav-side").classList.add("navFadeIn");
-    document.querySelector("#nav-side").classList.remove("navFadeOut");
+    console.log("showSideNav");
+    // document.querySelector("#nav-side").style.display = "flex";
+    document.querySelector("#nav-side").classList.remove("navFadeIn");
+    document.querySelector("#nav-side").classList.add("navFadeOut");
     // document.querySelector("#nav-button").setAttribute("data-display", "1");
     // navBarShowFlag = true;
 }
 
 function hideSideNav() {
-    document.querySelector("#nav-side").style.display = "none";
-    document.querySelector("#nav-side").classList.add("navFadeOut");
-    document.querySelector("#nav-side").classList.remove("navFadeIn");
+    console.log("hideSideNav");
+    // document.querySelector("#nav-side").style.display = "none";
+    document.querySelector("#nav-side").classList.remove("navFadeOut");
+    document.querySelector("#nav-side").classList.add("navFadeIn");
     // document.querySelector("#nav-button").setAttribute("data-display", "0");
     // navBarShowFlag = false;
 }
@@ -174,9 +176,9 @@ function submitFormAjax_NginxPolicy(formId, modalId, URL, successCallBack, error
     let str = "";
 
     for (let i = 0; i < arr.length; i++) {
-        if(arr[i].checked){
+        if (arr[i].checked) {
             if (str != "") {
-              str += ",";
+                str += ",";
             }
             str += arr[i].value;
         }
@@ -223,6 +225,99 @@ function submitFormAjax_NginxPolicy(formId, modalId, URL, successCallBack, error
     });
 }
 
+function submitFormAjax_AdminSetting(formId, modalId, URL, successCallBack, errorCallBack) {
+
+    console.log(formId, modalId, URL);
+
+    var submitFormData = new FormData(document.getElementById(formId));
+
+    $.ajax({
+        type: "post",
+        url: URL,
+        contentType: false,
+        processData: false,
+        data: submitFormData
+        ,
+        success: function (result, status, statusCode) {
+            if (successCallBack == null) {
+                Notify(
+                    'success',
+                    formId + ' 저장 성공',
+                    'success'
+                );
+                // closeInputModal(modalId);
+            } else {
+                successCallBack();
+            }
+        },
+        error: function (result, status, statusCode) {
+            console.log(result);
+            if (errorCallBack == null) {
+                Notify(
+                    'error',
+                    result.responseJSON.error_msg,
+                    'error'
+                );
+                // closeInputModal(modalId);
+            } else {
+                errorCallBack();
+            }
+        }
+    });
+}
+
+/**
+ * <PRE>
+ * 이 div 내부의 checkbox 토글
+ * </PRE>
+ * @param this_
+ * @param className1
+ * @param className2
+ * @param className3
+ */
+function toggleAdminSetting(this_, childArrays, parentArrays) {
+    const checked = this_.getElementsByTagName("input")[0].value === 'true';
+    console.log("checked? => " + checked + "  ==>  " + !checked);
+    this_.getElementsByTagName("input")[0].value = (!checked + "");
+    this_.classList.remove("toggle-false", "toggle-true");
+    this_.classList.add("toggle-" + !checked);
+
+    try {
+        if (checked) {
+            for (let i = 0; i < childArrays.length; i++) {
+                const tagClassName = childArrays[i];
+                console.log(" 바꾼다 chlidNode? => " + tagClassName);
+                const ARR = document.getElementsByClassName(tagClassName);
+                for (let j = 0; j < ARR.length; j++) {
+                    const temp_ = ARR[j];
+                    const childChecked = temp_.getElementsByTagName("input")[0].value === 'true';
+                    if (childChecked) {
+                        toggleAdminSetting(temp_);
+                    }
+                } // for j end
+            } // for i end
+        } // if checked end
+    } catch (e) {
+    }
+
+    try {
+        if (!checked) {
+            for (let i = 0; i < parentArrays.length; i++) {
+                const tagClassName = parentArrays[i];
+                console.log(" 바꾼다 parentNode? => " + tagClassName);
+                const ARR = document.getElementsByClassName(tagClassName);
+                for (let j = 0; j < ARR.length; j++) {
+                    const temp_ = ARR[j];
+                    const childChecked = temp_.getElementsByTagName("input")[0].value === 'false';
+                    if (childChecked) {
+                        toggleAdminSetting(temp_);
+                    }
+                } // for j end
+            } // for i end
+        } // if checked end
+    } catch (e) {
+    }
+} // toggleAdminSetting end
 
 function Notify(title, content, type) {
     Notification({
@@ -478,3 +573,45 @@ function adjustNginxSetting(formId, URL) {
 function NO_ACTION() {
 
 }
+
+
+
+function notiFormTypeSelect() {
+
+    console.log("aaaaaa");
+
+    try {
+        var column1Div = document.getElementById("notiColumn1");
+        var column2Div = document.getElementById("notiColumn2");
+        var notiTypeSelect = document.getElementById("notiTypeSelect");
+
+        var column1DivTitleDiv = column1Div.getElementsByTagName("div")[0];
+        var column2DivTitleDiv = column2Div.getElementsByTagName("div")[0];
+
+        switch (notiTypeSelect.value) {
+
+            case "NATEON":
+                column1Div.style.display = "block";
+                column2Div.style.display = "none";
+
+                column1DivTitleDiv.innerText = "팀룸 API URL";
+                column2DivTitleDiv.innerText = "";
+                break;
+
+            case "SLACK":
+                column1Div.style.display = "block";
+                column2Div.style.display = "block";
+
+                column1DivTitleDiv.innerText = "token";
+                column2DivTitleDiv.innerText = "room id";
+                break;
+
+            default:
+                column1Div.style.display = "none";
+                column2Div.style.display = "none";
+                break;
+        }
+    } catch (e) {
+        console.log(e);
+    }
+} // notiFormTypeSelect end

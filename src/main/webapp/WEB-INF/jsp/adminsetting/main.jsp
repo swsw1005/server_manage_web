@@ -5,13 +5,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<div id="insert-button" data-display="0" onclick="openInputModal('simple-modal-form', '${contextPath }/domain/form')">
-    <i class="fas fa-plus"></i>
+<div id="insert-button" data-display="0" onclick="submitFormAjax_AdminSetting('simple-form', 'simple-modal-form', '${contextPath}/api/v1/adminsetting/update')">
+  <i class="far fa-save"></i>
 </div>
 
-<div id="simple-modal-form" class="simple-modal-form" style="display: none;">
+<!-- <div id="simple-modal-form" class="simple-modal-form" style="display: none;">
 
-</div>
+</div> -->
 
 <div id="listLocation">
 

@@ -30,7 +30,7 @@ public class NginxServerViewController {
     private final NginxServerSubService nginxServerSubService;
 
     @GetMapping("/home")
-    public ModelAndView nginxserver(HttpServletRequest request) {
+    public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
         mav.addObject("title", "nginx 서버 관리");

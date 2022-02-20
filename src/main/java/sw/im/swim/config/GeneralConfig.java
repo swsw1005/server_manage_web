@@ -1,6 +1,7 @@
 package sw.im.swim.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import sw.im.swim.bean.dto.AdminSettingEntityDto;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -18,5 +19,7 @@ public class GeneralConfig {
     public static String GOOGLE_DNS_USER_NAME;
     public static String GOOGLE_DNS_PASSWORD;
     public static String CURRENT_IP = "";
+
+    public static AdminSettingEntityDto ADMIN_SETTING;
 
 }

@@ -3,15 +3,15 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <nav>
-    <div id="nav-side" class="nav-side">
+    <div id="nav-side" class="nav-side navFadeIn">
 
         <div class="middle-wrapper">
 
             <div class="header">
                 <div class="user_info">
-                    임성우 님
+                    ${sessionScope.admin.name} 님
                 </div>
-                <button type="button" onclick="hideSideNav()">
+                <button id="navHideButton" type="button" onclick="hideSideNav()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -38,6 +38,10 @@
                     서버 관리
                 </a>
 
+                <a href="${contextPath }/fail2ban/home" class="nav_row">
+                    ssh 보안 관리
+                </a>
+
                 <a href="${contextPath }/domain/home" class="nav_row">
                     domain 관리
                 </a>
@@ -45,6 +49,15 @@
                 <a href="${contextPath }/favicon/home" class="nav_row">
                     favicon 관리
                 </a>
+
+                <a href="${contextPath }/noti/home" class="nav_row">
+                    알림 설정
+                </a>
+
+                <a href="${contextPath }/adminsetting/home" class="nav_row">
+                    관리자 설정
+                </a>
+
                 <a href="${contextPath }/adminlog/home" class="nav_row">
                     관리자 로그
                 </a>

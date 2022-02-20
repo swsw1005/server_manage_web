@@ -29,6 +29,10 @@ public class NginxPolicyEntity extends EntityBase {
     @Builder.Default
     private String name = "기본정책";
 
+    public String getName() {
+        return "기본정책";
+    }
+
     @Column(nullable = false, length = 60)
     @Builder.Default
     private int workerProcessed = 8;

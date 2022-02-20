@@ -1,53 +1,56 @@
 package sw.im.swim.controller.view;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.DomainEntityDto;
+import sw.im.swim.bean.dto.NginxPolicyEntityDto;
+import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.service.AdminSettingService;
+import sw.im.swim.service.NginxPolicyService;
+import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Controller
-@RequestMapping("/domain")
+@RequestMapping("/adminsetting")
 @RequiredArgsConstructor
-public class DomainViewController {
+public class AdminSettingViewController {
 
-    private final NginxServerSubService nginxServerSubService;
+    private final AdminSettingService adminSettingService;
 
     @GetMapping("/home")
     public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
-        mav.addObject("title", "domain 관리");
-        mav.addObject("mainPageUrl", "/domain/main");
+        mav.addObject("title", "관리자 설정");
+        mav.addObject("mainPageUrl", "/adminsetting/main");
         return mav;
     }
 
     @GetMapping("/main")
     public ModelAndView main(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/main");
+        ModelAndView mav = new ModelAndView("adminsetting/main");
         return mav;
     }
 
     @GetMapping("/list")
     public ModelAndView list(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/list");
+        ModelAndView mav = new ModelAndView("adminsetting/form");
 
-        List<DomainEntityDto> list = nginxServerSubService.getAllDomains();
-        mav.addObject("list", list);
+        AdminSettingEntityDto setting = adminSettingService.getSetting();
 
+        mav.addObject("adminSetting", setting);
         return mav;
     }
-
-    @GetMapping("/form")
-    public ModelAndView form(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("domain/form");
-        return mav;
-    }
-
 
 }

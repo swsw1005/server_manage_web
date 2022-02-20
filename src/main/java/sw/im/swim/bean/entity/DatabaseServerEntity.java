@@ -25,11 +25,11 @@ public class DatabaseServerEntity extends EntityBase {
     @Setter
     private ServerInfoEntity serverInfoEntity;
 
-    @Column(nullable = false, length = 60)
-    private String id;
+    @Column(nullable = false, length = 60, name = "id")
+    private String dbId;
 
-    @Column(nullable = false, length = 200)
-    private String password;
+    @Column(nullable = false, length = 200, name = "password")
+    private String dbPassword;
 
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)

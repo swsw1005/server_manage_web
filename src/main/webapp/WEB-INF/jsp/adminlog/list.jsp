@@ -20,11 +20,11 @@
                     ${dto.message1}
             </div>
             <div class="list_row_name">
-                    ${dto.message1}
+                    ${dto.message2}
             </div>
 
             <div class="list_row_date">
-                c: ${dto.created }
+                c: ${dto.created}
             </div>
 
         </div>

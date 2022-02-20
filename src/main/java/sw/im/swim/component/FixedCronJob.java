@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.mchange.v2.lang.SystemUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.SystemPropertyUtils;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
@@ -110,12 +112,25 @@ public class FixedCronJob {
             log.info("?? IP CHANGE ?? :: " + currIp + "  =>  " + IP);
 
             if (currIp.equals(IP) == false) {
+
+                boolean isWindow = false;
+                try {
+                    isWindow = System.getProperty("os.name").toLowerCase().contains("window");
+                } catch (Exception e) {
+                }
+
+                if (isWindow) {
+                    return;
+                }
+
                 GeneralConfig.CURRENT_IP = IP;
 
                 final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
 
                 DNSUtil.updateIp(ROOT_DOMAIN);
                 adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
+
+
             }
 
         } catch (Exception e) {

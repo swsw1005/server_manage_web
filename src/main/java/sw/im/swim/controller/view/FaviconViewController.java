@@ -20,7 +20,7 @@ public class FaviconViewController {
     private final NginxServerSubService nginxServerSubService;
 
     @GetMapping("/home")
-    public ModelAndView favicon(HttpServletRequest request) {
+    public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
         mav.addObject("title", "favicon 관리");

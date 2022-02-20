@@ -45,18 +45,18 @@ public class NginxPolicyService {
 
     private final AdminLogService adminLogService;
 
-    public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections, long domainInfoSid) {
-
-        NginxPolicyEntity entity = NginxPolicyEntity.builder()
-                .name(name)
-                .workerProcessed(workerProcessed)
-                .workerConnections(workerConnections)
-                .domainEntity(new DomainEntity(domainInfoSid))
-                .build();
-
-        NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
-        return modelMapper.map(entity_, NginxPolicyEntityDto.class);
-    }
+//    public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections, long domainInfoSid) {
+//
+//        NginxPolicyEntity entity = NginxPolicyEntity.builder()
+//                .name(name)
+//                .workerProcessed(workerProcessed)
+//                .workerConnections(workerConnections)
+//                .domainEntity(new DomainEntity(domainInfoSid))
+//                .build();
+//
+//        NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
+//        return modelMapper.map(entity_, NginxPolicyEntityDto.class);
+//    }
 
     public NginxPolicyEntityDto update(String name, int workerProcessed, int workerConnections,
             String nginxServerSidString, long sid) throws Exception {
@@ -125,14 +125,14 @@ public class NginxPolicyService {
         }
     }
 
-    public List<NginxPolicyEntityDto> getAll() {
-        List<NginxPolicyEntity> list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
-        List<NginxPolicyEntityDto> result = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            result.add(modelMapper.map(list.get(i), NginxPolicyEntityDto.class));
-        }
-        return result;
-    }
+//    public List<NginxPolicyEntityDto> getAll() {
+//        List<NginxPolicyEntity> list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
+//        List<NginxPolicyEntityDto> result = new ArrayList<>();
+//        for (int i = 0; i < list.size(); i++) {
+//            result.add(modelMapper.map(list.get(i), NginxPolicyEntityDto.class));
+//        }
+//        return result;
+//    }
 
     public NginxPolicyEntityDto getAll(final long sid) throws Exception {
 
@@ -145,6 +145,13 @@ public class NginxPolicyService {
         }
     }
 
+    /**
+     * <PRE>
+     *     해당 정책에 연결된 nginx servers
+     * </PRE>
+     * @param parseLong
+     * @return
+     */
     public List<Long> getNginxServers(long parseLong) {
         List<Long> list = nginxPolicyServerEntityRepository.getNginxServers(parseLong);
         return list;

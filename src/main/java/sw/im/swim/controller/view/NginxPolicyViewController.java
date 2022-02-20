@@ -33,7 +33,7 @@ public class NginxPolicyViewController {
     private final NginxServerSubService nginxServerSubService;
 
     @GetMapping("/home")
-    public ModelAndView nginxpolicy(HttpServletRequest request) {
+    public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
         mav.addObject("title", "nginx 정책 관리");
