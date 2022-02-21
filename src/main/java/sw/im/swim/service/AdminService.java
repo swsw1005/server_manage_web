@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminEntityDto;
 import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.enums.Authority;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.AdminEntityRepository;
+import sw.im.swim.util.AesUtil;
 
 @Slf4j
 @Service
@@ -24,7 +26,14 @@ public class AdminService {
         try {
             AdminEntityDto dto = findByEmail(email);
 
-            if (dto.getPassword().equals(password) == false
+            log.debug(" password => " + password);
+
+            final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
+
+            log.debug(" encPassword       => " + encPassword);
+            log.debug(" dto.getPassword() => " + dto.getPassword());
+
+            if (encPassword.equals(dto.getPassword()) == false
                     || password == null) {
                 throw new Exception("wrong password");
             }
@@ -40,6 +49,7 @@ public class AdminService {
             return dto;
 
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             throw new Exception("login fail");
         }
     }

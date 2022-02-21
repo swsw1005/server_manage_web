@@ -8,10 +8,12 @@ import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.entity.DatabaseServerEntity;
 import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
+import sw.im.swim.util.AesUtil;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -44,10 +46,12 @@ public class ServerInfoService {
     public ServerInfoEntityDto insertNew(String name, String id, String password, String ip, Integer innerSSHPort, Integer outerSSHPort) throws Exception {
 
         try {
+            final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
+
             ServerInfoEntity entity = ServerInfoEntity.builder()
                     .name(name)
                     .id(id)
-                    .password(password)
+                    .password(encPassword)
                     .ip(ip)
                     .innerSSHPort(innerSSHPort)
                     .outerSSHPort(outerSSHPort)

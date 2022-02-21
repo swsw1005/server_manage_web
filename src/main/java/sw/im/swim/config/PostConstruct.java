@@ -1,6 +1,5 @@
 package sw.im.swim.config;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,14 +12,15 @@ import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.component.DatabaseBackupJob;
-import sw.im.swim.repository.AdminSettingEntityRepository;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.AdminSettingService;
+import sw.im.swim.util.AesUtil;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
@@ -44,6 +44,9 @@ public class PostConstruct {
 
     @Value(value = "${DB_BACKUP_CRON}")
     private String DB_BACKUP_CRON = "0 0 0/3 * * *";
+
+    @Value(value = "${AES_KEY}")
+    private String AES_KEY = "";
 
     private final AdminLogService adminLogService;
 
@@ -101,7 +104,21 @@ public class PostConstruct {
         AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
 
         adminSettingService.update(adminSetting);
-        
+
+        try {
+
+            GeneralConfig.ENC_KEY = AES_KEY + AES_KEY + AES_KEY + AES_KEY + AES_KEY;
+
+            String uuid = UUID.randomUUID().toString();
+
+            String encUUID = AesUtil.encrypt(uuid, GeneralConfig.ENC_KEY);
+
+            String decUUID = AesUtil.decrypt(encUUID, GeneralConfig.ENC_KEY);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
 
     }
 

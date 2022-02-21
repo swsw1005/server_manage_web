@@ -9,9 +9,11 @@ import sw.im.swim.bean.entity.DatabaseServerEntity;
 import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.bean.enums.DbType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
+import sw.im.swim.util.AesUtil;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -47,11 +49,13 @@ public class DatabaseServerService {
             } catch (Exception e) {
             }
 
-
-
             List<DatabaseServerEntityDto> result = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                result.add(modelMapper.map(list.get(i), DatabaseServerEntityDto.class));
+                DatabaseServerEntityDto dto = modelMapper.map(list.get(i), DatabaseServerEntityDto.class);
+
+                dto.setPassword(AesUtil.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
+
+                result.add(dto);
             }
             return result;
 
@@ -78,11 +82,13 @@ public class DatabaseServerService {
         try {
             ServerInfoEntity server = serverInfoEntityRepository.getById(serverSid);
 
+            final String encPassword = AesUtil.encrypt(dbPassword, GeneralConfig.ENC_KEY);
+
             DatabaseServerEntity entity = DatabaseServerEntity.builder()
                     .serverInfoEntity(server)
                     .name(name)
                     .dbId(dbId)
-                    .dbPassword(dbPassword)
+                    .dbPassword(encPassword)
                     .dbType(dbType)
                     .port(port)
                     .build();

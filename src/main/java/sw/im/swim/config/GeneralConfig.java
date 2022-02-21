@@ -20,6 +20,8 @@ public class GeneralConfig {
     public static String GOOGLE_DNS_PASSWORD;
     public static String CURRENT_IP = "";
 
+    public static String ENC_KEY = "";
+
     public static AdminSettingEntityDto ADMIN_SETTING;
 
 }
