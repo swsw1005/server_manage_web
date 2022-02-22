@@ -100,7 +100,7 @@ public class AskiiArtUtil {
     public static void main(String[] args) {
 
         try {
-            List<String> list = AskiiArtUtil.CREATE_NGINX_BANNER("192.168.255.231");
+            List<String> list = AskiiArtUtil.CREATE_NGINX_BANNER("앓옳옳옭앜ㅋㅋ");
 
             for (int i = 0; i < list.size(); i++) {
                 System.out.println(list.get(i));
