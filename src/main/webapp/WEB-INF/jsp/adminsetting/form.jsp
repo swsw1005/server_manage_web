@@ -7,6 +7,10 @@
     .toggle-wrapper input {
         display: none;
     }
+
+    .border-top {
+        border-top: 1px solid rgba(255, 255, 255, 0.7);
+    }
 </style>
 
 <h4>
@@ -16,7 +20,7 @@
 
 <form id="simple-form">
 
-    <div class="modal-form-half-row">
+    <div class="modal-form-half-row border-top">
         <div>
             SMTP_USER
         </div>
@@ -76,7 +80,20 @@
     </div>
 
 
-    <div class="modal-form-41-row">
+    <div class="modal-form-41-row border-top">
+        <div>
+            DNS_UPDATE
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.DNS_UPDATE}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="DNS_UPDATE" value="${adminSetting.DNS_UPDATE}">
+        </div>
+    </div>
+
+
+    <div class="modal-form-41-row border-top">
         <div>
             NOTI_ALL
         </div>
@@ -113,7 +130,7 @@
     </div>
 
 
-    <div class="modal-form-41-row">
+    <div class="modal-form-41-row border-top">
         <div>
             NOTI_STARTUP
         </div>
@@ -150,7 +167,7 @@
     </div>
 
 
-    <div class="modal-form-41-row">
+    <div class="modal-form-41-row border-top">
         <div>
             NOTI_HEALTHCHECK
         </div>
@@ -187,44 +204,81 @@
     </div>
 
 
-    <div class="modal-form-41-row">
+    <div class="modal-form-41-row border-top">
         <div>
-            NOTI_NGINX
+            NOTI_NGINX_UPDATE
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX} tg-noti tg-pa-nginx"
-             onclick="toggleAdminSetting(this, ['tg-nginx'], ['tg-pa-noti'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_UPDATE} tg-noti tg-pa-nginx-update"
+             onclick="toggleAdminSetting(this, ['tg-nginx-update'], ['tg-pa-noti'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
-            <input type="text" name="NOTI_NGINX" value="${adminSetting.NOTI_NGINX}">
+            <input type="text" name="NOTI_NGINX_UPDATE" value="${adminSetting.NOTI_NGINX_UPDATE}">
         </div>
     </div>
 
     <div class="modal-form-41-row">
         <div>
-            NOTI_NGINX_NATEON
+            NOTI_NGINX_UPDATE_NATEON
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_NATEON} tg-noti tg-nateon tg-nginx"
-             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-nateon', 'tg-pa-nginx'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_UPDATE_NATEON} tg-noti tg-nateon tg-nginx-update"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-nateon', 'tg-pa-nginx-update'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
-            <input type="text" name="NOTI_NGINX_NATEON" value="${adminSetting.NOTI_NGINX_NATEON}">
+            <input type="text" name="NOTI_NGINX_UPDATE_NATEON" value="${adminSetting.NOTI_NGINX_UPDATE_NATEON}">
         </div>
     </div>
 
     <div class="modal-form-41-row">
         <div>
-            NOTI_NGINX_SLACK
+            NOTI_NGINX_UPDATE_SLACK
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_SLACK} tg-noti tg-slack tg-nginx"
-             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-slack', 'tg-pa-nginx'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_UPDATE_SLACK} tg-noti tg-slack tg-nginx-update"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-slack', 'tg-pa-nginx-update'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
-            <input type="text" name="NOTI_NGINX_SLACK" value="${adminSetting.NOTI_NGINX_SLACK}">
+            <input type="text" name="NOTI_NGINX_UPDATE_SLACK" value="${adminSetting.NOTI_NGINX_UPDATE_SLACK}">
         </div>
     </div>
 
 
+    <div class="modal-form-41-row border-top">
+        <div>
+            NOTI_NGINX_RESTORE
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_RESTORE} tg-noti tg-pa-nginx-restore"
+             onclick="toggleAdminSetting(this, ['tg-nginx-restore'], ['tg-pa-nginx-restore'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_NGINX_RESTORE" value="${adminSetting.NOTI_NGINX_RESTORE}">
+        </div>
+    </div>
+
     <div class="modal-form-41-row">
+        <div>
+            NOTI_NGINX_RESTORE_NATEON
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_RESTORE_NATEON} tg-noti tg-nateon tg-nginx-restore"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-nateon', 'tg-pa-nginx-restore'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_NGINX_RESTORE_NATEON" value="${adminSetting.NOTI_NGINX_RESTORE_NATEON}">
+        </div>
+    </div>
+
+    <div class="modal-form-41-row">
+        <div>
+            NOTI_NGINX_RESTORE_SLACK
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_NGINX_RESTORE_SLACK} tg-noti tg-slack tg-nginx-restore"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-slack', 'tg-pa-nginx-restore'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_NGINX_RESTORE_SLACK" value="${adminSetting.NOTI_NGINX_RESTORE_SLACK}">
+        </div>
+    </div>
+
+
+    <div class="modal-form-41-row border-top">
         <div>
             NOTI_DB_SUCCESS
         </div>
@@ -261,7 +315,7 @@
     </div>
 
 
-    <div class="modal-form-41-row">
+    <div class="modal-form-41-row border-top">
         <div>
             NOTI_DB_FAIL
         </div>

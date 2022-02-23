@@ -1,12 +1,12 @@
 package sw.im.swim.bean.enums;
 
 public enum AdminLogType {
-    NGINX,
     NGINX_UPDATE,
     NGINX_RESTORE,
-    DB,
-    DB_BACKUP,
+    HEALTHCHECK,
+    DB_SUCCESS,
+    DB_FAIL,
     DB_RESTORE,
-    DNS, 
-    START, DB_LIST_UP, 
+    DNS,
+    STARTUP, DB_LIST_UP,
 }

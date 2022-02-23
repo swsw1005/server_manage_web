@@ -96,6 +96,7 @@ public class NginxConfCreateUtil {
         resultList.add(TAB + "# Virtual Host Configs");
         resultList.add(TAB + "##");
         resultList.add(TAB + "include /etc/nginx/conf.d/*.conf;");
+        resultList.add(TAB + "### root 도메인도 이 파일에서 관리한다.");
         resultList.add(TAB + "#include /etc/nginx/sites-enabled/*;");
         resultList.add("");
         resultList.add("");
@@ -328,8 +329,12 @@ public class NginxConfCreateUtil {
                 List<String> tempList = ONE_SERVER_BLOCK(nginxServerEntity);
 
                 subDomainList.addAll(tempList);
-            }
+            } // if else end
 
+        } // for i end
+
+        if (rootDomainList.size() < 4) {
+            throw new Exception("ROOT DOMAIN NOT SELECTED !!");
         }
 
         String[] HEAD = HEAD(processed, connections);

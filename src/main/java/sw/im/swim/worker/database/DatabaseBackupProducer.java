@@ -71,7 +71,7 @@ public class DatabaseBackupProducer implements Runnable {
             }
 
         } catch (Exception e) {
-            adminLogService.insertLog(AdminLogType.DB, "FAIL", e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DB_FAIL, "FAIL", e.getLocalizedMessage());
         }
 
     }

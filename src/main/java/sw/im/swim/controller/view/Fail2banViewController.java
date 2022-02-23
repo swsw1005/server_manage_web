@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.FaviconEntityDto;
+import sw.im.swim.bean.dto.WebServerEntityDto;
 import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.service.WebServerService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -16,13 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Fail2banViewController {
 
-    private final NginxServerSubService nginxServerSubService;
+    private final WebServerService webServerService;
 
     @GetMapping("/home")
     public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
-        mav.addObject("title", "ssh 보안 관리");
+        mav.addObject("title", "웹서버 ssh 관리");
         mav.addObject("mainPageUrl", "/fail2ban/main");
         return mav;
     }
@@ -37,7 +39,7 @@ public class Fail2banViewController {
     public ModelAndView list(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("fail2ban/list");
 
-        List<FaviconEntityDto> list = nginxServerSubService.getAllFavicons();
+        List<WebServerEntityDto> list = webServerService.getAll();
         mav.addObject("list", list);
 
         return mav;

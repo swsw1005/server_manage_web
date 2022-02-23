@@ -15,10 +15,7 @@ import org.springframework.util.SystemPropertyUtils;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.service.AdminLogService;
-import sw.im.swim.service.DatabaseServerService;
-import sw.im.swim.service.NginxPolicyService;
-import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.service.*;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
@@ -35,6 +32,8 @@ public class FixedCronJob {
     private final AdminLogService adminLogService;
 
     private final DatabaseServerService databaseServerService;
+
+    private final NotiService notiService;
 
     @Scheduled(cron = "0/15 * * * * *")
     public void faviconAutoRegister() {
@@ -113,23 +112,14 @@ public class FixedCronJob {
 
             if (currIp.equals(IP) == false) {
 
-                boolean isWindow = false;
-                try {
-                    isWindow = System.getProperty("os.name").toLowerCase().contains("window");
-                } catch (Exception e) {
+                if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
+                    GeneralConfig.CURRENT_IP = IP;
+
+                    final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
+
+                    DNSUtil.updateIp(ROOT_DOMAIN);
+                    adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
                 }
-
-                if (isWindow) {
-                    return;
-                }
-
-                GeneralConfig.CURRENT_IP = IP;
-
-                final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
-
-                DNSUtil.updateIp(ROOT_DOMAIN);
-                adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
-
 
             }
 
@@ -142,6 +132,12 @@ public class FixedCronJob {
     @Scheduled(cron = "0/5 * * * * *")
     public void databaseServerBackup() {
         ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
+    }
+
+
+    @Scheduled(cron = "3 0/1 * * * *")
+    public void notiDtoSync() {
+        notiService.getAll();
     }
 
 

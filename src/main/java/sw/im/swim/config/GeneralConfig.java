@@ -2,9 +2,12 @@ package sw.im.swim.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
+import sw.im.swim.bean.dto.NotiEntityDto;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GeneralConfig {
 
@@ -23,5 +26,9 @@ public class GeneralConfig {
     public static String ENC_KEY = "";
 
     public static AdminSettingEntityDto ADMIN_SETTING;
+
+    public static final ConcurrentHashMap<String, Boolean> NOTI_SETTING_MAP = new ConcurrentHashMap<>();
+
+    public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
 
 }

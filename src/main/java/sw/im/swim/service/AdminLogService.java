@@ -11,6 +11,8 @@ import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.entity.AdminLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.repository.AdminLogRepository;
+import sw.im.swim.worker.context.ThreadWorkerPoolContext;
+import sw.im.swim.worker.noti.NotiProducer;
 
 import javax.persistence.Column;
 import java.util.ArrayList;
@@ -39,7 +41,8 @@ public class AdminLogService {
             message2 = "null";
         }
 
-        log.info("title / message1 / message2 || " + title + " / " + message1 + " / " + message2);
+        String msg = title + " / " + message1 + " / " + message2;
+        log.info("title / message1 / message2 || " + msg);
 
         AdminLogEntity adminLogEntity = AdminLogEntity.builder()
                 .title(title)
@@ -47,6 +50,11 @@ public class AdminLogService {
                 .message2(message2)
                 .build();
         adminLogRepository.save(adminLogEntity);
+
+        NotiProducer notiProducer = new NotiProducer(msg, title);
+
+        ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
+
     }
 
 

@@ -23,28 +23,38 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean SMTP_SSL_ENABLE = true;
     private String SMTP_SSL_TRUST = "smtp.gmail.com";
     ////////////////////////////////////////
-    private boolean NOTI_ALL = true;
-    private boolean NOTI_ALL_NATEON = true;
-    private boolean NOTI_ALL_SLACK = true;
+    private boolean DNS_UPDATE = false;
     ////////////////////////////////////////
-    private boolean NOTI_STARTUP = true;
-    private boolean NOTI_STARTUP_NATEON = true;
-    private boolean NOTI_STARTUP_SLACK = true;
+    private boolean NOTI_ALL = false;
+    private boolean NOTI_ALL_NATEON = false;
+    private boolean NOTI_ALL_SLACK = false;
     ////////////////////////////////////////
-    private boolean NOTI_HEALTHCHECK = true;
-    private boolean NOTI_HEALTHCHECK_NATEON = true;
-    private boolean NOTI_HEALTHCHECK_SLACK = true;
+    private boolean NOTI_STARTUP = false;
+    private boolean NOTI_STARTUP_NATEON = false;
+    private boolean NOTI_STARTUP_SLACK = false;
     ////////////////////////////////////////
-    private boolean NOTI_NGINX = true;
-    private boolean NOTI_NGINX_NATEON = true;
-    private boolean NOTI_NGINX_SLACK = true;
+    private boolean NOTI_HEALTHCHECK = false;
+    private boolean NOTI_HEALTHCHECK_NATEON = false;
+    private boolean NOTI_HEALTHCHECK_SLACK = false;
     ////////////////////////////////////////
-    private boolean NOTI_DB_SUCCESS = true;
-    private boolean NOTI_DB_SUCCESS_NATEON = true;
-    private boolean NOTI_DB_SUCCESS_SLACK = true;
+    private boolean NOTI_NGINX_UPDATE = false;
+    private boolean NOTI_NGINX_UPDATE_NATEON = false;
+    private boolean NOTI_NGINX_UPDATE_SLACK = false;
     ////////////////////////////////////////
-    private boolean NOTI_DB_FAIL = true;
-    private boolean NOTI_DB_FAIL_NATEON = true;
-    private boolean NOTI_DB_FAIL_SLACK = true;
+    private boolean NOTI_NGINX_RESTORE = false;
+    private boolean NOTI_NGINX_RESTORE_NATEON = false;
+    private boolean NOTI_NGINX_RESTORE_SLACK = false;
     ////////////////////////////////////////
+    private boolean NOTI_DB_SUCCESS = false;
+    private boolean NOTI_DB_SUCCESS_NATEON = false;
+    private boolean NOTI_DB_SUCCESS_SLACK = false;
+    ////////////////////////////////////////
+    private boolean NOTI_DB_FAIL = false;
+    private boolean NOTI_DB_FAIL_NATEON = false;
+    private boolean NOTI_DB_FAIL_SLACK = false;
+    ////////////////////////////////////////
+
+
+
+
 }

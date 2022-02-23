@@ -76,12 +76,12 @@ public class DbBackupWorker implements Callable<String> {
 
             FileUtils.moveFileToDirectory(DUMP_FILE, new File(DatabaseServerUtil.RCLONE_DIR), true);
 
-            adminLogService.insertLog(AdminLogType.DB_BACKUP, "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name());
+            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name());
 
         } catch (FileTooSmallException e) {
             
         } catch (Exception e) {
-            adminLogService.insertLog(AdminLogType.DB_BACKUP, "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage());
+            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage());
             log.error(e.getMessage(), e);
         } finally {
             try {

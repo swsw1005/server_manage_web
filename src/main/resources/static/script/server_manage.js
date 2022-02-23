@@ -246,6 +246,7 @@ function submitFormAjax_AdminSetting(formId, modalId, URL, successCallBack, erro
                     'success'
                 );
                 // closeInputModal(modalId);
+                callList();
             } else {
                 successCallBack();
             }

@@ -55,11 +55,10 @@ public class AdminSettingService {
 
                 final String newFieldValue = (map.get(fieldName) == null ? "" : map.get(fieldName));
 
-
-                log.debug("" + "fieldName : " + fieldName
-                        + " \t " + "typeName : " + typeName
-                        + " \t " + "newFieldValue : " + newFieldValue
-                );
+//                log.debug("" + "fieldName : " + fieldName
+//                        + " \t " + "typeName : " + typeName
+//                        + " \t " + "newFieldValue : " + newFieldValue
+//                );
 
                 Field updateField = dto.getClass()
                         .getDeclaredField(fieldName);
@@ -69,6 +68,7 @@ public class AdminSettingService {
                     switch (typeName) {
                         case "boolean":
                             updateField.setBoolean(dto, Boolean.parseBoolean(newFieldValue));
+                            GeneralConfig.NOTI_SETTING_MAP.put(fieldName, Boolean.parseBoolean(newFieldValue));
                             break;
 
                         case "int":
@@ -93,6 +93,7 @@ public class AdminSettingService {
                     } // switch case end
 
                 } catch (Exception e) {
+                    log.error(e.getMessage() + "__________", e);
                 } // try catch end
 
             } // for i end
@@ -115,8 +116,6 @@ public class AdminSettingService {
 
             list.stream().forEach(v -> entityHashMap.put(v.getKey(), v));
 
-            log.error(" keySet 사이즈  " + entityHashMap.size());
-
             Field[] fields = dto.getClass().getDeclaredFields();
 
             Method[] methods = dto.getClass().getMethods();
@@ -126,12 +125,7 @@ public class AdminSettingService {
             for (int i = 0; i < methods.length; i++) {
                 Method temp_ = methods[i];
                 methodMap.put(temp_.getName().toLowerCase(), temp_);
-
-                System.out.println("\t\t ============== = " + temp_.getName().toLowerCase());
-
             }
-
-            System.out.println("methodMap.size() = " + methodMap.size());
 
             for (int j = 0; j < fields.length; j++) {
                 Field tempField = fields[j];
@@ -144,18 +138,11 @@ public class AdminSettingService {
                 Field updateField = dto.getClass()
                         .getDeclaredField(fieldName);
 
-                log.debug("" + "fieldName : " + fieldName
-                        + " \t " + "typeName : " + typeName
-                        + " \t " + "isExist : " + isExist
-                );
-
                 Method getter = methodMap.get("get" + fieldName.toLowerCase());
 
                 if (getter == null) {
                     getter = methodMap.get("is" + fieldName.toLowerCase());
                 }
-
-                System.out.println("getter = " + getter);
 
                 String updateValue = null;
 
@@ -170,11 +157,11 @@ public class AdminSettingService {
                     }
                 }
 
-                log.debug("" + "fieldName : " + fieldName
-                        + " \t " + "typeName : " + typeName
-                        + " \t " + "isExist : " + isExist
-                        + " \t " + "updateValue : " + updateValue
-                );
+//                log.debug("" + "fieldName : " + fieldName
+//                        + " \t " + "typeName : " + typeName
+//                        + " \t " + "isExist : " + isExist
+//                        + " \t " + "updateValue : " + updateValue
+//                );
 
                 AdminSettingEntity entity;
                 if (isExist) {

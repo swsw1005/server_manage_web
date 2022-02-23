@@ -11,11 +11,14 @@ import sw.im.swim.bean.entity.NotiEntity;
 import sw.im.swim.bean.entity.NotiEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.bean.enums.NotiType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -35,18 +38,24 @@ public class NotiService {
         for (int i = 0; i < list.size(); i++) {
             result.add(modelMapper.map(list.get(i), NotiEntityDto.class));
         }
+
+        synchronized (GeneralConfig.NOTI_DTO_MAP) {
+            GeneralConfig.NOTI_DTO_MAP.clear();
+            for (int i = 0; i < result.size(); i++) {
+                NotiEntityDto dto = result.get(i);
+                if (dto.getActive()) {
+                    GeneralConfig.NOTI_DTO_MAP.put(dto.getSid(), dto);
+                }
+            }
+        }
+
         return result;
     }
 
     public NotiEntityDto insertNew(String name, String column1, String column2, NotiType notiType) throws Exception {
 
         try {
-            NotiEntity entity = NotiEntity.builder()
-                    .name(name)
-                    .column1(column1)
-                    .column2(column2)
-                    .notiType(notiType)
-                    .build();
+            NotiEntity entity = NotiEntity.builder().name(name).column1(column1).column2(column2).notiType(notiType).build();
             NotiEntity entity_ = notiEntityRepository.save(entity);
             entity_.getCreatedAt();
             return modelMapper.map(entity_, NotiEntityDto.class);

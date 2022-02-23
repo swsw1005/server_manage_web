@@ -14,6 +14,7 @@ import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.component.DatabaseBackupJob;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.AdminSettingService;
+import sw.im.swim.service.NotiService;
 import sw.im.swim.util.AesUtil;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
@@ -52,12 +53,20 @@ public class PostConstruct {
 
     private final AdminSettingService adminSettingService;
 
+    private final NotiService notiService;
+
     @javax.annotation.PostConstruct
     public void INIT() throws SchedulerException {
 
+        notiService.getAll();
+
+        AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
+
+        adminSettingService.update(adminSetting);
+
         String ip = GoogleDNSUtil.getInstance().GET_IP();
 
-        adminLogService.insertLog(AdminLogType.START, "IP", ip);
+        adminLogService.insertLog(AdminLogType.STARTUP, "IP", ip);
 
         GeneralConfig.GOOGLE_DNS_USER_NAME = GOOGLE_DNS_USER_NAME;
         GeneralConfig.GOOGLE_DNS_PASSWORD = GOOGLE_DNS_PASSWORD;
@@ -101,10 +110,6 @@ public class PostConstruct {
             log.error(e.toString() + "\t" + e.getMessage() + " =====", e);
         }
 
-        AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
-
-        adminSettingService.update(adminSetting);
-
         try {
 
             GeneralConfig.ENC_KEY = AES_KEY + AES_KEY + AES_KEY + AES_KEY + AES_KEY;
@@ -118,8 +123,6 @@ public class PostConstruct {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
-
     }
 
 }
