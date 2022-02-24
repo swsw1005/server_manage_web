@@ -39,7 +39,7 @@ public class NotiProducer implements Runnable {
         try {
             FLAG_MASTER = GeneralConfig.NOTI_SETTING_MAP.get(masterFlag);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(masterFlag + " => " + e.getMessage(), e);
         }
 
         for (NotiType key : notiMap.keySet()) {

@@ -88,10 +88,8 @@ public class DbServerWorker implements Runnable {
                 ThreadWorkerPoolContext.getInstance().DB_DUMP_WORKER.submit(worker);
             }
 
-            adminLogService.insertLog(AdminLogType.DB_LIST_UP, "SUCCESS", ip + ":" + port + " " + dbType.name());
-
         } catch (Exception e) {
-            adminLogService.insertLog(AdminLogType.DB_LIST_UP, "ERROR", ip + ":" + port + " " + dbType.name() + " | " + e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DB_FAIL, "ERROR", ip + ":" + port + " " + dbType.name() + " | " + e.getLocalizedMessage());
             log.error(e.getMessage());
         }
 

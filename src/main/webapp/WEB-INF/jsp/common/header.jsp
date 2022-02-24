@@ -39,7 +39,7 @@
                 </a>
 
                 <a href="${contextPath }/fail2ban/home" class="nav_row">
-                    웹서버 ssh 관리
+                    서버 ssh 관리
                 </a>
 
                 <a href="${contextPath }/domain/home" class="nav_row">

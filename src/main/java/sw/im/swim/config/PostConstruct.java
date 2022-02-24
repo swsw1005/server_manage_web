@@ -1,8 +1,6 @@
 package sw.im.swim.config;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -28,8 +26,6 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 
-@Getter
-@Setter
 @Slf4j
 @Component
 @RequiredArgsConstructor

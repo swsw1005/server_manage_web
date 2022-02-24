@@ -67,5 +67,31 @@ public enum DbType {
         this.DUMP_COMMAND = DUMP_COMMAND;
     }
 
+    public String getROOT_DB_NAME() {
+        return ROOT_DB_NAME;
+    }
 
+    public String getJDBC_DRIVER_NAME() {
+        return JDBC_DRIVER_NAME;
+    }
+
+    public String getJDBC_URL() {
+        return JDBC_URL;
+    }
+
+    public String getCHECK_QUERY() {
+        return CHECK_QUERY;
+    }
+
+    public String getDB_LIST_COMMAND() {
+        return DB_LIST_COMMAND;
+    }
+
+    public String getDB_LIST_EXCLUDE() {
+        return DB_LIST_EXCLUDE;
+    }
+
+    public String getDUMP_COMMAND() {
+        return DUMP_COMMAND;
+    }
 }

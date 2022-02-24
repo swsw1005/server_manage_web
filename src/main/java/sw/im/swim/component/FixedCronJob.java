@@ -19,6 +19,7 @@ import sw.im.swim.service.*;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
+import sw.im.swim.worker.database.DatabaseHealchChecker;
 
 @Slf4j
 @Component
@@ -35,7 +36,7 @@ public class FixedCronJob {
 
     private final NotiService notiService;
 
-    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "17 0/1 * * * *")
     public void faviconAutoRegister() {
         try {
 
@@ -129,7 +130,7 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0/15 * * * * *")
     public void databaseServerBackup() {
         ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
     }
@@ -138,6 +139,17 @@ public class FixedCronJob {
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
         notiService.getAll();
+    }
+
+    @Scheduled(cron = "7 0/1 * * * *")
+    public void serverHealthCheck() {
+        try {
+// TODO 서버 ssh 체크 개발
+
+        } catch (Exception e) {
+            log.error(e.getMessage() + "_____", e);
+        }
+
     }
 
 

@@ -58,13 +58,18 @@ public class NginxPolicyService {
 //        return modelMapper.map(entity_, NginxPolicyEntityDto.class);
 //    }
 
-    public NginxPolicyEntityDto update(String name, int workerProcessed, int workerConnections,
-            String nginxServerSidString, long sid) throws Exception {
+    public NginxPolicyEntityDto update(String name,
+                                       int workerProcessed, int workerConnections,
+                                       String nginxServerSidString,
+                                       long domainInfoSid, long sid
+    ) throws Exception {
 
         try {
             log.warn("000 == " + "시작");
 
-            NginxPolicyEntity entity = nginxPolicyEntityRepository.getById(sid);
+            NginxPolicyEntity entity = nginxPolicyEntityRepository.getAllByDeletedAtIsNull().get(0);
+
+            DomainEntity domainEntity = domainEntityRepository.getById(domainInfoSid);
 
             log.warn("111 == " + entity.getSid() + "  " + entity.getName());
 
@@ -74,6 +79,7 @@ public class NginxPolicyService {
 
             entity.setWorkerProcessed(workerProcessed);
             entity.setWorkerConnections(workerConnections);
+            entity.setDomainEntity(domainEntity);
 
             NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
 
@@ -97,7 +103,8 @@ public class NginxPolicyService {
                 tempNginxServer.getName();
 
                 NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_)
-                        .nginxServerEntity(tempNginxServer).build();
+                        .nginxServerEntity(tempNginxServer)
+                        .build();
 
                 nginxServerEntities.add(tempNginxServer);
                 n_p_s_e_list.add(npse);
@@ -147,8 +154,9 @@ public class NginxPolicyService {
 
     /**
      * <PRE>
-     *     해당 정책에 연결된 nginx servers
+     * 해당 정책에 연결된 nginx servers
      * </PRE>
+     *
      * @param parseLong
      * @return
      */
@@ -165,21 +173,20 @@ public class NginxPolicyService {
     /**
      * <PRE>
      * nginx policy 적용
-     * // TODO 개발중
      * </PRE>
      *
-     * @param policySid
      * @return
      */
-    public String ADJUST_NGINX_POLICY(long policySid) {
+    public String ADJUST_NGINX_POLICY() {
         String msg = "";
         try {
             log.error("============================================");
             msg = "NO NGINX_POLICY";
 
             // 기본 nginx_policy 구하기
-            NginxPolicyEntity nginxPolicyEntity = nginxPolicyEntityRepository.getById(policySid);
+            NginxPolicyEntity nginxPolicyEntity = nginxPolicyEntityRepository.getAllByDeletedAtIsNull().get(0);
             String nginxPolicyName = nginxPolicyEntity.getName();
+            long policySid = nginxPolicyEntity.getSid();
 
             log.warn("nginxPolicyName => " + nginxPolicyName);
 

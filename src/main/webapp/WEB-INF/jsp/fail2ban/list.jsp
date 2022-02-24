@@ -4,7 +4,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <h4>
-    웹서버 ssh 관리
+    서버 ssh 관리
 </h4>
 
 <c:forEach var="dto" items="${list}">

@@ -92,7 +92,7 @@
         </div>
     </div>
 
-
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_ALL
@@ -130,6 +130,7 @@
     </div>
 
 
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_STARTUP
@@ -166,7 +167,45 @@
         </div>
     </div>
 
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-41-row border-top">
+        <div>
+            NOTI_MAIL
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL} tg-noti tg-pa-startup"
+             onclick="toggleAdminSetting(this, ['tg-mail'], ['tg-pa-noti'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_MAIL" value="${adminSetting.NOTI_MAIL}">
+        </div>
+    </div>
 
+    <div class="modal-form-41-row">
+        <div>
+            NOTI_MAIL_NATEON
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_NATEON} tg-noti tg-nateon tg-startup"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-nateon', 'tg-pa-mail'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_MAIL_NATEON" value="${adminSetting.NOTI_MAIL_NATEON}">
+        </div>
+    </div>
+
+    <div class="modal-form-41-row">
+        <div>
+            NOTI_MAIL_SLACK
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_SLACK} tg-noti tg-slack tg-startup"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-slack', 'tg-pa-mail'])">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NOTI_MAIL_SLACK" value="${adminSetting.NOTI_MAIL_SLACK}">
+        </div>
+    </div>
+
+
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_HEALTHCHECK
@@ -204,6 +243,7 @@
     </div>
 
 
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_NGINX_UPDATE
@@ -241,6 +281,7 @@
     </div>
 
 
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_NGINX_RESTORE
@@ -278,6 +319,7 @@
     </div>
 
 
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_DB_SUCCESS
@@ -315,6 +357,7 @@
     </div>
 
 
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             NOTI_DB_FAIL
@@ -351,6 +394,8 @@
         </div>
     </div>
 
+
+    <!-- ---------------------------------------------------------- -->
 </form>
 
 <%--<div class="modal-form-41-row" style="text-align: center;">--%>

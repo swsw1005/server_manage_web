@@ -24,7 +24,7 @@ public class Fail2banViewController {
     public ModelAndView home(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("common/main");
 
-        mav.addObject("title", "웹서버 ssh 관리");
+        mav.addObject("title", "서버 ssh 관리");
         mav.addObject("mainPageUrl", "/fail2ban/main");
         return mav;
     }

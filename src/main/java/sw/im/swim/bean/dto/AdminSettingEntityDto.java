@@ -33,6 +33,10 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean NOTI_STARTUP_NATEON = false;
     private boolean NOTI_STARTUP_SLACK = false;
     ////////////////////////////////////////
+    private boolean NOTI_MAIL = false;
+    private boolean NOTI_MAIL_NATEON = false;
+    private boolean NOTI_MAIL_SLACK = false;
+    ////////////////////////////////////////
     private boolean NOTI_HEALTHCHECK = false;
     private boolean NOTI_HEALTHCHECK_NATEON = false;
     private boolean NOTI_HEALTHCHECK_SLACK = false;

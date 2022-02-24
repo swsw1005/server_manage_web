@@ -86,6 +86,7 @@ public class NginxPolicyController {
             @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
             @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
             @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString,
+            @RequestParam(name = "domainInfoSid", required = false, defaultValue = "") final String domainInfoSid,
             @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
             HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
@@ -94,6 +95,7 @@ public class NginxPolicyController {
                     Integer.parseInt(workerProcessed),
                     Integer.parseInt(workerConnections),
                     nginxServerSidString,
+                    Long.parseLong(domainInfoSid),
                     Long.parseLong(sid)
             );
             map.put("entity", dto);
@@ -106,9 +108,6 @@ public class NginxPolicyController {
         }
         return map;
     }
-
-
-
 
 
 //    @RequestMapping(value = "/nginxpolicy/add", method = {RequestMethod.POST})
@@ -164,12 +163,11 @@ public class NginxPolicyController {
 
     @RequestMapping(value = "/nginxpolicy", method = {RequestMethod.PATCH})
     public Map<String, Object> adjustNginxPolicy(
-            @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
             HttpServletRequest request, HttpServletResponse response
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            nginxPolicyService.ADJUST_NGINX_POLICY(Long.parseLong(sid));
+            nginxPolicyService.ADJUST_NGINX_POLICY();
             map.put("code", 0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -8,5 +8,6 @@ public enum AdminLogType {
     DB_FAIL,
     DB_RESTORE,
     DNS,
-    STARTUP, DB_LIST_UP,
+    MAIL,
+    STARTUP,
 }
