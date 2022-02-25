@@ -17,6 +17,7 @@ import sw.im.swim.worker.noti.NotiProducer;
 import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -81,6 +82,10 @@ public class AdminLogService {
             log.error(e.getMessage(), e);
         }
         return result;
+    }
+
+    public void deleteByIds(Set<Long> ids) {
+        adminLogRepository.deleteAllById(ids);
     }
 
 

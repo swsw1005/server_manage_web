@@ -20,6 +20,7 @@ import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.database.DatabaseHealchChecker;
+import sw.im.swim.worker.noti.AdminLogEmailWorker;
 
 @Slf4j
 @Component
@@ -113,6 +114,8 @@ public class FixedCronJob {
 
             if (currIp.equals(IP) == false) {
 
+                log.error("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
+
                 if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
                     GeneralConfig.CURRENT_IP = IP;
 
@@ -132,7 +135,19 @@ public class FixedCronJob {
 
     @Scheduled(cron = "0/15 * * * * *")
     public void databaseServerBackup() {
-        ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
+
+        try {
+            Thread.sleep(1500);
+        } catch (Exception e) {
+        }
+
+        ThreadWorkerPoolContext.getInstance()
+                .DB_SERVER_WORKER
+                .execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
+        ThreadWorkerPoolContext.getInstance()
+                .NOTI_WORKER
+                .execute(new AdminLogEmailWorker(adminLogService));
+
     }
 
 

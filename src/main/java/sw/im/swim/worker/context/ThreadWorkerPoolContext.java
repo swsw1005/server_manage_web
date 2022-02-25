@@ -38,7 +38,7 @@ public class ThreadWorkerPoolContext {
 
         NOTI_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[0]);
         NGINX_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[1]);
-        DB_SERVER_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[2]);
+        DB_SERVER_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[2]);
         DB_DUMP_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[3]);
 
         log.debug("WORKER POOL init complete !");

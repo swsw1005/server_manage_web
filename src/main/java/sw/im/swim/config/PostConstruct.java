@@ -88,6 +88,9 @@ public class PostConstruct {
 
         CronVO vo;
 
+        vo = new CronVO("0 0/5 * * * ?", "!! every 5 minute");
+        list.add(vo);
+
         vo = new CronVO("0 0 0/1 * * ?", "every 1 hour");
         list.add(vo);
         vo = new CronVO("0 0 0/2 * * ?", "every 2 hour");
