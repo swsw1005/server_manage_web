@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.FaviconEntityDto;
+import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.dto.WebServerEntityDto;
 import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.service.ServerInfoService;
 import sw.im.swim.service.WebServerService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Fail2banViewController {
 
-    private final WebServerService webServerService;
+    private final ServerInfoService serverInfoService;
 
     @GetMapping("/home")
     public ModelAndView home(HttpServletRequest request) {
@@ -39,7 +41,7 @@ public class Fail2banViewController {
     public ModelAndView list(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("fail2ban/list");
 
-        List<WebServerEntityDto> list = webServerService.getAll();
+        List<ServerInfoEntityDto> list = serverInfoService.getAll();
         mav.addObject("list", list);
 
         return mav;

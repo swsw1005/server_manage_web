@@ -128,14 +128,14 @@
 
         <c:if test="${insert}">
             <button type="button" class="w3-button w3-round w3-green"
-                    onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath }/api/v1/nginxpolicy')">
+                    onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/nginxpolicy')">
                 저장
             </button>
         </c:if>
 
         <c:if test="${!insert}">
             <button type="button" class="w3-button w3-round w3-green"
-                    onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath }/api/v1/nginxpolicyUpdate')">
+                    onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/nginxpolicyUpdate')">
                 수정
             </button>
         </c:if>

@@ -4,7 +4,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <h4>
-    server 관리
+    관리자 로그
 </h4>
 
 <c:forEach var="dto" items="${list}">

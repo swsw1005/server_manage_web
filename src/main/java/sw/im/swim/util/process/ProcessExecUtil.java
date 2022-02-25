@@ -3,6 +3,7 @@ package sw.im.swim.util.process;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,9 @@ public class ProcessExecUtil {
             while ((line = br.readLine()) != null) {
                 list.add(line);
             }
+        } catch (IOException e) {
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getClass().getSimpleName());
         } finally {
             try {
                 process.destroy();
@@ -59,6 +61,7 @@ public class ProcessExecUtil {
                 cli += "\n";
                 cli += line;
             }
+        } catch (IOException e) {
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
@@ -93,6 +96,7 @@ public class ProcessExecUtil {
                 cli += "\n";
                 cli += line;
             }
+        } catch (IOException e) {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {

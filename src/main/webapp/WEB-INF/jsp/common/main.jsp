@@ -30,7 +30,7 @@
     function loadMainPage() {
         $.ajax({
             type: "get",
-            url: "${contextPath }${mainPageUrl}",
+            url: "${contextPath}${mainPageUrl}",
             contentType: false,
             processData: false,
             data: {}

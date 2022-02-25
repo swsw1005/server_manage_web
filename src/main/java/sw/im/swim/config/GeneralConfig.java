@@ -1,6 +1,7 @@
 package sw.im.swim.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.NotiEntityDto;
 
@@ -10,8 +11,6 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GeneralConfig {
-
-    public static String FAIL2BAN_TOKEN = "ahlf3oia9a83fghlia938g9";
 
 //    public static final Hashtable<NotiType, Boolean> booleanMap = new Hashtable<>();
 
@@ -30,5 +29,7 @@ public class GeneralConfig {
     public static final ConcurrentHashMap<String, Boolean> NOTI_SETTING_MAP = new ConcurrentHashMap<>();
 
     public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
+
+    public static final Vector<CronVO> CRON_EXPRESSION_LIST = new Vector<>();
 
 }

@@ -18,47 +18,47 @@
 
             <div class="body">
 
-                <a href="${contextPath }/nginxpolicy/home" class="nav_row">
+                <a href="${contextPath}/nginxpolicy/home" class="nav_row">
                     nginx 정책 관리
                 </a>
 
-                <a href="${contextPath }/nginxserver/home" class="nav_row">
+                <a href="${contextPath}/nginxserver/home" class="nav_row">
                     nginx 서버 관리
                 </a>
 
-                <a href="${contextPath }/database/home" class="nav_row">
+                <a href="${contextPath}/database/home" class="nav_row">
                     DB 관리
                 </a>
 
-                <a href="${contextPath }/webserver/home" class="nav_row">
+                <a href="${contextPath}/webserver/home" class="nav_row">
                     웹서버 관리
                 </a>
 
-                <a href="${contextPath }/server/home" class="nav_row">
+                <a href="${contextPath}/server/home" class="nav_row">
                     서버 관리
                 </a>
 
-                <a href="${contextPath }/fail2ban/home" class="nav_row">
+                <a href="${contextPath}/fail2ban/home" class="nav_row">
                     서버 ssh 관리
                 </a>
 
-                <a href="${contextPath }/domain/home" class="nav_row">
+                <a href="${contextPath}/domain/home" class="nav_row">
                     domain 관리
                 </a>
 
-                <a href="${contextPath }/favicon/home" class="nav_row">
+                <a href="${contextPath}/favicon/home" class="nav_row">
                     favicon 관리
                 </a>
 
-                <a href="${contextPath }/noti/home" class="nav_row">
+                <a href="${contextPath}/noti/home" class="nav_row">
                     알림 설정
                 </a>
 
-                <a href="${contextPath }/adminsetting/home" class="nav_row">
+                <a href="${contextPath}/adminsetting/home" class="nav_row">
                     관리자 설정
                 </a>
 
-                <a href="${contextPath }/adminlog/home" class="nav_row">
+                <a href="${contextPath}/adminlog/home" class="nav_row">
                     관리자 로그
                 </a>
 

@@ -54,7 +54,7 @@ public class DatabaseHealchChecker implements Runnable {
             }
 
         } catch (Exception e) {
-            adminLogService.insertLog(AdminLogType.DB_FAIL, "FAIL", e.getLocalizedMessage());
+            adminLogService.insertLog(AdminLogType.DB_FAIL, "HEALTH CHECK FAIL", e.getLocalizedMessage());
             log.error(e.getMessage(), e);
         } finally {
             try {

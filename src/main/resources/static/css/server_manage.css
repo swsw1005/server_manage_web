@@ -378,6 +378,10 @@ input[type="radio"] {
 }
 
 .modal-form-half-row div:first-child,
+.modal-form-12-row div:first-child,
+.modal-form-13-row div:first-child,
+.modal-form-14-row div:first-child,
+.modal-form-23-row div:first-child,
 .modal-form-41-row div:first-child,
 .modal-form-31-row div:first-child,
 .modal-form-21-row div:first-child,
@@ -404,6 +408,43 @@ input[type="radio"] {
     margin: 10px 10px 0px 10px;
     display: grid;
     grid-template-columns: 2fr 1fr;
+}
+
+.modal-form-12-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.modal-form-13-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.modal-form-14-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+.modal-form-23-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+}
+
+.modal-form-2121-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+}
+
+.modal-form-2121-row div{
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    word-break: break-word;
 }
 
 .toggle-wrapper i.fa-toggle-on {
@@ -504,6 +545,13 @@ input[type="radio"] {
     padding-bottom: 5px;
     margin-bottom: 5px;
     border-bottom: 1px solid rgba(245, 245, 245, 0.836);
+}
+
+#nginx-server-location {
+    border: 1px solid white;
+    background: #3a3a3a;
+    margin: 3px;
+    height: calc(100vh - 400px);
 }
 
 .nginx-server-chk-wrapper {

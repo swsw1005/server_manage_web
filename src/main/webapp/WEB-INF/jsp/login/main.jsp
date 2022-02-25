@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
 
-    <link href="${contextPath }/static/css/simple-v1.css" rel="stylesheet" type="text/css"/>
-    <script src="${contextPath }/static/script/jquery-3.6.0.min.js"></script>
+    <link href="${contextPath}/static/css/simple-v1.css" rel="stylesheet" type="text/css"/>
+    <script src="${contextPath}/static/script/jquery-3.6.0.min.js"></script>
 
     <style>
         #form-body {
@@ -63,13 +63,13 @@
     function loadMainPage() {
         $.ajax({
             type: "post",
-            url: "${contextPath }/login",
+            url: "${contextPath}/login",
             contentType: false,
             processData: false,
             data: new FormData(document.getElementById("login-form"))
             ,
             success: function (result, status, statusCode) {
-                window.location = "${contextPath }/";
+                window.location = "${contextPath}/";
             },
             error: function (result, status, statusCode) {
                 alert("loginFail");

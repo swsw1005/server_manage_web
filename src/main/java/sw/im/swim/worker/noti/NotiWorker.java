@@ -41,7 +41,7 @@ public class NotiWorker implements Runnable {
 
         NotiType NOTI_TYPE = notiEntityDto.getNotiType();
 
-        log.info("NOTI_TYPE==" + NOTI_TYPE);
+        log.info("NOTI_TYPE==" + NOTI_TYPE + " __ " + notiEntityDto.getName());
 
         switch (NOTI_TYPE) {
             case SLACK:

@@ -17,20 +17,20 @@
 
     <div class="modal-form-row form-row-horizontal">
         <div>
-            worker 수
+            worker
         </div>
         <input type="number" name="workerProcessed" value="${nginxPolicy.workerProcessed}">
     </div>
 
     <div class="modal-form-row form-row-horizontal">
         <div>
-            worker 당 커넥션 수
+            worker/conn
         </div>
         <input type="number" name="workerConnections" value="${nginxPolicy.workerConnections}">
     </div>
       
 
-    <div class="modal-form-row">
+    <div class="modal-form-23-row">
         <div>
             ROOT 도메인
         </div>
@@ -62,8 +62,7 @@
         </div>
     </div>
 
-    <div id="nginx-server-location" class="modal-form-row"
-        style="border: 1px solid white; background: #3a3a3a">
+    <div id="nginx-server-location" class="modal-form-row">
        
             <c:forEach var="dto" items="${nginxServerList}">
                 <div class="nginx-server-wrapper">
@@ -111,7 +110,7 @@
 <div class="modal-form-row" style="text-align: center;">
 
     <button type="button" class="w3-button w3-round w3-green"
-        onclick="submitFormAjax_NginxPolicy('simple-form', 'simple-modal-form', '${contextPath }/api/v1/nginxpolicyUpdate')">
+        onclick="submitFormAjax_NginxPolicy('simple-form', 'simple-modal-form', '${contextPath}/api/v1/nginxpolicyUpdate')">
         저장
     </button>
 

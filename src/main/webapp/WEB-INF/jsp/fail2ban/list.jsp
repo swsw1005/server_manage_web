@@ -4,7 +4,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <h4>
-    서버 ssh 관리
+    server SSH 관리
 </h4>
 
 <c:forEach var="dto" items="${list}">
@@ -14,21 +14,20 @@
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
+
             <div class="list_row_name">
+                    ${dto.ip}
+            </div>
+
+            <div class="list_row_name" style="font-size: 1.2em;">
                     ${dto.name}
             </div>
-            <div class="list_row_ip">
-                <c:choose>
-                    <c:when test="${dto.https}">
-                        https://${dto.serverInfoEntity.ip}:${dto.port}
-                    </c:when>
-                    <c:otherwise>
-                        http://${dto.serverInfoEntity.ip}:${dto.port}
-                    </c:otherwise>
-                </c:choose>
+
+            <div class="list_row_name">
+                    ${dto.id}
             </div>
             <div class="list_row_name">
-                    ${dto.healthCheckUrl}
+                    ${dto.innerSSHPort} =&gt ${dto.outerSSHPort}
             </div>
 
             <div class="list_row_date">
@@ -43,9 +42,5 @@
 
         </div>
 
-        <div class="list_row_item list_row_del" onclick="deleteListItem('${dto.sid}', '${contextPath}/api/v1/webserver')">
-            <i class="fas fa-trash-alt"></i>
-        </div>
     </div>
 </c:forEach>
-

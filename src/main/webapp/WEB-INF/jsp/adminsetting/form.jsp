@@ -79,6 +79,39 @@
         <input type="text" name="SMTP_SSL_TRUST" value="${adminSetting.SMTP_SSL_TRUST}">
     </div>
 
+    <div class="modal-form-half-row border-top">
+        <div>
+            ADMIN_EMAIL
+        </div>
+        <input type="text" name="ADMIN_EMAIL" value="${adminSetting.ADMIN_EMAIL}">
+    </div>
+
+    <div class="modal-form-half-row">
+        <div>
+            ADMIN_LOG_MAIL_TITLE
+        </div>
+        <input type="text" name="ADMIN_LOG_MAIL_TITLE" value="${adminSetting.ADMIN_LOG_MAIL_TITLE}">
+    </div>
+
+    <div class="modal-form-half-row">
+        <div>
+            ADMIN_LOG_MAIL_CRON
+        </div>
+        <select name="ADMIN_LOG_MAIL_CRON" class="w3-select">
+            <option value="">
+                ----- 선택 -----
+            </option>
+            <c:forEach var="dto" items="${cronList}">
+                <c:if test="${dto.cron eq adminSetting.ADMIN_LOG_MAIL_CRON}">
+                    <option value="${dto.cron}" selected>${dto.name}</option>
+                </c:if>
+                <c:if test="${dto.cron ne adminSetting.ADMIN_LOG_MAIL_CRON}">
+                    <option value="${dto.cron}">${dto.name}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </div>
+
 
     <div class="modal-form-41-row border-top">
         <div>
@@ -89,6 +122,68 @@
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
             <input type="text" name="DNS_UPDATE" value="${adminSetting.DNS_UPDATE}">
+        </div>
+    </div>
+
+
+    <div class="modal-form-half-row">
+        <div>
+            DB_BACKUP_CRON
+        </div>
+        <select name="DB_BACKUP_CRON" class="w3-select">
+            <option value="">
+                ----- 선택 -----
+            </option>
+            <c:forEach var="dto" items="${cronList}">
+                <c:if test="${dto.cron eq adminSetting.DB_BACKUP_CRON}">
+                    <option value="${dto.cron}" selected>${dto.name}</option>
+                </c:if>
+                <c:if test="${dto.cron ne adminSetting.DB_BACKUP_CRON}">
+                    <option value="${dto.cron}">${dto.name}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-half-row">
+        <div>
+            FAIL2BAN_TOKEN
+        </div>
+        <input type="text" name="FAIL2BAN_TOKEN" value="${adminSetting.FAIL2BAN_TOKEN}">
+    </div>
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-41-row">
+        <div>
+            SERVER_HEALTH_CHECK
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.SERVER_HEALTH_CHECK}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="SERVER_HEALTH_CHECK" value="${adminSetting.SERVER_HEALTH_CHECK}">
+        </div>
+    </div>
+    <div class="modal-form-41-row">
+        <div>
+            WEB_SERVER_HEALTH_CHECK
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.WEB_SERVER_HEALTH_CHECK}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="WEB_SERVER_HEALTH_CHECK" value="${adminSetting.WEB_SERVER_HEALTH_CHECK}">
+        </div>
+    </div>
+    <div class="modal-form-41-row">
+        <div>
+            DB_HEALTH_CHECK
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.DB_HEALTH_CHECK}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="DB_HEALTH_CHECK" value="${adminSetting.DB_HEALTH_CHECK}">
         </div>
     </div>
 
@@ -172,8 +267,8 @@
         <div>
             NOTI_MAIL
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL} tg-noti tg-pa-startup"
-             onclick="toggleAdminSetting(this, ['tg-mail'], ['tg-pa-noti'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL} tg-noti tg-pa-mail"
+             onclick="toggleAdminSetting(this, ['tg-mail'], ['tg-pa-mail'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
             <input type="text" name="NOTI_MAIL" value="${adminSetting.NOTI_MAIL}">
@@ -184,8 +279,8 @@
         <div>
             NOTI_MAIL_NATEON
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_NATEON} tg-noti tg-nateon tg-startup"
-             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-nateon', 'tg-pa-mail'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_NATEON} tg-noti tg-nateon tg-mail"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-mail', 'tg-pa-nateon', 'tg-pa-mail'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
             <input type="text" name="NOTI_MAIL_NATEON" value="${adminSetting.NOTI_MAIL_NATEON}">
@@ -196,8 +291,8 @@
         <div>
             NOTI_MAIL_SLACK
         </div>
-        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_SLACK} tg-noti tg-slack tg-startup"
-             onclick="toggleAdminSetting(this, [], ['tg-pa-noti', 'tg-pa-slack', 'tg-pa-mail'])">
+        <div class="toggle-wrapper toggle-${adminSetting.NOTI_MAIL_SLACK} tg-noti tg-slack tg-mail"
+             onclick="toggleAdminSetting(this, [], ['tg-pa-mail', 'tg-pa-slack', 'tg-pa-mail'])">
             <i class="fas fa-toggle-on"></i>
             <i class="fas fa-toggle-off"></i>
             <input type="text" name="NOTI_MAIL_SLACK" value="${adminSetting.NOTI_MAIL_SLACK}">

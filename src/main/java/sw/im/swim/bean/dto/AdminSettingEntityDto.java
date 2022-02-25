@@ -23,7 +23,19 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean SMTP_SSL_ENABLE = true;
     private String SMTP_SSL_TRUST = "smtp.gmail.com";
     ////////////////////////////////////////
+    private String ADMIN_EMAIL = "";
+    private String ADMIN_LOG_MAIL_TITLE = "[관리자 로그] 메일";
+    private String ADMIN_LOG_MAIL_CRON = "";
+    ////////////////////////////////////////
     private boolean DNS_UPDATE = false;
+    ////////////////////////////////////////
+    private String DB_BACKUP_CRON = "";
+    ////////////////////////////////////////
+    private String FAIL2BAN_TOKEN = "";
+    ////////////////////////////////////////
+    private boolean SERVER_HEALTH_CHECK = false;
+    private boolean WEB_SERVER_HEALTH_CHECK = false;
+    private boolean DB_HEALTH_CHECK = false;
     ////////////////////////////////////////
     private boolean NOTI_ALL = false;
     private boolean NOTI_ALL_NATEON = false;
@@ -57,8 +69,6 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean NOTI_DB_FAIL_NATEON = false;
     private boolean NOTI_DB_FAIL_SLACK = false;
     ////////////////////////////////////////
-
-
 
 
 }

@@ -11,7 +11,7 @@
 
     <div class="list_row">
         <div class="list_row_item list_row_content list_row_update"
-             onclick="openInputModal('simple-modal-form', '${contextPath }/nginxpolicy/form', '${dto.sid}')">
+             onclick="openInputModal('simple-modal-form', '${contextPath}/nginxpolicy/form', '${dto.sid}')">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>

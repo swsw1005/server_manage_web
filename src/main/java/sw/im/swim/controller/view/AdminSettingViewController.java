@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
@@ -17,6 +19,8 @@ import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -49,6 +53,9 @@ public class AdminSettingViewController {
 
         AdminSettingEntityDto setting = adminSettingService.getSetting();
 
+        ArrayList<CronVO> cronList = new ArrayList<>(GeneralConfig.CRON_EXPRESSION_LIST);
+
+        mav.addObject("cronList", cronList);
         mav.addObject("adminSetting", setting);
         return mav;
     }

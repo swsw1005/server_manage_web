@@ -67,7 +67,7 @@ public class AdminLogService {
         List<AdminLogEntityDto> result = new ArrayList<>();
 
         try {
-            List<AdminLogEntity> list = adminLogRepository.findAllBySidIsNotNullOrderByCreatedAtDesc();
+            List<AdminLogEntity> list = adminLogRepository.allLog();
 
             for (int i = 0; i < list.size(); i++) {
                 AdminLogEntity temp = list.get(i);
@@ -78,6 +78,7 @@ public class AdminLogService {
             }
 
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return result;
     }

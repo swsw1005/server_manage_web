@@ -12,7 +12,8 @@ import java.util.concurrent.ThreadFactory;
 @Slf4j
 public class ThreadWorkerPoolContext {
 
-    public Queue<Integer> DB_SERVER_QUEUE;
+    public final Queue<Integer> DB_SERVER_QUEUE;
+    public final Queue<Integer> ADMIN_LOG_MAIL_QUEUE;
 
     public ExecutorService NOTI_WORKER;
     public ExecutorService NGINX_WORKER;
@@ -22,6 +23,7 @@ public class ThreadWorkerPoolContext {
     private ThreadWorkerPoolContext() {
 
         DB_SERVER_QUEUE = new LinkedBlockingQueue<>();
+        ADMIN_LOG_MAIL_QUEUE = new LinkedBlockingQueue<>();
 
         final ThreadFactory[] namedThreadFactorys = {
                 new ThreadFactoryBuilder().setNameFormat("NOTI_WORKER-%d")

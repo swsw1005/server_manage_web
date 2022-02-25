@@ -43,9 +43,7 @@ public class DatabaseServerService {
                 ServerInfoEntity entity = serverList.get(0);
 
                 List<WebServerEntity> webServerEntityList = webServerEntityRepository.getByServerInfo(entity.getSid());
-                log.info("webServerEntityList => " + webServerEntityList.size());
                 List<DatabaseServerEntity> databaseServerEntityList = databaseServerEntityRepository.getByServerInfo(entity.getSid());
-                log.info("databaseServerEntityList => " + databaseServerEntityList.size());
             } catch (Exception e) {
             }
 

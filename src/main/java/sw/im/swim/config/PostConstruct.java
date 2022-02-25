@@ -2,28 +2,22 @@ package sw.im.swim.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
-import sw.im.swim.component.DatabaseBackupJob;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.AdminSettingService;
 import sw.im.swim.service.NotiService;
 import sw.im.swim.util.AesUtil;
-import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 
 import java.io.File;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.UUID;
-
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 
 @Slf4j
@@ -39,9 +33,6 @@ public class PostConstruct {
     @Value("${google.dns.password}")
     private String GOOGLE_DNS_PASSWORD;
 
-    @Value(value = "${DB_BACKUP_CRON}")
-    private String DB_BACKUP_CRON = "0 0 0/3 * * *";
-
     @Value(value = "${AES_KEY}")
     private String AES_KEY = "";
 
@@ -53,6 +44,8 @@ public class PostConstruct {
 
     @javax.annotation.PostConstruct
     public void INIT() throws SchedulerException {
+
+        setCronExpression();
 
         notiService.getAll();
 
@@ -73,38 +66,6 @@ public class PostConstruct {
         } catch (Exception e) {
         }
 
-        String cronExp = String.valueOf(DB_BACKUP_CRON);
-        try {
-            Scheduler defaultScheduler = StdSchedulerFactory.getDefaultScheduler();
-            CronScheduleBuilder cronSchedule = null;
-            try {
-                log.info("try cron => " + cronExp);
-                cronSchedule = cronSchedule(cronExp);
-            } catch (Exception e2) {
-                cronExp = DEFAULT_CRON;
-                log.info("retry cron => " + cronExp);
-                cronSchedule = cronSchedule(DEFAULT_CRON);
-            }
-
-            JobDetail jobDetail = newJob(DatabaseBackupJob.class).withIdentity("jobName", "DATABASE_BACKUP_JOB").build();
-
-            Trigger trigger = newTrigger().withIdentity("triggerName", "DATABASE_BACKUP_TRIGGER").withSchedule(cronSchedule).build();
-
-            if (defaultScheduler.checkExists(jobDetail.getKey())) {
-                defaultScheduler.deleteJob(jobDetail.getKey());
-            }
-
-            Date time = defaultScheduler.scheduleJob(jobDetail, trigger);
-
-            log.warn("NEXT JOB TIME => " + DateFormatUtil.DATE_FORMAT_yyyyMMdd_T_HHmmssXXX.format(time));
-
-            defaultScheduler.start();
-
-        } catch (RuntimeException e) {
-            log.error("Maybe Cron Expression ERROR.... [" + cronExp + "]");
-        } catch (Exception e) {
-            log.error(e.toString() + "\t" + e.getMessage() + " =====", e);
-        }
 
         try {
 
@@ -120,5 +81,34 @@ public class PostConstruct {
             log.error(e.getMessage(), e);
         }
     }
+
+    private void setCronExpression() {
+
+        ArrayList<CronVO> list = new ArrayList<>();
+
+        CronVO vo;
+
+        vo = new CronVO("0 0 0/1 * * ?", "every 1 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0/2 * * ?", "every 2 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0/3 * * ?", "every 3 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0/4 * * ?", "every 4 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0/6 * * ?", "every 6 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0/12 * * ?", "every 12 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0 0/1 * ?", "every 24 hour");
+        list.add(vo);
+        vo = new CronVO("0 0 0 0/2 * ?", "every 2 day");
+        list.add(vo);
+
+        GeneralConfig.CRON_EXPRESSION_LIST.clear();
+        GeneralConfig.CRON_EXPRESSION_LIST.addAll(list);
+
+    }
+
 
 }

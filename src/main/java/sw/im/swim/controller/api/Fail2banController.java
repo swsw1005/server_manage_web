@@ -177,7 +177,7 @@ public class Fail2banController {
         log.info("token   \t+" + token);
 
         try {
-            if (!token.equals(GeneralConfig.FAIL2BAN_TOKEN)) {
+            if (!token.equals(GeneralConfig.ADMIN_SETTING.getFAIL2BAN_TOKEN())) {
                 throw new TokenException("TOKEN_VALID");
             }
             int result = fail2banService.SEND(server, ip, country, job);

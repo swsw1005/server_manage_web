@@ -6,6 +6,7 @@ import sw.im.swim.bean.dto.DatabaseServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.bean.enums.DbType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.DatabaseServerService;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
@@ -25,9 +26,6 @@ public class DatabaseBackupProducer implements Runnable {
     @Override
     public void run() {
         List<DatabaseServerEntityDto> databaseServerList = databaseServerService.getAll();
-
-        log.debug("database server size => " + databaseServerList.size());
-
         try {
             new File(DatabaseServerUtil.DB_DUMP_FILE_TMP).mkdirs();
         } catch (Exception e) {
@@ -38,8 +36,6 @@ public class DatabaseBackupProducer implements Runnable {
             job = ThreadWorkerPoolContext.getInstance().DB_SERVER_QUEUE.poll();
         } catch (Exception e) {
         }
-
-        log.info("START!! ----------------------------------------");
 
         File pgpass = DatabaseServerUtil.PG_PASS_DELETE();
 
@@ -72,18 +68,19 @@ public class DatabaseBackupProducer implements Runnable {
             } // try catch end
         } else {
             // DB 헬스 체크 ---------------------------------
-            try {
-                for (DatabaseServerEntityDto dto : databaseServerList) {
-                    ThreadWorkerPoolContext.getInstance()
-                            .DB_SERVER_WORKER
-                            .execute(new DatabaseHealchChecker(adminLogService, dto));
-                }
-            } catch (Exception e) {
-                adminLogService.insertLog(AdminLogType.DB_FAIL, "FAIL", e.getLocalizedMessage());
-            } // try catch end
+            if (GeneralConfig.ADMIN_SETTING.isDB_HEALTH_CHECK()) {
+                try {
+                    for (DatabaseServerEntityDto dto : databaseServerList) {
+                        ThreadWorkerPoolContext.getInstance()
+                                .DB_SERVER_WORKER
+                                .execute(new DatabaseHealchChecker(adminLogService, dto));
+                    }
+                } catch (Exception e) {
+                    adminLogService.insertLog(AdminLogType.DB_FAIL, "FAIL", e.getLocalizedMessage());
+                } // try catch end
+            }
         }
         ThreadWorkerPoolContext.getInstance().DB_SERVER_QUEUE.clear();
-
 
     }
 }
