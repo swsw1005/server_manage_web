@@ -20,7 +20,7 @@ public class SSHUtils {
      * @param password
      * @throws JSchException
      */
-    public SSHUtils(String username, String host, int port, String password) throws JSchException {
+    public SSHUtils(String host, int port, String username, String password) throws JSchException {
         this.username = username;
         this.host = host;
         this.port = port;
@@ -40,8 +40,11 @@ public class SSHUtils {
     private void connectSSH() throws JSchException {
         session = new JSch().getSession(username, host, port);
         session.setPassword(password);
-        // 호스트 정보를 검사하지 않도록 설정
-        session.setConfig("StrictHostKeyChecking", "no");
+
+        java.util.Properties config = new java.util.Properties();
+        config.put("StrictHostKeyChecking", "no");
+        session.setConfig(config);
+
         session.connect();
     }
 

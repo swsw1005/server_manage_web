@@ -40,6 +40,8 @@ public class NginxPolicyService {
 
     private final NginxServerService nginxServerService;
 
+    private final NginxPolicySubService nginxPolicySubService;
+
     private final DomainEntityRepository domainEntityRepository;
     private final FaviconEntityRepository faviconEntityRepository;
 
@@ -260,7 +262,11 @@ public class NginxPolicyService {
                 FAVICON_SET.add(favicon_);
             } // for i end
 
-            NginxWorker nginxWorker = new NginxWorker(policyEntityDto, nginxServerEntityList, adminLogService);
+            NginxWorker nginxWorker = new NginxWorker(policyEntityDto,
+                    nginxServerEntityList,
+                    adminLogService,
+                    nginxPolicySubService
+            );
             ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
 
         } catch (Exception e) {

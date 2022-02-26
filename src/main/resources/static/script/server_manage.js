@@ -127,14 +127,14 @@ function callList() {
     });
 }
 
-function submitFormAjax(formId, modalId, URL, successCallBack, errorCallBack) {
+function submitFormAjax(formId, modalId, URL, method, successCallBack, errorCallBack) {
 
     console.log(formId, modalId, URL);
 
     var submitFormData = new FormData(document.getElementById(formId));
 
     $.ajax({
-        type: "post",
+        type: method,
         url: URL,
         contentType: false,
         processData: false,
@@ -265,6 +265,44 @@ function submitFormAjax_AdminSetting(formId, modalId, URL, successCallBack, erro
             }
         }
     });
+}
+
+function unbanIp(this_, URL) {
+
+    var ip = this_.getAttribute("data-ip");
+    var token = this_.getAttribute("data-token");
+    var sid = this_.getAttribute("data-sid");
+    var job = this_.getAttribute("data-job");
+
+    $.ajax({
+        type: "post",
+        url: URL,
+        // contentType: false,
+        // processData: false,
+        data: {
+            sid: sid,
+            ip: ip,
+            token: token,
+            job: job
+        }
+        ,
+        success: function (result, status, statusCode) {
+            Notify(
+                'success',
+                ip + ' 차단해제',
+                'success'
+            );
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                'error',
+                result.responseJSON.error_msg,
+                'error'
+            );
+        }
+    });
+
+
 }
 
 /**
@@ -574,7 +612,6 @@ function adjustNginxSetting(formId, URL) {
 function NO_ACTION() {
 
 }
-
 
 
 function notiFormTypeSelect() {

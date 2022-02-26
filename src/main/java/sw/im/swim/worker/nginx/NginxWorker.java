@@ -1,10 +1,7 @@
 package sw.im.swim.worker.nginx;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 
@@ -13,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
+import sw.im.swim.service.NginxPolicySubService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
 import sw.im.swim.util.nginx.NginxServiceControllUtil;
@@ -25,6 +24,7 @@ public class NginxWorker implements Runnable {
     private final NginxPolicyEntityDto policyEntityDto;
     private final List<NginxServerEntityDto> nginxServerEntityList;
     private final AdminLogService adminLogService;
+    private final NginxPolicySubService nginxPolicySubService;
 
 //    private String OLD_NGINX_CONF_FILE_PATH = "";
 
@@ -141,6 +141,18 @@ public class NginxWorker implements Runnable {
             RESTORE_NEED = false;
 
             adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "SUCCESS", "NGINX UPDATE END");
+
+            Calendar cal1 = Calendar.getInstance(GeneralConfig.TIME_ZONE);
+            Calendar cal2 = Calendar.getInstance(GeneralConfig.TIME_ZONE);
+            cal2.add(Calendar.MONTH, 3);
+            cal2.add(Calendar.DATE, -1);
+
+            String timeStr = DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(cal1.getTime())
+                    + " ~ " +
+                    DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(cal2.getTime());
+            adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "CERT UPDATE", timeStr);
+
+            nginxPolicySubService.updateLastCertTime();
 
         } catch (Exception e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());

@@ -96,7 +96,12 @@ public class AdminSettingService {
                             break;
 
                         default:
-                            updateField.set(dto, newFieldValue);
+                            if (fieldName.contains("TOKEN") && (newFieldValue == null || newFieldValue.length() < 3)) {
+                                updateField.set(dto, UUID.randomUUID().toString().substring(0, 10));
+                            } else {
+                                updateField.set(dto, newFieldValue);
+                            }
+
                             break;
                     } // switch case end
 

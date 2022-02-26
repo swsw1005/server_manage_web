@@ -17,8 +17,7 @@ public class ServerInfoEntityDto implements Serializable {
     private String id;
     private String password;
     private String ip;
-    private Integer innerSSHPort;
-    private Integer outerSSHPort;
+    private Integer sshPort;
 
     public String getCreated() {
         try {

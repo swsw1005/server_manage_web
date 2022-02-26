@@ -72,6 +72,18 @@
         </div>
     </div>
 
+    <div class="modal-form-41-row">
+        <div>
+            SMTP_STARTTLS_ENABLE
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.SMTP_STARTTLS_ENABLE}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="SMTP_STARTTLS_ENABLE" value="${adminSetting.SMTP_STARTTLS_ENABLE}">
+        </div>
+    </div>
+
     <div class="modal-form-half-row">
         <div>
             SMTP_SSL_TRUST

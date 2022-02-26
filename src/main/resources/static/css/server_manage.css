@@ -440,12 +440,33 @@ input[type="radio"] {
     grid-template-columns: 2fr 1fr 2fr 1fr;
 }
 
-.modal-form-2121-row div{
+.modal-form-2121-row div {
     display: flex;
     justify-self: center;
     align-self: center;
     word-break: break-word;
 }
+
+#ipListLocation {
+    border: 1px solid ghostwhite;
+    overflow-y: scroll;
+    max-height: 40vh;
+    background-color: #3a3a3a44;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px;
+}
+
+#ipListLocation .ip {
+    margin: 5px;
+    padding: 5px;
+    width: 45%;
+    background-color: black;
+    text-align: center;
+}
+
 
 .toggle-wrapper i.fa-toggle-on {
     font-size: 32px;
@@ -552,6 +573,7 @@ input[type="radio"] {
     background: #3a3a3a;
     margin: 3px;
     height: calc(100vh - 400px);
+    overflow-y: scroll;
 }
 
 .nginx-server-chk-wrapper {

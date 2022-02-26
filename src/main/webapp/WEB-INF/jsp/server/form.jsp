@@ -50,23 +50,16 @@
 
         <div class="modal-form-row">
             <div>
-                ssh 내부 port
+                ssh port
             </div>
-            <input type="number" name="innerSSHPort">
-        </div>
-
-        <div class="modal-form-row">
-            <div>
-                ssh 외부 port
-            </div>
-            <input type="number" name="outerSSHPort">
+            <input type="number" name="sshPort">
         </div>
 
     </form>
 
     <div class="modal-form-row" style="text-align: center;">
         <button type="button" class="w3-button w3-round w3-green"
-                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/server')">
+                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/server', 'post')">
             저장
         </button>
         <button type="button" class="w3-button w3-round w3-red" onclick="closeInputModal('simple-modal-form')">

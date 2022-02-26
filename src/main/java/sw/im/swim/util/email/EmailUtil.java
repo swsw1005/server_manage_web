@@ -1,5 +1,6 @@
 package sw.im.swim.util.email;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Properties;
@@ -18,6 +19,7 @@ public class EmailUtil {
             final String SMTP_PASSWORD,
             final String SMTP_HOST,
             final int SMTP_PORT,
+            final boolean SMTP_STARTTLS_ENABLE,
             final boolean SMTP_AUTH,
             final boolean SMTP_SSL_ENABLE,
             final String SMTP_SSL_TRUST,
@@ -32,12 +34,19 @@ public class EmailUtil {
             prop.put("mail.smtp.host", SMTP_HOST);
             prop.put("mail.smtp.port", SMTP_PORT);
             prop.put("mail.smtp.auth", SMTP_AUTH);
-            prop.put("mail.smtp.ssl.enable", SMTP_SSL_ENABLE);
-            prop.put("mail.smtp.ssl.trust", SMTP_SSL_TRUST);
+
+            if (SMTP_STARTTLS_ENABLE) {
+                prop.put("mail.smtp.starttls.enable", SMTP_SSL_ENABLE);
+            } else {
+                prop.put("mail.smtp.ssl.enable", SMTP_SSL_ENABLE);
+                prop.put("mail.smtp.ssl.trust", SMTP_SSL_TRUST);
+            }
+
+            log.error(new Gson().toJson(prop));
 
             // 3. SMTP 서버정보와 사용자 정보를 기반으로 Session 클래스의 인스턴스 생성
 
-            Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
+            Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(SMTP_USER, SMTP_PASSWORD);
                 }
@@ -51,14 +60,16 @@ public class EmailUtil {
 
             // 수신자 메일 주소
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(TO_EMAIL));
-
             // Subject
-            message.setSubject(title);
-
+            message.setSubject(title, "UTF-8");
             // Text
-            message.setText(BODY);
+            message.setText(BODY, "UTF-8", "html");
+
+            log.error("mail send start");
 
             Transport.send(message);    // send message
+
+            log.error("mail send end");
 
         } catch (Exception e) {
             log.error(e.getMessage() + "=============", e);
@@ -66,5 +77,26 @@ public class EmailUtil {
         }
     }
 
+
+    public static void main(String[] args) {
+        try {
+
+            EmailUtil.sendEmail("swim.logger92@gmail.com",
+                    "swsw1005!@#",
+                    "smtp.gmail.com",
+                    587,
+                    true,
+                    true,
+                    true,
+                    "smtp.gmail.com",
+                    "swsw1005@gmail.com",
+                    "tes",
+                    "test test"
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

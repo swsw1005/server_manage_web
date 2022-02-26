@@ -49,14 +49,13 @@ public class ServerInfoController {
             @RequestParam(name = "id", required = false, defaultValue = "") final String id,
             @RequestParam(name = "ip", required = false, defaultValue = "") final String ip,
             @RequestParam(name = "password", required = false, defaultValue = "") final String password,
-            @RequestParam(name = "innerSSHPort", required = false, defaultValue = "") final int innerSSHPort,
-            @RequestParam(name = "outerSSHPort", required = false, defaultValue = "") final int outerSSHPort,
+            @RequestParam(name = "sshPort", required = false, defaultValue = "") final int sshPort,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         Map<String, Object> map = new HashMap<>();
         try {
-            ServerInfoEntityDto entity = serverInfoService.insertNew(name, id, password, ip, innerSSHPort, outerSSHPort);
+            ServerInfoEntityDto entity = serverInfoService.insertNew(name, id, password, ip, sshPort);
             map.put("entity", entity);
             map.put("code", 0);
         } catch (Exception e) {

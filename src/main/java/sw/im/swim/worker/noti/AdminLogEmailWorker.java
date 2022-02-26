@@ -1,5 +1,6 @@
 package sw.im.swim.worker.noti;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.AdminLogEntityDto;
@@ -7,9 +8,11 @@ import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
+import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.email.EmailUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +38,7 @@ public class AdminLogEmailWorker implements Runnable {
 
         try {
 
-            log.error(" !!! ADMIN EMAIL SEND !!! ");
+//            log.error(" !!! ADMIN EMAIL SEND !!! ");
 
             List<AdminLogEntityDto> list = adminLogService.listAll();
 
@@ -43,16 +46,22 @@ public class AdminLogEmailWorker implements Runnable {
 
             AdminSettingEntityDto setting = GeneralConfig.ADMIN_SETTING;
 
+//            log.error("GeneralConfig.ADMIN_SETTING   " + new Gson().toJson(setting));
+
+            String title = setting.getADMIN_LOG_MAIL_TITLE()
+                    + "  "
+                    + DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss_z.format(new Date());
             EmailUtil.sendEmail(
                     setting.getSMTP_USER(),
                     setting.getSMTP_PASSWORD(),
                     setting.getSMTP_HOST(),
                     setting.getSMTP_PORT(),
+                    setting.isSMTP_STARTTLS_ENABLE(),
                     setting.isSMTP_AUTH(),
                     setting.isSMTP_SSL_ENABLE(),
                     setting.getSMTP_SSL_TRUST(),
                     setting.getADMIN_EMAIL(),
-                    setting.getADMIN_LOG_MAIL_TITLE(),
+                    title,
                     content
             );
             Set<Long> ids = list.stream().map(AdminLogEntityDto::getSid).collect(Collectors.toSet());

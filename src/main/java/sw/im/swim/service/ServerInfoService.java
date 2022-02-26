@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.entity.DatabaseServerEntity;
 import sw.im.swim.bean.entity.ServerInfoEntity;
@@ -15,7 +16,6 @@ import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
 import sw.im.swim.util.AesUtil;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class ServerInfoService {
         return result;
     }
 
-    public ServerInfoEntityDto insertNew(String name, String id, String password, String ip, Integer innerSSHPort, Integer outerSSHPort) throws Exception {
+    public ServerInfoEntityDto insertNew(String name, String id, String password, String ip, Integer sshPort) throws Exception {
 
         try {
             final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
@@ -53,8 +53,7 @@ public class ServerInfoService {
                     .id(id)
                     .password(encPassword)
                     .ip(ip)
-                    .innerSSHPort(innerSSHPort)
-                    .outerSSHPort(outerSSHPort)
+                    .sshPort(sshPort)
                     .build();
             ServerInfoEntity entity_ = serverInfoEntityRepository.save(entity);
             entity_.getCreatedAt();
@@ -87,4 +86,18 @@ public class ServerInfoService {
         }
     }
 
+    public ServerInfoEntityDto getBySid(long sid) throws Exception {
+        try {
+            ServerInfoEntity entity = serverInfoEntityRepository.getById(sid);
+            ServerInfoEntityDto dto = modelMapper.map(entity, ServerInfoEntityDto.class);
+            try {
+                dto.setPassword(AesUtil.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
+            } catch (Exception e) {
+            }
+            return dto;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new Exception();
+        }
+    }
 }

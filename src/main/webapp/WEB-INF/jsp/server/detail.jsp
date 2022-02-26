@@ -16,7 +16,7 @@
     <form id="simple-form">
         <div class="modal-form-row">
             <h3>
-                server 등록
+                server 상세정보
             </h3>
         </div>
 
@@ -24,48 +24,44 @@
             <div>
                 서버 이름
             </div>
-            <input type="text" name="name">
+            <input type="text" name="name" value="${dto.name}">
         </div>
 
         <div class="modal-form-row">
             <div>
                 IP
             </div>
-            <input type="text" name="ip">
+            <div>
+                ${dto.ip}
+            </div>
         </div>
 
-        <div class="modal-form-row">
-            <div>
-                 ssh id
-            </div>
-            <input type="text" name="id">
+        <div id="ipListLocation">
+            <c:forEach items="${ips}" var="ip">
+                <div class="ip" onclick="unbanIp(this, '${contextPath}/api/v1/fail2ban/block')"
+                     data-token="${token}"
+                     data-sid="${dto.sid}"
+                     data-ip="${ip}"
+                     data-job="unban">
+                    ${ip}
+                </div>
+
+            </c:forEach>
+
         </div>
 
-        <div class="modal-form-row">
-            <div>
-                ssh password
-            </div>
-            <input type="password" name="password">
-        </div>
-
-        <div class="modal-form-row">
-            <div>
-                ssh port
-            </div>
-            <input type="number" name="sshPort">
-        </div>
 
     </form>
 
-    <div class="modal-form-row" style="text-align: center;">
-        <button type="button" class="w3-button w3-round w3-green"
-                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/server', 'post')">
-            저장
-        </button>
-        <button type="button" class="w3-button w3-round w3-red" onclick="closeInputModal('simple-modal-form')">
-            취소
-        </button>
-    </div>
+    <%--    <div class="modal-form-row" style="text-align: center;">--%>
+    <%--        <button type="button" class="w3-button w3-round w3-green"--%>
+    <%--                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/server', 'put')">--%>
+    <%--            저장--%>
+    <%--        </button>--%>
+    <%--        <button type="button" class="w3-button w3-round w3-red" onclick="closeInputModal('simple-modal-form')">--%>
+    <%--            취소--%>
+    <%--        </button>--%>
+    <%--    </div>--%>
 
 </div>
 

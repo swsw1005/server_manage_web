@@ -1,11 +1,7 @@
 package sw.im.swim.bean.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sw.im.swim.bean.entity.base.EntityBase;
 import sw.im.swim.util.number.NumberVaildateUtil;
+
+import java.util.Calendar;
 
 @Getter
 @Builder
@@ -45,6 +43,15 @@ public class NginxPolicyEntity extends EntityBase {
     @Column(nullable = false, length = 60)
     @Builder.Default
     private int workerConnections = 768;
+
+    @Column(name = "last_cert_updated_at", insertable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Calendar lastCertUpdatedAt;
+
+    public void certUpdate() {
+        this.lastCertUpdatedAt = Calendar.getInstance();
+    }
+
 
     public void setWorkerProcessed(int workerProcessed) {
 //        this.workerProcessed = NumberVaildateUtil.validateBetween(workerProcessed, 4, 16);

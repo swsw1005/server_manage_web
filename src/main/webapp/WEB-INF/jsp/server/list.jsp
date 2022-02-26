@@ -10,7 +10,7 @@
 <c:forEach var="dto" items="${list}">
 
     <div class="list_row">
-        <div class="list_row_item list_row_content">
+        <div class="list_row_item list_row_content" onclick="openInputModal('simple-modal-form', '${contextPath}/server/detail/${dto.sid}')">
                 <%--            <div>--%>
                 <%--                    ${dto.sid}--%>
                 <%--            </div>--%>
@@ -27,7 +27,7 @@
                     ${dto.id}
             </div>
             <div class="list_row_name">
-                    ${dto.innerSSHPort} =&gt ${dto.outerSSHPort}
+                    ${dto.sshPort}
             </div>
 
             <div class="list_row_date">

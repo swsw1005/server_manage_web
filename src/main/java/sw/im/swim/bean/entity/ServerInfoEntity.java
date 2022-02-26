@@ -31,10 +31,7 @@ public class ServerInfoEntity extends EntityBase {
     @Column(nullable = false, length = 60, unique = true)
     private String ip;
 
-    @Column(nullable = false, length = 10, name = "inner_ssh_port")
-    private Integer innerSSHPort;
-
-    @Column(nullable = false, length = 10, name = "outer_ssh_port")
-    private Integer outerSSHPort;
+    @Column(nullable = true, length = 10, name = "ssh_port")
+    private Integer sshPort;
 
 }

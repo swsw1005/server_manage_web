@@ -38,10 +38,6 @@
                     서버 관리
                 </a>
 
-                <a href="${contextPath}/fail2ban/home" class="nav_row">
-                    서버 ssh 관리
-                </a>
-
                 <a href="${contextPath}/domain/home" class="nav_row">
                     domain 관리
                 </a>

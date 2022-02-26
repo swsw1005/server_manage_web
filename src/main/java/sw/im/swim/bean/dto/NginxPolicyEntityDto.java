@@ -17,6 +17,8 @@ public class NginxPolicyEntityDto implements Serializable {
     private DomainEntityDto domainEntity;
     private int workerProcessed;
     private int workerConnections;
+    protected Calendar lastCertUpdatedAt;
+
     private List<NginxServerEntityDto> nginxServerEntities;
 
     private String nginxServerSids = "";

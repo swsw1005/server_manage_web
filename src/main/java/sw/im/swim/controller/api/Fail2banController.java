@@ -2,16 +2,17 @@ package sw.im.swim.controller.api;
 
 
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.exception.TokenException;
 import sw.im.swim.service.Fail2banService;
+import sw.im.swim.service.ServerInfoService;
+import sw.im.swim.util.server.ServerSSHUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -20,12 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Controller
-@RequestMapping("/fail2ban")
+@RestController
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class Fail2banController {
 
-    @Autowired
-    private Fail2banService fail2banService;
+    private final Fail2banService fail2banService;
+
+    private final ServerInfoService serverInfoService;
 
     // @RequestMapping("/view/main")
     // public ModelAndView main() {
@@ -34,92 +37,41 @@ public class Fail2banController {
     //     return mav;
     // }
 
-    @RequestMapping("/api/block")
+    @PostMapping("/fail2ban/block")
     public @ResponseBody
     Map<String, Object> block(
-
             @RequestParam(name = "job", defaultValue = "", required = false) String job,
+            @RequestParam(name = "sid", defaultValue = "", required = false) long sid,
             @RequestParam(name = "ip", defaultValue = "", required = false) String ip,
             @RequestParam(name = "token", defaultValue = "", required = false) String token
-
     ) {
         Map<String, Object> map = new HashMap<>();
-
-        if (job == null) {
-            job = "";
-        }
-        if (ip == null) {
-            ip = "";
-        }
-        if (token == null) {
-            token = "";
-        }
-
-        String command = "fail2ban-client set sshd unbanip ";
-
-        Process p = null;
-        map.put("success", 0);
-
         try {
 
-            if (token.equals("dntjddla0772!@")) {
-                map.put("success", 1);
+            if (token.equals(GeneralConfig.ADMIN_SETTING.getFAIL2BAN_TOKEN())) {
+
             } else {
-                throw new Exception();
+                throw new Exception("TOKEN NOT MATCH");
             }
 
-            String[] ipArr = ip.split("\\.");
+            ServerInfoEntityDto serverInfo = serverInfoService.getBySid(sid);
+            serverInfo.getIp();
 
-            log.info("ip==" + ip);
-            log.info(new Gson().toJson(ipArr));
-
-            int[] ipArr_ = new int[4];
-            map.put("success", 2);
-
-            for (int i = 0; i < ipArr_.length; i++) {
-                ipArr_[i] = Integer.parseInt(ipArr[i].trim());
-
-                if (ipArr_[i] > 255 || ipArr_[i] < 0) {
-                    throw new Exception();
-                }
-                command += ipArr_[i];
-                command += ".";
+            switch (job) {
+                case "ban":
+                    ServerSSHUtils.banIP(serverInfo, ip);
+                    break;
+                case "unban":
+                    ServerSSHUtils.unbanIP(serverInfo, ip);
+                    break;
+                default:
+                    throw new Exception("job type not match");
             }
-            command += ".";
-
-            map.put("success", 3);
-
-            command = command.replace("..", "");
-
-            log.info("---------------\n" + command + "\n---------------------\n");
-
-            p = Runtime.getRuntime().exec(command);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = null;
-
-            map.put("success", 4);
-
-            int count = 0;
-
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                log.warn(line);
-                result += line;
-                result += "\n";
-            }
-
-            log.info("===================\n" + result + "\n=======================\n");
-
-            map.put("success", 5);
-
+            map.put("msg", "success");
         } catch (Exception e) {
-            map.put("fail", -1);
+            map.put("msg", "fail | " + e.getLocalizedMessage());
         } finally {
             try {
-                p.destroy();
             } catch (Exception e) {
             }
         }
@@ -127,28 +79,28 @@ public class Fail2banController {
         return map;
     }
 
-    @PostMapping("/api/start")
+    @PostMapping("/fail2ban/start")
     public @ResponseBody
     Map<String, Object> start(HttpServletRequest request) {
         log.warn("/api/start");
         return HANDLE(request, "start");
     }
 
-    @PostMapping("/api/stop")
+    @PostMapping("/fail2ban/stop")
     public @ResponseBody
     Map<String, Object> stop(HttpServletRequest request) {
         log.warn("/api/stop");
         return HANDLE(request, "stop");
     }
 
-    @PostMapping("/api/ban")
+    @PostMapping("/fail2ban/ban")
     public @ResponseBody
     Map<String, Object> ban(HttpServletRequest request) {
         log.warn("/api/ban");
         return HANDLE(request, "ban");
     }
 
-    @PostMapping("/api/unban")
+    @PostMapping("/fail2ban/unban")
     public @ResponseBody
     Map<String, Object> unban(HttpServletRequest request) {
         log.warn("/api/unban");

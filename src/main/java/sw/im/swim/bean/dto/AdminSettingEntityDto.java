@@ -21,6 +21,7 @@ public class AdminSettingEntityDto implements Serializable {
     private int SMTP_PORT = 465;
     private boolean SMTP_AUTH = true;
     private boolean SMTP_SSL_ENABLE = true;
+    private boolean SMTP_STARTTLS_ENABLE = true;
     private String SMTP_SSL_TRUST = "smtp.gmail.com";
     ////////////////////////////////////////
     private String ADMIN_EMAIL = "";

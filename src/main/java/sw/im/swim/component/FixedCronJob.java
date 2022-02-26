@@ -112,13 +112,13 @@ public class FixedCronJob {
 
             log.info("?? IP CHANGE ?? :: " + currIp + "  =>  " + IP);
 
+            GeneralConfig.CURRENT_IP = IP;
+
             if (currIp.equals(IP) == false) {
 
                 log.error("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
 
                 if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
-                    GeneralConfig.CURRENT_IP = IP;
-
                     final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
 
                     DNSUtil.updateIp(ROOT_DOMAIN);
