@@ -88,35 +88,31 @@ public class PostConstruct {
 
         CronVO vo;
 
-        vo = new CronVO("0/5 * * * * ?", "!! every 5 second");
+        vo = new CronVO("0/10 * * * * ?", "!! every 10 second", 0, 0, "");
         list.add(vo);
-        vo = new CronVO("0/10 * * * * ?", "!! every 10 second");
+        vo = new CronVO("0/20 * * * * ?", "!! every 20 second", 0, 0, "");
         list.add(vo);
-        vo = new CronVO("0/20 * * * * ?", "!! every 20 second");
-        list.add(vo);
-        vo = new CronVO("0/30 * * * * ?", "!! every 30 second");
+        vo = new CronVO("0/30 * * * * ?", "!! every 30 second", 0, 0, "");
         list.add(vo);
 
-        vo = new CronVO("0 0/1 * * * ?", "!! every 1 minute");
+        vo = new CronVO("0 0/1 * * * ?", "!! every 1 minute", 0, 0, "");
         list.add(vo);
-        vo = new CronVO("0 0/5 * * * ?", "!! every 5 minute");
+        vo = new CronVO("0 0/5 * * * ?", "!! every 5 minute", 0, 0, "");
         list.add(vo);
 
-        vo = new CronVO("0 0 0/1 * * ?", "every 1 hour");
+        vo = new CronVO("0 1 0/1 * * ?", "every 1 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0/2 * * ?", "every 2 hour");
+        vo = new CronVO("0 2 0/2 * * ?", "every 2 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0/3 * * ?", "every 3 hour");
+        vo = new CronVO("0 1 0/3 * * ?", "every 3 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0/4 * * ?", "every 4 hour");
+        vo = new CronVO("0 2 0/4 * * ?", "every 4 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0/6 * * ?", "every 6 hour");
+        vo = new CronVO("0 3 0/6 * * ?", "every 6 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0/12 * * ?", "every 12 hour");
+        vo = new CronVO("0 4 0/12 * * ?", "every 12 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 0 0 0/1 * ?", "every 24 hour");
-        list.add(vo);
-        vo = new CronVO("0 0 0 0/2 * ?", "every 2 day");
+        vo = new CronVO("0 5 0 * * ?", "every 24 hour", 0, 23, "시");
         list.add(vo);
 
         GeneralConfig.CRON_EXPRESSION_LIST.clear();

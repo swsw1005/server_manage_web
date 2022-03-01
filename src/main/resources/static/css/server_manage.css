@@ -362,6 +362,10 @@ input[type="radio"] {
     }
 }
 
+.border-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+}
+
 #listLocation {
     max-width: 650px;
     margin: auto;
@@ -371,13 +375,8 @@ input[type="radio"] {
     margin: 10px 10px 0px 10px;
 }
 
-.modal-form-half-row {
-    margin: 10px 10px 0px 10px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
 .modal-form-half-row div:first-child,
+.modal-form-1111-row div:first-child,
 .modal-form-12-row div:first-child,
 .modal-form-13-row div:first-child,
 .modal-form-14-row div:first-child,
@@ -390,6 +389,25 @@ input[type="radio"] {
     display: flex;
     /*justify-self: center;*/
     align-self: center;
+}
+
+
+.modal-form-half-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.modal-form-11-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.modal-form-1-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
 .modal-form-41-row {
@@ -438,6 +456,24 @@ input[type="radio"] {
     margin: 10px 10px 0px 10px;
     display: grid;
     grid-template-columns: 2fr 1fr 2fr 1fr;
+}
+
+.modal-form-1111-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.modal-form-1212-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr;
+}
+
+.modal-form-2323-row {
+    margin: 10px 10px 0px 10px;
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr 3fr;
 }
 
 .modal-form-2121-row div {
@@ -557,6 +593,24 @@ input[type="radio"] {
     font-size: 24px;
     /*margin-top: 11px;*/
     margin-right: 5px;
+}
+
+.flex-left {
+    justify-self: left;
+    justify-content: left;
+    justify-items: left;
+}
+
+.flex-right {
+    justify-self: right;
+    justify-content: right;
+    justify-items: right;
+}
+
+.flex-center {
+    justify-self: center;
+    justify-content: center;
+    justify-items: center;
 }
 
 .nginx-server-wrapper {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.NotiEntityDto;
+import sw.im.swim.util.server.ServerInfoUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -31,5 +32,7 @@ public class GeneralConfig {
     public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
 
     public static final Vector<CronVO> CRON_EXPRESSION_LIST = new Vector<>();
+
+    public static ServerInfoUtil.ServerInfo SERVER_INFO = ServerInfoUtil.getServerInfo();
 
 }

@@ -7,10 +7,6 @@
     .toggle-wrapper input {
         display: none;
     }
-
-    .border-top {
-        border-top: 1px solid rgba(255, 255, 255, 0.7);
-    }
 </style>
 
 <h4>

@@ -1,120 +1,27 @@
 package sw.im.swim.util.server;
 
+
+import com.google.gson.Gson;
+import sw.im.swim.worker.noti.NotiWorker;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ServerInfoUtil {
 
-    // String ipRegexString = "\\d[1-3]{.}[1]\\d[1-3]{.}[1]\\d[1-3]{.}[1]\\d[1-3]";
-    private static final String ipRegexString = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
-
     private static final String[] arr = {"KB", "MB", "GB", "TB"};
-
-    private static final String[] IFCONFIG_CMD = {"sh", "-c", "ifconfig"};
-    private static final String[] HOSTNAME_CMD = {"sh", "-c", "hostname -I"};
 
     public static ServerInfo getServerInfo() {
         ServerInfo serverInfo = new ServerInfo();
 
-        Pattern ipPattern = Pattern.compile(ipRegexString);
-
         // 네트워크 정보 get
         try {
-
-            List<String> IP_ = RUN_READ_COMMAND_LIST(HOSTNAME_CMD);
-
-            String IP = IP_.get(0).trim();
-
-            // System.out.println("--------------" + IP);
-
-            Matcher hostMatcher = ipPattern.matcher(IP);
-
-            if (hostMatcher.matches()) {
-                serverInfo.setIpAddress(IP);
-            }
-
-            IFCONFIG_CMD[2] = IFCONFIG_CMD[2] + " | grep " + IP;
-
-            List<String> ifconfigList_ = RUN_READ_COMMAND_LIST(IFCONFIG_CMD);
-
-            List<String> ifconfigList = new ArrayList<>();
-
-            for (int i = 0; i < ifconfigList_.size(); i++) {
-                String temp__ = ifconfigList_.get(i)
-                        .replaceAll("\t", "   ")
-                        .replace("  ", " ")
-                        .trim();
-                ifconfigList.add(temp__);
-            }
-            for (int i = 0; i < ifconfigList.size(); i++) {
-                String line = ifconfigList.get(i);
-
-                // System.out.println();
-                // System.out.println(line);
-
-                if (line.length() < 10) {
-                    continue;
-                }
-
-                boolean startsWithInet = line.startsWith("inet ");
-                String[] lineArr = line.split(" ");
-                boolean arrLong4 = lineArr.length >= 4;
-
-                // System.out.println("\t startsWithInet = " + startsWithInet + "\t arrLong4 = "
-                // + arrLong4);
-
-                if (startsWithInet && arrLong4) {
-                } else {
-                    continue;
-                }
-
-                Matcher ipMatcher = ipPattern.matcher(lineArr[1]);
-                Matcher netmaskMatcher = ipPattern.matcher(lineArr[3]);
-
-                boolean isIpFound = ipMatcher.find();
-                boolean isNetmaskFound = netmaskMatcher.find();
-                boolean isIpMatch = lineArr[1].equals(IP);
-
-                // System.out.println("lineArr[1] " + lineArr[1]);
-                // System.out.println("IP " + IP);
-                // System.out.println("\t isIpFound = " + isIpFound + "\t isNetmaskFound = " +
-                // isNetmaskFound
-                // + "\t isIpMatch = " + isIpMatch);
-
-                if (isIpFound && isNetmaskFound && isIpMatch) {
-                    serverInfo.setSubnetMask(lineArr[3].trim());
-                    break;
-                } else {
-                    continue;
-                }
-
-            } // for end
-
-            int idx = IP.lastIndexOf(".");
-
-            String gateway = IP.substring(0, idx) + ".1";
-
-            // System.out.println("gateway ====" + gateway + "====");
-
-            serverInfo.setGateway(gateway);
-
+            serverInfo = getServerInfoFromIfconfig();
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-            } catch (Exception e) {
-            }
         }
 
         // CPU 정보 get
@@ -122,7 +29,9 @@ public class ServerInfoUtil {
         String line = "";
         CpuInfo cpuInfo = null;
 
-        Set<String> cpuPhysicalIdSet = new HashSet<>();
+//        Set<String> cpuPhysicalIdSet = new HashSet<>();
+
+        HashMap<String, Integer> cpuCntMap = new HashMap<>();
 
         try {
             FileInputStream fis = new FileInputStream("/proc/cpuinfo");
@@ -149,7 +58,7 @@ public class ServerInfoUtil {
                     if (line.startsWith("physical id")) {
                         physicalId = line.split(":")[1].trim();
                     }
-                    if (line.startsWith("siblings")) {
+                    if (line.startsWith("cpu cores")) {
                         try {
                             String b = line.split(":")[1].trim();
                             int a = Integer.parseInt(b);
@@ -158,27 +67,48 @@ public class ServerInfoUtil {
                             e.printStackTrace();
                         }
                     }
-                    if (line.startsWith("cpu cores")) {
-                        try {
-                            cpuInfo.setCores(Integer.parseInt(line.split(":")[1].trim()));
-                        } catch (Exception e) {
-                        }
-                    }
 
                     if (cpuInfo != null) {
-                        if (!cpuPhysicalIdSet.contains(physicalId)) {
-                            if (cpuInfo.getCache() != null && cpuInfo.getClock() != null && cpuInfo.getCore() != null
-                                    && cpuInfo.getName() != null && cpuInfo.getCores() != null) {
-                                cpuList.add(cpuInfo);
-                                cpuPhysicalIdSet.add(physicalId);
+                        if (cpuInfo.getCache() != null && cpuInfo.getClock() != null && cpuInfo.getCore() != null && cpuInfo.getName() != null) {
+                            cpuList.add(cpuInfo);
 
-                                cpuInfo = null;
+                            boolean alreadyFound = cpuCntMap.keySet().contains(cpuInfo.getName());
+
+                            if (alreadyFound) {
+                                cpuCntMap.put(cpuInfo.getName(), cpuCntMap.get(cpuInfo.getName()) + 1);
+                            } else {
+                                cpuCntMap.put(cpuInfo.getName(), 1);
                             }
+
+                            cpuInfo = null;
                         }
                     }
 
                 } // while end
-                serverInfo.setCpuList(cpuList);
+
+                HashMap<String, CpuInfo> cpuSet = new HashMap<>();
+
+                for (int i = 0; i < cpuList.size(); i++) {
+                    CpuInfo cpu = cpuList.get(i);
+
+                    try {
+                        int times = cpuCntMap.get(cpu.getName());
+                        cpu.setThread(times * cpu.getCore());
+
+                        cpuSet.put(cpu.getName(), cpu);
+
+                    } catch (Exception e) {
+                    }
+
+                }
+
+                List<CpuInfo> result = new ArrayList<>();
+
+                cpuSet.forEach((k, v) -> {
+                    result.add(v);
+                });
+
+                serverInfo.setCpuList(result);
 
             } catch (Exception e) {
             }
@@ -323,19 +253,148 @@ public class ServerInfoUtil {
         return result;
     }
 
+    private static ServerInfo getServerInfoFromIfconfig() {
+
+        ServerInfo serverInfo = new ServerInfo();
+        BufferedReader in = null;
+        Pattern ipPattern = null;
+        final String ipRegexString = "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+        try {
+            ipPattern = Pattern.compile(ipRegexString);
+        } catch (Exception e) {
+        }
+
+        try {
+            ProcessBuilder ps = new ProcessBuilder("sh", "-c", "ip r | grep default");
+            ps.redirectErrorStream(true);
+
+            Process pr = ps.start();
+
+            in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+
+                Matcher matcher = ipPattern.matcher(line);
+
+                if (matcher.find()) {
+                    String gateway = line.substring(matcher.start(), matcher.end());
+                    serverInfo.setGateway(gateway);
+                    System.out.println("gateway => " + gateway);
+                }
+
+            }
+            pr.waitFor();
+        } catch (Exception e) {
+        } finally {
+            try {
+                in.close();
+            } catch (Exception e) {
+            }
+        }
+
+        // BufferedReader in = null;
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            ProcessBuilder ps = new ProcessBuilder("ifconfig");
+            ps.redirectErrorStream(true);
+
+            Process pr = ps.start();
+
+            in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+
+                String line_ = line.replace("\t", " ").replace("  ", " ").trim();
+                list.add(line_);
+            }
+            list.add("");
+            list.add("");
+            pr.waitFor();
+        } catch (Exception e) {
+        } finally {
+            try {
+                in.close();
+            } catch (Exception e) {
+            }
+        }
+        list.add("end");
+        list.add("");
+
+        // System.out.println("\n\n\n\n\n");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            String line = list.get(i);
+
+            if (line.equals("end")) {
+                break;
+            }
+
+            // System.out.println("[ " + i + "] \t" + line);
+
+            boolean isOtherInterface = (line.contains("lo:") || line.contains("docker"));
+            boolean isInterfaceLine = (line.contains(" mtu ") && line.contains("flags"));
+            boolean isInterfaceNameNotTooLong = (line.indexOf("flags") < 10);
+
+            // System.out.println("line.indexOf flag \t" + line.indexOf("flags") + "\t" +
+            // isInterfaceNameNotTooLong);
+
+            if (isOtherInterface && isInterfaceLine && isInterfaceNameNotTooLong) {
+                i += 7;
+                continue;
+            }
+
+            if (isInterfaceLine && isInterfaceNameNotTooLong) {
+
+                try {
+                    String nextline = list.get(i + 1);
+                    int IDX_inet = nextline.indexOf("inet ");
+                    int IDX_netmask = nextline.indexOf(" netmask ");
+
+                    String ipStr = nextline.substring(IDX_inet, IDX_netmask);
+                    String netmaskStr = nextline.substring(IDX_netmask);
+
+                    System.out.println("ipStr      \t -> " + ipStr);
+                    System.out.println("netmaskStr \t -> " + netmaskStr);
+
+                    Matcher ipMatcher = ipPattern.matcher(ipStr);
+                    Matcher netmaskMatcher = ipPattern.matcher(netmaskStr);
+
+                    boolean foundIp = ipMatcher.find();
+                    boolean foundNetmask = netmaskMatcher.find();
+
+                    System.out.println("\t foundIp  => " + foundIp + "\t foundNetmask  => " + foundNetmask);
+
+                    ipStr = ipStr.substring(ipMatcher.start(), ipMatcher.end());
+                    netmaskStr = netmaskStr.substring(netmaskMatcher.start(), netmaskMatcher.end());
+
+                    System.out.println("\t ipStr  => " + ipStr + "\t netmaskStr  => " + netmaskStr);
+
+                    serverInfo.setIpAddress(ipStr);
+                    serverInfo.setSubnetMask(netmaskStr);
+
+                    break;
+
+                } catch (Exception e) {
+                }
+
+            }
+
+        } // for each end
+
+        return serverInfo;
+    } // end getServerInfoFromIfconfig()
+
     public static class CpuInfo {
 
         // cpu
         private String name;
         private String clock;
         private String cache;
-        private Integer core;
-        private Integer cores;
-
-        // private Integer thread;
-        public Integer getThread() {
-            return core * cores;
-        }
+        private int core = 1;
+        private int thread = 1;
 
         public String getName() {
             return name;
@@ -369,20 +428,13 @@ public class ServerInfoUtil {
             this.core = core;
         }
 
-        public Integer getCores() {
-            return cores;
+        public Integer getThread() {
+            return thread;
         }
 
-        public void setCores(Integer cores) {
-            this.cores = cores;
+        public void setThread(Integer thread) {
+            this.thread = thread;
         }
-
-        @Override
-        public String toString() {
-            return "CpuInfo [cache=" + cache + ", clock=" + clock + ", core=" + core + ", cores=" + cores + ", name="
-                    + name + "]";
-        }
-
     }
 
     public static class ServerInfo {
@@ -532,106 +584,11 @@ public class ServerInfoUtil {
         public void setCpuList(List<CpuInfo> cpuList) {
             this.cpuList = cpuList;
         }
-
-        @Override
-        public String toString() {
-
-            String cpuStr = "";
-
-            for (int i = 0; i < cpuList.size(); i++) {
-                try {
-                    String cpu_ = cpuList.get(i).toString();
-                    cpuStr += "\n\t\t" + cpu_;
-                } catch (Exception e) {
-                }
-
-            }
-
-            return "\n\n ServerInfo ["
-                    + "\n\t availableMem=" + availableMem
-                    + "\n\t availableMemStr=" + availableMemStr
-                    + "\n\t cpuList=" + cpuStr
-                    + "\n\t freeMem=" + freeMem
-                    + "\n\t freeMemStr=" + freeMemStr
-                    + "\n\t gateway=" + gateway
-                    + "\n\t ipAddress=" + ipAddress
-                    + "\n\t kernel=" + kernel
-                    + "\n\t mac=" + mac
-                    + "\n\t os=" + os
-                    + "\n\t subnetMask=" + subnetMask
-                    + "\n\t swapMem=" + swapMem
-                    + "\n\t swapMemStr=" + swapMemStr
-                    + "\n\t totalMem=" + totalMem
-                    + "\n\t totalMemStr=" + totalMemStr
-                    + "\n\n";
-        }
-    }
-
-    public static final List<String> RUN_READ_COMMAND_LIST(final String[] commandArr) {
-        String cli = "";
-        Process process = null;
-        BufferedReader br = null;
-        InputStreamReader inputStreamReader = null;
-        List<String> list = new ArrayList<>();
-        try {
-            process = Runtime.getRuntime().exec(commandArr);
-            inputStreamReader = new InputStreamReader(process.getInputStream());
-            br = new BufferedReader(inputStreamReader);
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                list.add(line);
-            }
-        } catch (Exception e) {
-        } finally {
-            try {
-                process.destroy();
-            } catch (Exception e) {
-            }
-            try {
-                br.close();
-            } catch (Exception e) {
-            }
-            try {
-                inputStreamReader.close();
-            } catch (Exception e) {
-            }
-        }
-        return list;
-    }
-
-    public static String NETMASK(final String input) {
-        String tempSubnetMask = "";
-        switch (input) {
-            case "24":
-                tempSubnetMask = "255.255.255.0";
-                break;
-            case "25":
-                tempSubnetMask = "255.255.255.128";
-                break;
-            case "26":
-                tempSubnetMask = "255.255.255.192";
-                break;
-            case "27":
-                tempSubnetMask = "255.255.255.224";
-                break;
-            case "28":
-                tempSubnetMask = "255.255.255.240";
-                break;
-            case "29":
-                tempSubnetMask = "255.255.255.248";
-                break;
-            case "30":
-                tempSubnetMask = "255.255.255.252";
-                break;
-            default:
-                break;
-        }
-        return tempSubnetMask;
     }
 
     public static void main(String[] args) {
 
-        ServerInfo info = ServerInfoUtil.getServerInfo();
+        ServerInfo info = ServerInfoUtil.getServerInfoFromIfconfig();
 
         System.out.println();
         System.out.println();

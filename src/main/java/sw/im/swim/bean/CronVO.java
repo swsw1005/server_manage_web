@@ -10,4 +10,7 @@ import lombok.Setter;
 public class CronVO {
     private String cron;
     private String name;
+    private int start;
+    private int length;
+    private String suffix;
 }

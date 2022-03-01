@@ -17,6 +17,7 @@ import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.*;
 import sw.im.swim.util.dns.GoogleDNSUtil;
+import sw.im.swim.util.server.ServerInfoUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.database.DatabaseHealchChecker;
@@ -97,6 +98,12 @@ public class FixedCronJob {
         } catch (Exception e) {
         }
 
+        try {
+            GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
 
@@ -130,6 +137,16 @@ public class FixedCronJob {
         } catch (Exception e) {
             adminLogService.insertLog(AdminLogType.DNS, "FAIL", e.getLocalizedMessage());
         }
+
+
+
+        try {
+            GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+
     }
 
 
