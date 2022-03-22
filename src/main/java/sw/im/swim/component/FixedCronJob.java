@@ -38,6 +38,8 @@ public class FixedCronJob {
 
     private final NotiService notiService;
 
+    private final SpeedTestService speedTestService;
+
     @Scheduled(cron = "17 0/1 * * * *")
     public void faviconAutoRegister() {
         try {
@@ -139,7 +141,6 @@ public class FixedCronJob {
         }
 
 
-
         try {
             GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
         } catch (Exception e) {
@@ -184,5 +185,15 @@ public class FixedCronJob {
 
     }
 
+
+    @Scheduled(cron = "0 0/10 * * * *")
+    public void serverSpeedTest() {
+        try {
+            speedTestService.speedTest();
+        } catch (Exception e) {
+            log.error(e.getMessage() + "_____", e);
+        }
+
+    }
 
 }
