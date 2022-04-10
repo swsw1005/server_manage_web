@@ -4,15 +4,25 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sw.im.swim.bean.dto.SpeedTestClientDto;
+import sw.im.swim.bean.dto.SpeedTestResultDto;
+import sw.im.swim.bean.dto.SpeedTestServerDto;
 import sw.im.swim.bean.entity.SpeedTestClientEntity;
 import sw.im.swim.bean.entity.SpeedTestResultEntity;
 import sw.im.swim.bean.entity.SpeedTestServerEntity;
 import sw.im.swim.repository.SpeedTestClientEntityRepository;
 import sw.im.swim.repository.SpeedTestResultEntityRepository;
 import sw.im.swim.repository.SpeedTestServerEntityRepository;
+import sw.im.swim.service.querydsl.SpeedTestQueryDsl;
 import sw.im.swim.util.process.ProcessExecUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,6 +33,10 @@ public class SpeedTestService {
     private final SpeedTestClientEntityRepository speedTestClientEntityRepository;
     private final SpeedTestServerEntityRepository speedTestServerEntityRepository;
     private final SpeedTestResultEntityRepository speedTestResultEntityRepository;
+
+    private final SpeedTestQueryDsl speedTestQueryDsl;
+
+    private final ModelMapper modelMapper;
 
     private static final String[] arr = {"sh", "-c", "speedtest-cli --json"};
 
@@ -122,6 +136,38 @@ public class SpeedTestService {
                 .isp(isp)
                 .build();
         return speedTestClientEntityRepository.save(entity);
+    }
+
+
+    public List<SpeedTestResultDto> getList(int pageNum, int pageSize) {
+
+        List<SpeedTestResultDto> resultList = new ArrayList<>();
+        try {
+
+            Pageable pageable = PageRequest.of(pageNum, pageSize);
+
+            List<SpeedTestResultEntity> list = speedTestQueryDsl.getListByLimitAndSearch(null, pageable);
+
+            for (int i = 0; i < list.size(); i++) {
+
+                SpeedTestResultEntity speedTestResult = list.get(i);
+                SpeedTestClientEntity speedTestClient = speedTestResult.getSpeedTestClientEntity();
+                SpeedTestServerEntity speedTestServer = speedTestResult.getSpeedTestServerEntity();
+
+                SpeedTestResultDto var1 = modelMapper.map(speedTestResult, SpeedTestResultDto.class);
+                SpeedTestClientDto var2 = modelMapper.map(speedTestClient, SpeedTestClientDto.class);
+                SpeedTestServerDto var3 = modelMapper.map(speedTestServer, SpeedTestServerDto.class);
+
+                var1.setSpeedTestClientDto(var2);
+                var1.setSpeedTestServerDto(var3);
+
+                resultList.add(var1);
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return resultList;
     }
 
 }

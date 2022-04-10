@@ -1,5 +1,6 @@
 package sw.im.swim.config;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
@@ -7,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
+import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.AdminSettingService;
 import sw.im.swim.service.NotiService;
+import sw.im.swim.service.SpeedTestService;
 import sw.im.swim.util.AesUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.util.nginx.AskiiArtUtil;
@@ -43,6 +46,8 @@ public class PostConstruct {
     private final AdminSettingService adminSettingService;
 
     private final NotiService notiService;
+
+    private final SpeedTestService speedTestService;
 
     @javax.annotation.PostConstruct
     public void INIT() throws SchedulerException {
@@ -85,6 +90,12 @@ public class PostConstruct {
         }
 
         log.info("Application START (2/2)!!!!");
+
+        List<SpeedTestResultDto> list = speedTestService.getList(1, 100);
+
+//        for (SpeedTestResultDto dto : list) {
+//            System.out.println("dto = " + new Gson().toJson(dto));
+//        }
     }
 
     private void setCronExpression() {
