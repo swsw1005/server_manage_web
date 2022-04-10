@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 @ControllerAdvice
 public class ControllerAdviceConfig {
     @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(true);
-        binder.registerCustomEditor(String.class, stringtrimmer);
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        String[] abd = new String[]{"class.*", "Class.*", "*.class.*", "*.Class.*"};
+        dataBinder.setDisallowedFields(abd);
+        StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(false);
+        dataBinder.registerCustomEditor(String.class, stringtrimmer);
     }
 }

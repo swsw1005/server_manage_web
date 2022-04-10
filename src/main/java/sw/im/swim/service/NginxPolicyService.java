@@ -252,10 +252,10 @@ public class NginxPolicyService {
                     throw new Exception();
                 }
 
-                if (isAddressExcist) {
-                    msg = "ip + port conflict :: " + address_;
-                    throw new Exception();
-                }
+                // if (isAddressExcist) {
+                //     msg = "ip + port conflict :: " + address_;
+                //     throw new Exception();
+                // }
 
                 DOMAIN_SET.add(domain_);
                 IP_SET.add(address_);

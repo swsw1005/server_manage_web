@@ -14,9 +14,11 @@ import sw.im.swim.service.AdminSettingService;
 import sw.im.swim.service.NotiService;
 import sw.im.swim.util.AesUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
+import sw.im.swim.util.nginx.AskiiArtUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -79,7 +81,10 @@ public class PostConstruct {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            System.exit(0);
         }
+
+        log.info("Application START (2/2)!!!!");
     }
 
     private void setCronExpression() {

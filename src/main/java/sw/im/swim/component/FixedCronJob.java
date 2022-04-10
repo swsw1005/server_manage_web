@@ -186,10 +186,14 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     public void serverSpeedTest() {
         try {
             speedTestService.speedTest();
+        } catch (IllegalStateException e) {
+            log.error(e.getMessage() + "_____");
+        } catch (RuntimeException e) {
+            log.error(e.getMessage() + "_____");
         } catch (Exception e) {
             log.error(e.getMessage() + "_____", e);
         }

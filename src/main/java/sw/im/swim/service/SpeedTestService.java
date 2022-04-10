@@ -32,13 +32,17 @@ public class SpeedTestService {
 
             insertSpeedTest(speedResult);
 
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage() + "____");
+        } catch (NullPointerException e) {
+            throw new NullPointerException(e.getMessage() + "____");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage() + "____");
         }
     }
 
-    public void insertSpeedTest(String jsonStr) throws Exception {
+    public void insertSpeedTest(String jsonStr) throws IllegalStateException, NullPointerException, Exception {
 
         try {
             JsonObject jsonObject = JsonParser.parseString(jsonStr).getAsJsonObject();
@@ -62,6 +66,10 @@ public class SpeedTestService {
 
             speedTestResultEntityRepository.save(speedTestResultEntity);
 
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage() + "____");
+        } catch (NullPointerException e) {
+            throw new NullPointerException(e.getMessage() + "____");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage() + "____");
@@ -113,9 +121,7 @@ public class SpeedTestService {
                 .ip(ip)
                 .isp(isp)
                 .build();
-
         return speedTestClientEntityRepository.save(entity);
-
     }
 
 }
