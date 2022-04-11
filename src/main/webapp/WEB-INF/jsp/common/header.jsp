@@ -46,6 +46,10 @@
                     favicon 관리
                 </a>
 
+                <a href="${contextPath}/speedtest/home" class="nav_row">
+                    인터넷 속도
+                </a>
+
                 <a href="${contextPath}/noti/home" class="nav_row">
                     알림 설정
                 </a>

@@ -91,11 +91,11 @@ public class PostConstruct {
 
         log.info("Application START (2/2)!!!!");
 
-        List<SpeedTestResultDto> list = speedTestService.getList(1, 100);
+        List<String> speedTestHostList = speedTestService.getHostList();
+        List<String> speedTestNameList = speedTestService.getNameList();
+        List<String> speedTestCountryList = speedTestService.getCountryList();
+        List<SpeedTestResultDto> list = speedTestService.getList(null, 0, 100);
 
-//        for (SpeedTestResultDto dto : list) {
-//            System.out.println("dto = " + new Gson().toJson(dto));
-//        }
     }
 
     private void setCronExpression() {

@@ -2,6 +2,7 @@ package sw.im.swim.bean.dto;
 
 
 import lombok.*;
+import sw.im.swim.config.GeneralConfig;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -30,5 +31,13 @@ public class SpeedTestServerDto {
     private String url;
     private Double latency;
 
+    public String getCreated() {
+        try {
+            createdAt.setTimeZone(GeneralConfig.TIME_ZONE);
+            return GeneralConfig.SIMPLE_DATE_FORMAT.format(createdAt.getTime());
+        } catch (Exception e) {
+        }
+        return "-";
+    }
 
 }

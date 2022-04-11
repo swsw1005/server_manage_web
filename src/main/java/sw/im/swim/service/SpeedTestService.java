@@ -139,14 +139,14 @@ public class SpeedTestService {
     }
 
 
-    public List<SpeedTestResultDto> getList(int pageNum, int pageSize) {
+    public List<SpeedTestResultDto> getList(SpeedTestResultDto dto, int pageNum, int pageSize) {
 
         List<SpeedTestResultDto> resultList = new ArrayList<>();
         try {
 
             Pageable pageable = PageRequest.of(pageNum, pageSize);
 
-            List<SpeedTestResultEntity> list = speedTestQueryDsl.getListByLimitAndSearch(null, pageable);
+            List<SpeedTestResultEntity> list = speedTestQueryDsl.getListByLimitAndSearch(dto, pageable);
 
             for (int i = 0; i < list.size(); i++) {
 
@@ -169,5 +169,19 @@ public class SpeedTestService {
         }
         return resultList;
     }
+
+
+    public List<String> getHostList() {
+        return speedTestQueryDsl.getHostList();
+    }
+
+    public List<String> getCountryList() {
+        return speedTestQueryDsl.getCountryList();
+    }
+
+    public List<String> getNameList() {
+        return speedTestQueryDsl.getNameList();
+    }
+
 
 }

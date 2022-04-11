@@ -560,6 +560,11 @@ input[type="radio"] {
     /*background: rgba(161, 13, 154, 0.59);*/
 }
 
+.list_row_500 {
+    width: 500px;
+    font-size: 1em;
+}
+
 .list_row_name {
     width: 300px;
     font-size: 1em;

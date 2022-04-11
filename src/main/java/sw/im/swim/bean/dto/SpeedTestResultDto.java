@@ -3,6 +3,8 @@ package sw.im.swim.bean.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.util.number.NumberVaildateUtil;
 
 import java.util.Calendar;
 
@@ -24,5 +26,22 @@ public class SpeedTestResultDto {
 
     private SpeedTestClientDto speedTestClientDto;
     private SpeedTestServerDto speedTestServerDto;
+
+    public String getCreated() {
+        try {
+            createdAt.setTimeZone(GeneralConfig.TIME_ZONE);
+            return GeneralConfig.SIMPLE_DATE_FORMAT.format(createdAt.getTime());
+        } catch (Exception e) {
+        }
+        return "-";
+    }
+
+    public String getDownloadSpeed() {
+        return NumberVaildateUtil.humanReadableInt((long) Math.round(this.download));
+    }
+
+    public String getUploadSpeed() {
+        return NumberVaildateUtil.humanReadableInt((long) Math.round(this.upload));
+    }
 
 }

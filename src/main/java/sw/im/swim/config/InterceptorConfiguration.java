@@ -62,6 +62,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
                 "/adminlog/**",
                 "/noti/*",
                 "/noti/**",
+                "/speedtest/*",
+                "/speedtest/**",
         };
 
         final String[] apiPatterns = {

@@ -1,13 +1,11 @@
 package sw.im.swim.service.querydsl;
 
+import com.google.gson.Gson;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.entity.*;
@@ -25,7 +23,35 @@ public class SpeedTestQueryDsl {
     private final QSpeedTestClientEntity qSpeedTestClientEntity = QSpeedTestClientEntity.speedTestClientEntity;
     private final QSpeedTestServerEntity qSpeedTestServerEntity = QSpeedTestServerEntity.speedTestServerEntity;
 
+
+    public List<String> getCountryList() {
+        List<String> list = queryFactory.select(qSpeedTestServerEntity.country)
+                .from(qSpeedTestServerEntity)
+                .groupBy(qSpeedTestServerEntity.country)
+                .fetch();
+        return list;
+    }
+
+    public List<String> getHostList() {
+        List<String> list = queryFactory.select(qSpeedTestServerEntity.host)
+                .from(qSpeedTestServerEntity)
+                .groupBy(qSpeedTestServerEntity.host)
+                .fetch();
+        return list;
+    }
+
+    public List<String> getNameList() {
+        List<String> list = queryFactory.select(qSpeedTestServerEntity.name)
+                .from(qSpeedTestServerEntity)
+                .groupBy(qSpeedTestServerEntity.name)
+                .fetch();
+        return list;
+    }
+
+
     public List<SpeedTestResultEntity> getListByLimitAndSearch(SpeedTestResultDto speedTestResultDto, Pageable pageable) {
+
+        log.error("  " + new Gson().toJson(speedTestResultDto) + "  \t pageable.getOffset() " + pageable.getOffset() + " \t pageable.getPageSize() " + pageable.getPageSize() + " \t pageable.getPageNumber() " + pageable.getPageNumber());
 
         List<SpeedTestResultEntity> list =
                 queryFactory.selectFrom(qSpeedTestResultEntity)
@@ -36,6 +62,7 @@ public class SpeedTestQueryDsl {
                                 hostEq(speedTestResultDto),
                                 nameEq(speedTestResultDto)
                         )
+                        .orderBy(qSpeedTestResultEntity.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch();
