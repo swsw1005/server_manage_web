@@ -86,7 +86,6 @@ public class NginxPolicyViewController {
         List<NginxServerEntityDto> nginxServerList = nginxServerService.getAll();
         for (int i = 0; i < nginxServerList.size(); i++) {
             Long tempSid = nginxServerList.get(i).getSid();
-            log.error("tempSid = " + tempSid);
             nginxServerList.get(i).setSelected(linkedNginxServerSet.contains(tempSid));
         }
         mav.addObject("nginxServerList", nginxServerList);

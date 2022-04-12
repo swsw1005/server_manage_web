@@ -38,8 +38,10 @@ public class NotiProducer implements Runnable {
 
         try {
             FLAG_MASTER = GeneralConfig.NOTI_SETTING_MAP.get(masterFlag);
+        } catch (NullPointerException e) {
+            log.error(masterFlag + "\t" + FLAG_MASTER + " => " + e.getMessage());
         } catch (Exception e) {
-            log.error(masterFlag + " => " + e.getMessage(), e);
+            log.error(masterFlag + "\t" + FLAG_MASTER + " => " + e.getMessage(), e);
         }
 
         for (NotiType key : notiMap.keySet()) {
@@ -51,12 +53,12 @@ public class NotiProducer implements Runnable {
             }
         }
 
-//        log.debug("----" + new Gson().toJson(notiMap));
-//        log.debug("--------" + new Gson().toJson(GeneralConfig.NOTI_SETTING_MAP));
-
         if (!FLAG_MASTER) {
             return;
         }
+
+//        log.debug("----" + new Gson().toJson(notiMap));
+//        log.debug("--------" + new Gson().toJson(GeneralConfig.NOTI_SETTING_MAP));
 
         try {
             ThreadWorkerPoolContext WORKER = ThreadWorkerPoolContext.getInstance();

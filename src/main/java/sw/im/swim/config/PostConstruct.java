@@ -66,7 +66,7 @@ public class PostConstruct {
 
         GeneralConfig.GOOGLE_DNS_USER_NAME = GOOGLE_DNS_USER_NAME;
         GeneralConfig.GOOGLE_DNS_PASSWORD = GOOGLE_DNS_PASSWORD;
-        GeneralConfig.CURRENT_IP = ip;
+        // GeneralConfig.CURRENT_IP = ip;
 
         try {
             new File(DatabaseServerUtil.DB_DUMP_FILE_TMP).delete();

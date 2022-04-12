@@ -60,6 +60,7 @@ public class GoogleDNSUtil {
             } catch (Exception e) {
             }
         }
+        log.error("GET IP FAIL !!!!! RETURN NULL");
         return null;
     }
 
@@ -75,7 +76,8 @@ public class GoogleDNSUtil {
                             GeneralConfig.GOOGLE_DNS_PASSWORD +
                             "@domains.google.com/nic/update";
 
-            log.info("url => " + url);
+            log.info(" ===== GOOGLE Dynamic DNS =======");
+            log.info("updateIp url => " + url);
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; utf-8");
