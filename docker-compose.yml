@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  server_manager:
+    image: openjdk:11.0.14.1-jre
+    volumes:
+      - $PWD/:/usr/local/server-manager
+    environment:
+      - LC_ALL=C.UTF-8
+      - TZ=Asia/Seoul
+      - spring.config.additional-location=file:///usr/local/server-manager/application.properties
+    restart: always
+    network_mode: "host"
+    command :
+        - apt update && apt install net-tools iproutes -y
+    entrypoint: 
+        - java
+        - -jar 
+        - /usr/local/server-manager/server-manager.war
