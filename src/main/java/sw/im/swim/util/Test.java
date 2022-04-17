@@ -12,11 +12,11 @@ public class Test {
 
     //     Calendar a = entity.getCreatedAt();
 
-    //     System.out.println();
-    //     System.out.println();
-    //     System.out.println();
+    //     log.debug();
+    //     log.debug();
+    //     log.debug();
 
-    //     System.out.println(a);
+    //     log.debug(a);
 
     // }
 }

@@ -16,11 +16,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <ul>AES256Util
  * <p>
  * 암호화와 복호화 과정에서 동일한 키를 사용하는 대칭 키 알고리즘
  */
+@Slf4j
 public class AesUtil {
 
     public static byte[] ivBytes = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -77,9 +80,9 @@ public class AesUtil {
 
                 map.put(a, b);
 
-                System.out.println("update admin_info set  password = '" + b + "'  where password = '" + a + "' ;");
-                System.out.println("update db_server_info set  password = '" + b + "'  where password = '" + a + "' ;");
-                System.out.println("update server_info set  ssh_password = '" + b + "'  where ssh_password = '" + a + "' ;");
+                log.debug("update admin_info set  password = '" + b + "'  where password = '" + a + "' ;");
+                log.debug("update db_server_info set  password = '" + b + "'  where password = '" + a + "' ;");
+                log.debug("update server_info set  ssh_password = '" + b + "'  where ssh_password = '" + a + "' ;");
 
             }
 
@@ -91,7 +94,7 @@ public class AesUtil {
 
                     final String c = AesUtil.decrypt(b, "swsw1005swsw1005swsw1005swsw1005swsw1005swsw1005");
 
-                    System.out.println(a + " \t " + b + " \t " + c);
+                    log.debug(a + " \t " + b + " \t " + c);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

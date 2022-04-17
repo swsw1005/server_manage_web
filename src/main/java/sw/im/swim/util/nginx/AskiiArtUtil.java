@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AskiiArtUtil {
 
     private final static String sharp_bar = "###########################################################################################################\n#";
@@ -103,9 +106,8 @@ public class AskiiArtUtil {
             List<String> list = AskiiArtUtil.CREATE_NGINX_BANNER("앓옳옳옭앜ㅋㅋ");
 
             for (int i = 0; i < list.size(); i++) {
-                System.out.println(list.get(i));
+                log.debug(list.get(i));
             }
-            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }

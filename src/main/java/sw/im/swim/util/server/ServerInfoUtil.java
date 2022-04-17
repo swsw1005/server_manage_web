@@ -2,6 +2,8 @@ package sw.im.swim.util.server;
 
 
 import com.google.gson.Gson;
+
+import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.worker.noti.NotiWorker;
 
 import java.io.BufferedReader;
@@ -11,6 +13,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class ServerInfoUtil {
 
     private static final String[] arr = {"KB", "MB", "GB", "TB"};
@@ -203,7 +206,7 @@ public class ServerInfoUtil {
 
     private static Long getMemNumeric(String memString) {
         Long result = 0L;
-        // System.out.println(" getMemNumeric \t input \t>>> " + memString);
+        // log.debug(" getMemNumeric \t input \t>>> " + memString);
         try {
             memString = memString.toUpperCase();
             for (int i = 0; i < arr.length; i++) {
@@ -216,7 +219,7 @@ public class ServerInfoUtil {
             }
         } catch (Exception e) {
         }
-        // System.out.println(" getMemNumeric \t output \t>>> " + result);
+        // log.debug(" getMemNumeric \t output \t>>> " + result);
         return result;
     }
 
@@ -273,14 +276,14 @@ public class ServerInfoUtil {
             in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
-                System.out.println(line);
+                log.debug(line);
 
                 Matcher matcher = ipPattern.matcher(line);
 
                 if (matcher.find()) {
                     String gateway = line.substring(matcher.start(), matcher.end());
                     serverInfo.setGateway(gateway);
-                    System.out.println("gateway => " + gateway);
+                    log.debug("gateway => " + gateway);
                 }
 
             }
@@ -304,7 +307,7 @@ public class ServerInfoUtil {
             in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
-                System.out.println(line);
+                log.debug(line);
 
                 String line_ = line.replace("\t", " ").replace("  ", " ").trim();
                 list.add(line_);
@@ -322,7 +325,7 @@ public class ServerInfoUtil {
         list.add("end");
         list.add("");
 
-        // System.out.println("\n\n\n\n\n");
+        // log.debug("\n\n\n\n\n");
 
         for (int i = 0; i < list.size(); i++) {
 
@@ -332,13 +335,13 @@ public class ServerInfoUtil {
                 break;
             }
 
-            // System.out.println("[ " + i + "] \t" + line);
+            // log.debug("[ " + i + "] \t" + line);
 
             boolean isOtherInterface = (line.contains("lo:") || line.contains("docker"));
             boolean isInterfaceLine = (line.contains(" mtu ") && line.contains("flags"));
             boolean isInterfaceNameNotTooLong = (line.indexOf("flags") < 10);
 
-            // System.out.println("line.indexOf flag \t" + line.indexOf("flags") + "\t" +
+            // log.debug("line.indexOf flag \t" + line.indexOf("flags") + "\t" +
             // isInterfaceNameNotTooLong);
 
             if (isOtherInterface && isInterfaceLine && isInterfaceNameNotTooLong) {
@@ -356,8 +359,8 @@ public class ServerInfoUtil {
                     String ipStr = nextline.substring(IDX_inet, IDX_netmask);
                     String netmaskStr = nextline.substring(IDX_netmask);
 
-                    System.out.println("ipStr      \t -> " + ipStr);
-                    System.out.println("netmaskStr \t -> " + netmaskStr);
+                    log.debug("ipStr      \t -> " + ipStr);
+                    log.debug("netmaskStr \t -> " + netmaskStr);
 
                     Matcher ipMatcher = ipPattern.matcher(ipStr);
                     Matcher netmaskMatcher = ipPattern.matcher(netmaskStr);
@@ -365,12 +368,12 @@ public class ServerInfoUtil {
                     boolean foundIp = ipMatcher.find();
                     boolean foundNetmask = netmaskMatcher.find();
 
-                    System.out.println("\t foundIp  => " + foundIp + "\t foundNetmask  => " + foundNetmask);
+                    log.debug("\t foundIp  => " + foundIp + "\t foundNetmask  => " + foundNetmask);
 
                     ipStr = ipStr.substring(ipMatcher.start(), ipMatcher.end());
                     netmaskStr = netmaskStr.substring(netmaskMatcher.start(), netmaskMatcher.end());
 
-                    System.out.println("\t ipStr  => " + ipStr + "\t netmaskStr  => " + netmaskStr);
+                    log.debug("\t ipStr  => " + ipStr + "\t netmaskStr  => " + netmaskStr);
 
                     serverInfo.setIpAddress(ipStr);
                     serverInfo.setSubnetMask(netmaskStr);
@@ -590,15 +593,15 @@ public class ServerInfoUtil {
 
         ServerInfo info = ServerInfoUtil.getServerInfoFromIfconfig();
 
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println(info);
-        System.out.println();
-        System.out.println();
-        System.out.println(ServerInfoUtil.format(info.getTotalMem()));
-        System.out.println();
-        System.out.println();
+        // log.debug();
+        // log.debug();
+        // log.debug();
+        // log.debug(info);
+        // log.debug();
+        // log.debug();
+        // log.debug(ServerInfoUtil.format(info.getTotalMem()));
+        // log.debug();
+        // log.debug();
 
     }
 

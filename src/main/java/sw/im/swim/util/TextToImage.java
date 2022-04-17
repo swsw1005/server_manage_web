@@ -14,11 +14,14 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @since 2018. 03. 20
  * @author sunghs.tistory.com, blog.naver.com/sunghs9071
  *
  */
+@Slf4j
 public class TextToImage {
 
     /**
@@ -33,7 +36,7 @@ public class TextToImage {
     public void convert(List<String> text, String fileName, String fontFamily, int fontSize) throws Exception {
 
         if (text == null || fileName == null || fontFamily == null) {
-            System.out.println("Request Parameter Error");
+            log.debug("Request Parameter Error");
             return;
         }
 
@@ -49,8 +52,8 @@ public class TextToImage {
         // fontSize와 코드 line 수 만큼 늘어나므로 font 별로 다르지 않음. +3은 line 별 위아래 여유를 주기위해
         int height = (text.size() + 0) * fontSize + 1;
 
-        System.out.println("Image Width(폭-가로) : " + width);
-        System.out.println("Image Height(높이-세로) : " + height);
+        log.debug("Image Width(폭-가로) : " + width);
+        log.debug("Image Height(높이-세로) : " + height);
 
         // Init
         font = new Font(fontFamily, Font.BOLD, fontSize);
@@ -77,7 +80,7 @@ public class TextToImage {
 
         // Write - Image
         ImageIO.write(bufferedImage, "PNG", fos);
-        System.out.println(fileName + " to Image Convert Result : SUCCESS ");
+        log.debug(fileName + " to Image Convert Result : SUCCESS ");
     }
 
     /**
@@ -103,7 +106,7 @@ public class TextToImage {
             if (maxSize < size)
                 maxSize = size;
         }
-        System.out.println("Max Size : " + maxSize);
+        log.debug("Max Size : " + maxSize);
         return maxSize;
     }
 
@@ -149,7 +152,7 @@ public class TextToImage {
             // drawString 시 tab 문자를 구분하지 못하는 것 같아 SPACE 4칸으로 치환
             contents = contents.replaceAll("\t", "    ");
             list.add(contents);
-            System.out.println(contents);
+            log.debug(contents);
         }
         br.close();
         return list;
