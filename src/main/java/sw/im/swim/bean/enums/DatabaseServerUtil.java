@@ -18,7 +18,7 @@ public class DatabaseServerUtil {
     public static final String RCLONE_DIR = "/usr/local/tempFiles/";
     public static final Set<String> PG_PASS_SET = ConcurrentHashMap.newKeySet();
 
-    public static final String[] PG_PASS_COMMAND = {"sh", "-c", PG_PASS_FILE};
+    public static final String[] PG_PASS_COMMAND = {"sh", "-c", "chmod 600 " + PG_PASS_FILE};
 
 
     public static final File PG_PASS_DELETE() {

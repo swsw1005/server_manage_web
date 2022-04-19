@@ -2,6 +2,8 @@ package sw.im.swim.util.nginx;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.bean.dto.AdminSettingEntityDto;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.BufferedReader;
@@ -13,23 +15,23 @@ import java.util.Set;
 @Slf4j
 public class NginxServiceControllUtil {
 
-    private static final String[] NGINX_SERVICE_START = new String[] { "sh", "-c", "systemctl start nginx" };
-    private static final String[] NGINX_SERVICE_STOP = new String[] { "sh", "-c", "systemctl stop nginx" };
-    private static final String[] NGINX_SERVICE_STATUS = new String[] { "sh", "-c", "systemctl status nginx" };
-    private static final String[] NGINX_STATUS_ACTIVE_INDICATORS = new String[] { 
+    private static final String[] NGINX_SERVICE_START = new String[]{"sh", "-c", "systemctl start nginx"};
+    private static final String[] NGINX_SERVICE_STOP = new String[]{"sh", "-c", "systemctl stop nginx"};
+    private static final String[] NGINX_SERVICE_STATUS = new String[]{"sh", "-c", "systemctl status nginx"};
+    private static final String[] NGINX_STATUS_ACTIVE_INDICATORS = new String[]{
             "nginx.service",
             "Loaded: loaded",
             "Active: active (running)",
-            "Main PID:" };
-    private static final String[] NGINX_STATUS_DEAD_INDICATORS = new String[] { 
+            "Main PID:"};
+    private static final String[] NGINX_STATUS_DEAD_INDICATORS = new String[]{
             "nginx.service",
             "Loaded: loaded",
             "Active: inactive",
-            "Main PID:" };
-    private static final String[] CERTBOT_RESULT_INDICATORS = new String[] { 
+            "Main PID:"};
+    private static final String[] CERTBOT_RESULT_INDICATORS = new String[]{
             "Congratulations",
             "fullchain.pem",
-            "privkey.pem" };
+            "privkey.pem"};
 
     public static final boolean NGINX_START() {
         return NGINX_JOB(true);
@@ -63,10 +65,11 @@ public class NginxServiceControllUtil {
                 certCommand += ("  -d " + domain);
             }
 
-            certCommand += " --non-interactive --agree-tos --redirect  --expand  -m swsw1005@gmail.com ";
+            certCommand += " --non-interactive --agree-tos --redirect  --expand  -m ";
+            certCommand += GeneralConfig.ADMIN_SETTING.getADMIN_EMAIL();
             certCommand += " --pre-hook \"systemctl stop nginx\" --post-hook \"systemctl start nginx\" ";
-            
-            String[] CERTBOT_EXEC = new String[] { "sh", "-c", certCommand };
+
+            String[] CERTBOT_EXEC = new String[]{"sh", "-c", certCommand};
 
             log.error("\t certCommand \n--------------------------------------\n" + certCommand
                     + "\n============================\n");
@@ -79,13 +82,13 @@ public class NginxServiceControllUtil {
             int[] INDEX_ARR = new int[ARR_LENGTH];
 
             int pre_idx;
-            for(pre_idx = 0; pre_idx < ARR_LENGTH; ++pre_idx) {
+            for (pre_idx = 0; pre_idx < ARR_LENGTH; ++pre_idx) {
                 INDEX_ARR[pre_idx] = commandResult.indexOf(CERTBOT_RESULT_INDICATORS[pre_idx]);
             }
 
             pre_idx = -1;
 
-            for(int i = 0; i < ARR_LENGTH; ++i) {
+            for (int i = 0; i < ARR_LENGTH; ++i) {
                 int idx = INDEX_ARR[i];
                 if (pre_idx >= idx) {
                     return false;

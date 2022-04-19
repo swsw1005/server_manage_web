@@ -10,7 +10,7 @@ public enum DbType {
             "SELECT NOW()",
             "psql -h %s -p %s -U %s -d %s -w  -c '\\l' | grep UTF-8",
             "postgres|template0|template1",
-            "pg_dump -h %s -p %s -U %s -d %s -E utf-8 --inserts  > %s"
+            "pg_dump -h %s -p %s -U %s -d %s -E utf-8 --inserts --column-inserts > %s"
     ),
     MYSQL(
             "mysql",

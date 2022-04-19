@@ -49,7 +49,7 @@ public class DbServerWorker implements Runnable {
 
             final String[] arr = {"sh", "-c", DB_LIST_COMMAND};
 
-            log.debug(DB_LIST_COMMAND);
+            log.info(DB_LIST_COMMAND);
 
             List<String> cliResult = ProcessExecUtil.RUN_READ_COMMAND_LIST(arr);
 
