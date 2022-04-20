@@ -24,11 +24,11 @@ public interface NginxServerEntityRepository extends JpaRepository<NginxServerEn
 
     @Query(
             "select nsi from nginx_server_info nsi " +
-                    " left join fetch web_server_info wse " +
-                    " left join fetch domain_info di " +
-                    " left join fetch favicon_info fi " +
+                    " left join fetch nsi.webServerEntity" +
+                    " left join fetch nsi.domainEntity " +
+                    " left join fetch nsi.faviconEntity " +
                     " where nsi.deletedAt is null " +
-                    " and wse.sid = :sid"
+                    " and nsi.webServerEntity.sid = :sid"
     )
     List<NginxServerEntity> getAllByWebServer(@Param("sid") long sid);
 

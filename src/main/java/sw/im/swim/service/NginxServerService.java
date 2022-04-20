@@ -67,11 +67,14 @@ public class NginxServerService {
 
     public void delete(final long sid) throws Exception {
         try {
-            NginxServerEntity entity = nginxServerEntityRepository.getById(sid);
-            entity.delete();
-            nginxServerEntityRepository.save(entity);
-
+            // 1. nginx policy & server mapping table delete
             nginxPolicyServerEntityRepository.deleteAllByNginxServerEntityEquals(sid);
+
+            // 2. nginx server delete
+            NginxServerEntity entity = nginxServerEntityRepository.getById(sid);
+            // entity.delete();
+            // nginxServerEntityRepository.save(entity);
+            nginxServerEntityRepository.delete(entity);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception();

@@ -19,6 +19,7 @@ import sw.im.swim.repository.WebServerEntityRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -36,6 +37,8 @@ public class WebServerService {
     private final ServerInfoEntityRepository serverInfoEntityRepository;
 
     private final ModelMapper modelMapper;
+
+    private final NginxServerService nginxServerService;
 
     public List<WebServerEntityDto> getAll() {
         List<WebServerEntity> list = webServerEntityRepository.getAll();
@@ -84,17 +87,12 @@ public class WebServerService {
             entity.delete();
             webServerEntityRepository.save(entity);
 
+            // 1. nginx server list get
             List<NginxServerEntity> nginxServerList = nginxServerEntityRepository.getAllByWebServer(sid);
-
             for (int i = 0; i < nginxServerList.size(); i++) {
                 NginxServerEntity tempNginxServerEntity = nginxServerList.get(i);
-
-                tempNginxServerEntity.delete();
-                nginxServerEntityRepository.save(tempNginxServerEntity);
-            }
-
-            for (int i = 0; i < nginxServerList.size(); i++) {
-                nginxPolicyServerEntityRepository.deleteAllByNginxServerEntityEquals(nginxServerList.get(i).getSid());
+                // nginxServerSidSet.add(tempNginxServerEntity.getSid());
+                nginxServerService.delete(tempNginxServerEntity.getSid());
             }
 
             return true;
