@@ -41,15 +41,45 @@ public class SpeedTestResultEntity {
     @Column(nullable = false, length = 100)
     private Double ping;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "speed_test_server_sid")
-    @Setter
-    private SpeedTestServerEntity speedTestServerEntity;
+    @Column()
+    private Double client_latitude;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "speed_test_client_sid")
-    @Setter
-    private SpeedTestClientEntity speedTestClientEntity;
+    @Column()
+    private Double client_longitude;
+
+    @Column(nullable = false, length = 200)
+    private String client_ip;
+
+    @Column(nullable = false, length = 200)
+    private String client_isp;
+
+    @Column(nullable = false, length = 200)
+    private String client_country;
+
+
+    @Column(nullable = false, length = 200)
+    private Double server_latitude;
+
+    @Column(nullable = false, length = 200)
+    private Double server_longitude;
+
+    @Column(nullable = false, length = 200)
+    private String server_name;
+
+    @Column(nullable = false, length = 200)
+    private String server_country;
+
+    @Column(nullable = false, length = 200)
+    private String server_sponsor;
+
+    @Column(nullable = false, length = 200)
+    private String server_host;
+
+    @Column(nullable = false, length = 200)
+    private String server_url;
+
+    @Column(nullable = false, length = 200)
+    private Double server_latency;
 
 
 }

@@ -16,16 +16,16 @@
                     ${dto.sid}
             </div>
             <div class="list_row_name">
-                    ${dto.speedTestServerDto.host}
+                    ${dto.server_host}
             </div>
             <div class="list_row_name">
-                    ${dto.speedTestServerDto.name}
+                    ${dto.server_name}
             </div>
             <div class="list_row_name">
-                    ${dto.speedTestServerDto.country}
+                    ${dto.server_country}
             </div>
             <div class="list_row_name">
-                    ${dto.speedTestServerDto.latitude} / ${dto.speedTestServerDto.longitude}
+                    ${dto.server_latitude} / ${dto.server_longitude}
             </div>
 
             <div class="list_row_500">

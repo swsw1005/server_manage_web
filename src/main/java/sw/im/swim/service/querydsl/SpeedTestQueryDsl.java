@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
-import sw.im.swim.bean.entity.*;
+import sw.im.swim.bean.entity.QSpeedTestResultEntity;
+import sw.im.swim.bean.entity.SpeedTestResultEntity;
 
 import java.util.List;
 
@@ -20,30 +21,27 @@ public class SpeedTestQueryDsl {
     private final JPAQueryFactory queryFactory;
 
     private final QSpeedTestResultEntity qSpeedTestResultEntity = QSpeedTestResultEntity.speedTestResultEntity;
-    private final QSpeedTestClientEntity qSpeedTestClientEntity = QSpeedTestClientEntity.speedTestClientEntity;
-    private final QSpeedTestServerEntity qSpeedTestServerEntity = QSpeedTestServerEntity.speedTestServerEntity;
-
 
     public List<String> getCountryList() {
-        List<String> list = queryFactory.select(qSpeedTestServerEntity.country)
-                .from(qSpeedTestServerEntity)
-                .groupBy(qSpeedTestServerEntity.country)
+        List<String> list = queryFactory.select(qSpeedTestResultEntity.server_country)
+                .from(qSpeedTestResultEntity)
+                .groupBy(qSpeedTestResultEntity.server_country)
                 .fetch();
         return list;
     }
 
     public List<String> getHostList() {
-        List<String> list = queryFactory.select(qSpeedTestServerEntity.host)
-                .from(qSpeedTestServerEntity)
-                .groupBy(qSpeedTestServerEntity.host)
+        List<String> list = queryFactory.select(qSpeedTestResultEntity.server_host)
+                .from(qSpeedTestResultEntity)
+                .groupBy(qSpeedTestResultEntity.server_host)
                 .fetch();
         return list;
     }
 
     public List<String> getNameList() {
-        List<String> list = queryFactory.select(qSpeedTestServerEntity.name)
-                .from(qSpeedTestServerEntity)
-                .groupBy(qSpeedTestServerEntity.name)
+        List<String> list = queryFactory.select(qSpeedTestResultEntity.server_name)
+                .from(qSpeedTestResultEntity)
+                .groupBy(qSpeedTestResultEntity.server_name)
                 .fetch();
         return list;
     }
@@ -55,8 +53,6 @@ public class SpeedTestQueryDsl {
 
         List<SpeedTestResultEntity> list =
                 queryFactory.selectFrom(qSpeedTestResultEntity)
-                        .innerJoin(qSpeedTestResultEntity.speedTestClientEntity, qSpeedTestClientEntity)
-                        .innerJoin(qSpeedTestResultEntity.speedTestServerEntity, qSpeedTestServerEntity)
                         .where(
                                 countryEq(speedTestResultDto),
                                 hostEq(speedTestResultDto),
@@ -72,8 +68,6 @@ public class SpeedTestQueryDsl {
         List<Long> countQuery =
                 queryFactory.select(qSpeedTestResultEntity.sid)
                         .from(qSpeedTestResultEntity)
-                        .innerJoin(qSpeedTestResultEntity.speedTestClientEntity, qSpeedTestClientEntity)
-                        .innerJoin(qSpeedTestResultEntity.speedTestServerEntity, qSpeedTestServerEntity)
                         .where(
                                 countryEq(speedTestResultDto),
                                 hostEq(speedTestResultDto),
@@ -89,9 +83,9 @@ public class SpeedTestQueryDsl {
 
     private BooleanExpression countryEq(SpeedTestResultDto speedTestResultDto) {
         try {
-            String val = speedTestResultDto.getSpeedTestServerDto().getCountry();
+            String val = speedTestResultDto.getServer_country();
             val.length();
-            return qSpeedTestResultEntity.speedTestServerEntity.country.eq(val);
+            return qSpeedTestResultEntity.server_country.eq(val);
         } catch (Exception e) {
             return null;
         }
@@ -99,9 +93,9 @@ public class SpeedTestQueryDsl {
 
     private BooleanExpression hostEq(SpeedTestResultDto speedTestResultDto) {
         try {
-            String val = speedTestResultDto.getSpeedTestServerDto().getHost();
+            String val = speedTestResultDto.getServer_host();
             val.length();
-            return qSpeedTestResultEntity.speedTestServerEntity.host.eq(val);
+            return qSpeedTestResultEntity.server_host.eq(val);
         } catch (Exception e) {
             return null;
         }
@@ -109,9 +103,9 @@ public class SpeedTestQueryDsl {
 
     private BooleanExpression nameEq(SpeedTestResultDto speedTestResultDto) {
         try {
-            String val = speedTestResultDto.getSpeedTestServerDto().getName();
+            String val = speedTestResultDto.getServer_name();
             val.length();
-            return qSpeedTestResultEntity.speedTestServerEntity.name.eq(val);
+            return qSpeedTestResultEntity.server_name.eq(val);
         } catch (Exception e) {
             return null;
         }

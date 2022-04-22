@@ -6,6 +6,7 @@ import lombok.Setter;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.number.NumberVaildateUtil;
 
+import javax.persistence.Column;
 import java.util.Calendar;
 
 /**
@@ -24,8 +25,22 @@ public class SpeedTestResultDto {
     private Double upload;
     private Double ping;
 
-    private SpeedTestClientDto speedTestClientDto;
-    private SpeedTestServerDto speedTestServerDto;
+
+    private Double client_latitude;
+    private Double client_longitude;
+    private String client_ip;
+    private String client_isp;
+    private String client_country;
+
+    private Double server_latitude;
+    private Double server_longitude;
+    private String server_name;
+    private String server_country;
+    private String server_sponsor;
+    private String server_host;
+    private String server_url;
+    private Double server_latency;
+
 
     public String getCreated() {
         try {

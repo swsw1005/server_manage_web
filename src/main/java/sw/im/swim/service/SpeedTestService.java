@@ -9,15 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sw.im.swim.bean.dto.SpeedTestClientDto;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
-import sw.im.swim.bean.dto.SpeedTestServerDto;
-import sw.im.swim.bean.entity.SpeedTestClientEntity;
 import sw.im.swim.bean.entity.SpeedTestResultEntity;
-import sw.im.swim.bean.entity.SpeedTestServerEntity;
-import sw.im.swim.repository.SpeedTestClientEntityRepository;
 import sw.im.swim.repository.SpeedTestResultEntityRepository;
-import sw.im.swim.repository.SpeedTestServerEntityRepository;
 import sw.im.swim.service.querydsl.SpeedTestQueryDsl;
 import sw.im.swim.util.process.ProcessExecUtil;
 
@@ -30,8 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SpeedTestService {
 
-    private final SpeedTestClientEntityRepository speedTestClientEntityRepository;
-    private final SpeedTestServerEntityRepository speedTestServerEntityRepository;
     private final SpeedTestResultEntityRepository speedTestResultEntityRepository;
 
     private final SpeedTestQueryDsl speedTestQueryDsl;
@@ -43,6 +35,8 @@ public class SpeedTestService {
     public void speedTest() throws Exception {
         try {
             String speedResult = ProcessExecUtil.RUN_READ_COMMAND(arr);
+
+            log.info("speedResult   " + speedResult);
 
             insertSpeedTest(speedResult);
 
@@ -67,15 +61,41 @@ public class SpeedTestService {
             double uploadSpeed = jsonObject.get("upload").getAsDouble();
             double ping = jsonObject.get("ping").getAsDouble();
 
-            SpeedTestServerEntity server = getSpeedTestServerEntityFromJson(serverJsonObject);
-            SpeedTestClientEntity client = getSpeedTestClientEntityFromJson(clientJsonObject);
+
+            String server_url = serverJsonObject.get("url").getAsString();
+            String server_name = serverJsonObject.get("name").getAsString();
+            String server_country = serverJsonObject.get("country").getAsString();
+            String server_cc = serverJsonObject.get("cc").getAsString();
+            String server_sponsor = serverJsonObject.get("sponsor").getAsString();
+            String server_host = serverJsonObject.get("host").getAsString();
+            double server_lat = serverJsonObject.get("lat").getAsDouble();
+            double server_lon = serverJsonObject.get("lon").getAsDouble();
+            double server_latency = serverJsonObject.get("latency").getAsDouble();
+            int server_id = serverJsonObject.get("id").getAsInt();
+
+            String client_ip = clientJsonObject.get("ip").getAsString();
+            String client_country = clientJsonObject.get("country").getAsString();
+            double client_lat = clientJsonObject.get("lat").getAsDouble();
+            double client_lon = clientJsonObject.get("lon").getAsDouble();
+            String client_isp = clientJsonObject.get("isp").getAsString();
 
             SpeedTestResultEntity speedTestResultEntity = SpeedTestResultEntity.builder()
                     .download(downloadSpeed)
                     .upload(uploadSpeed)
                     .ping(ping)
-                    .speedTestClientEntity(client)
-                    .speedTestServerEntity(server)
+                    .server_url(server_url)
+                    .server_name(server_name)
+                    .server_country(server_country)
+                    .server_sponsor(server_sponsor)
+                    .server_host(server_host)
+                    .server_latency(server_latency)
+                    .server_latitude(server_lat)
+                    .server_longitude(server_lon)
+                    .client_ip(client_ip)
+                    .client_country(client_country)
+                    .client_latitude(client_lat)
+                    .client_longitude(client_lon)
+                    .client_isp(client_isp)
                     .build();
 
             speedTestResultEntityRepository.save(speedTestResultEntity);
@@ -91,54 +111,6 @@ public class SpeedTestService {
     }
 
 
-    private SpeedTestServerEntity getSpeedTestServerEntityFromJson(JsonObject jsonObject) {
-
-        String url = jsonObject.get("url").getAsString();
-        String name = jsonObject.get("name").getAsString();
-        String country = jsonObject.get("country").getAsString();
-        String cc = jsonObject.get("cc").getAsString();
-        String sponsor = jsonObject.get("sponsor").getAsString();
-        String host = jsonObject.get("host").getAsString();
-        double lat = jsonObject.get("lat").getAsDouble();
-        double lon = jsonObject.get("lon").getAsDouble();
-        double latency = jsonObject.get("latency").getAsDouble();
-        int id = jsonObject.get("id").getAsInt();
-
-        SpeedTestServerEntity entity = SpeedTestServerEntity.builder()
-                .url(url)
-                .name(name)
-                .country(country)
-                .cc(cc)
-                .sponsor(sponsor)
-                .host(host)
-                .latency(latency)
-                .latitude(lat)
-                .longitude(lon)
-                .id((long) id)
-                .build();
-
-        return speedTestServerEntityRepository.save(entity);
-    }
-
-    private SpeedTestClientEntity getSpeedTestClientEntityFromJson(JsonObject jsonObject) {
-
-        String ip = jsonObject.get("ip").getAsString();
-        String country = jsonObject.get("country").getAsString();
-        double lat = jsonObject.get("lat").getAsDouble();
-        double lon = jsonObject.get("lon").getAsDouble();
-        String isp = jsonObject.get("isp").getAsString();
-
-        SpeedTestClientEntity entity = SpeedTestClientEntity.builder()
-                .country(country)
-                .latitude(lat)
-                .longitude(lon)
-                .ip(ip)
-                .isp(isp)
-                .build();
-        return speedTestClientEntityRepository.save(entity);
-    }
-
-
     public List<SpeedTestResultDto> getList(SpeedTestResultDto dto, int pageNum, int pageSize) {
 
         List<SpeedTestResultDto> resultList = new ArrayList<>();
@@ -151,15 +123,8 @@ public class SpeedTestService {
             for (int i = 0; i < list.size(); i++) {
 
                 SpeedTestResultEntity speedTestResult = list.get(i);
-                SpeedTestClientEntity speedTestClient = speedTestResult.getSpeedTestClientEntity();
-                SpeedTestServerEntity speedTestServer = speedTestResult.getSpeedTestServerEntity();
 
                 SpeedTestResultDto var1 = modelMapper.map(speedTestResult, SpeedTestResultDto.class);
-                SpeedTestClientDto var2 = modelMapper.map(speedTestClient, SpeedTestClientDto.class);
-                SpeedTestServerDto var3 = modelMapper.map(speedTestServer, SpeedTestServerDto.class);
-
-                var1.setSpeedTestClientDto(var2);
-                var1.setSpeedTestServerDto(var3);
 
                 resultList.add(var1);
             }
