@@ -120,7 +120,7 @@
         </select>
     </div>
 
-
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-41-row border-top">
         <div>
             DNS_UPDATE
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
         <div>
             DB_BACKUP_CRON
@@ -147,6 +147,26 @@
                     <option value="${dto.cron}" selected>${dto.name}</option>
                 </c:if>
                 <c:if test="${dto.cron ne adminSetting.DB_BACKUP_CRON}">
+                    <option value="${dto.cron}">${dto.name}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-half-row">
+        <div>
+            인터넷 속도 측정 주기
+        </div>
+        <select name="INTERNET_TEST_CRON" class="w3-select">
+            <option value="">
+                ----- 선택 -----
+            </option>
+            <c:forEach var="dto" items="${cronList}">
+                <c:if test="${dto.cron eq adminSetting.INTERNET_TEST_CRON}">
+                    <option value="${dto.cron}" selected>${dto.name}</option>
+                </c:if>
+                <c:if test="${dto.cron ne adminSetting.INTERNET_TEST_CRON}">
                     <option value="${dto.cron}">${dto.name}</option>
                 </c:if>
             </c:forEach>

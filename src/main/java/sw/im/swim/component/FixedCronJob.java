@@ -22,6 +22,7 @@ import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.database.DatabaseHealchChecker;
 import sw.im.swim.worker.noti.AdminLogEmailWorker;
+import sw.im.swim.worker.speedtest.SpeedTestWorker;
 
 @Slf4j
 @Component
@@ -151,7 +152,7 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "0/5 * * * * *")
     public void databaseServerBackup() {
 
         try {
@@ -159,12 +160,9 @@ public class FixedCronJob {
         } catch (Exception e) {
         }
 
-        ThreadWorkerPoolContext.getInstance()
-                .DB_SERVER_WORKER
-                .execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
-        ThreadWorkerPoolContext.getInstance()
-                .NOTI_WORKER
-                .execute(new AdminLogEmailWorker(adminLogService));
+        ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
+        ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(new AdminLogEmailWorker(adminLogService));
+        ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
 
     }
 
@@ -186,18 +184,18 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0 0/3 * * * *")
-    public void serverSpeedTest() {
-        try {
-            speedTestService.speedTest();
-        } catch (IllegalStateException e) {
-            log.error(e.getMessage() + "_____");
-        } catch (RuntimeException e) {
-            log.error(e.getMessage() + "_____");
-        } catch (Exception e) {
-            log.error(e.getMessage() + "_____", e);
-        }
-
-    }
+//    @Scheduled(cron = "0 0 0/1 * * *")
+//    public void serverSpeedTest() {
+//        try {
+//            speedTestService.speedTest();
+//        } catch (IllegalStateException e) {
+//            log.error(e.getMessage() + "_____");
+//        } catch (RuntimeException e) {
+//            log.error(e.getMessage() + "_____");
+//        } catch (Exception e) {
+//            log.error(e.getMessage() + "_____", e);
+//        }
+//
+//    }
 
 }

@@ -32,6 +32,8 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
     private String DB_BACKUP_CRON = "";
     ////////////////////////////////////////
+    private String INTERNET_TEST_CRON = "";
+    ////////////////////////////////////////
     private String FAIL2BAN_TOKEN = "";
     ////////////////////////////////////////
     private boolean SERVER_HEALTH_CHECK = false;
