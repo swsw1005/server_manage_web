@@ -102,7 +102,7 @@
     </div>
 
     <div class="modal-form-half-row">
-        <div>
+        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/mail')">
             ADMIN_LOG_MAIL_CRON
         </div>
         <select name="ADMIN_LOG_MAIL_CRON" class="w3-select">
@@ -135,7 +135,7 @@
 
     <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
-        <div>
+        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/dbbackup')">
             DB_BACKUP_CRON
         </div>
         <select name="DB_BACKUP_CRON" class="w3-select">
@@ -155,7 +155,7 @@
 
     <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
-        <div>
+        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/speedtest')">
             인터넷 속도 측정 주기
         </div>
         <select name="INTERNET_TEST_CRON" class="w3-select">

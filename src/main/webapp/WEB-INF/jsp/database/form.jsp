@@ -88,7 +88,7 @@
 
     <div class="modal-form-row" style="text-align: center;">
         <button type="button" class="w3-button w3-round w3-green"
-                onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/database, 'post'
+            onclick="submitFormAjax('simple-form', 'simple-modal-form', '${contextPath}/api/v1/database', 'post')">
             저장
         </button>
         <button type="button" class="w3-button w3-round w3-red" onclick="closeInputModal('simple-modal-form')">

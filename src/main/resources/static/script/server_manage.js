@@ -358,6 +358,34 @@ function toggleAdminSetting(this_, childArrays, parentArrays) {
     }
 } // toggleAdminSetting end
 
+
+function adminSettingAjax(URL) {
+    $.ajax({
+        type: "post",
+        url: URL,
+        // contentType: false,
+        // processData: false,
+        data: {
+        }
+        ,
+        success: function (result, status, statusCode) {
+            Notify(
+                'success',
+              result,
+                'success'
+            );
+        },
+        error: function (result, status, statusCode) {
+            Notify(
+                'error',
+                result.responseJSON.error_msg,
+                'error'
+            );
+        }
+    });
+}
+
+
 function Notify(title, content, type) {
     Notification({
         title: title,
