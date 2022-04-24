@@ -71,6 +71,10 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
                 "/api/*",
         };
 
+        final String[] excludeApiPatterns = {
+                "/api/*/fail2ban/**",
+        };
+
         final String[] loginPatterns = {
                 "/login/**",
                 "/logout/*",
@@ -93,6 +97,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
                 .addPathPatterns(viewPatterns)
                 .addPathPatterns(apiPatterns)
                 .excludePathPatterns("/")
+                .excludePathPatterns(excludeApiPatterns)
                 .excludePathPatterns(resourcePatterns)
                 .excludePathPatterns(loginPatterns);
 

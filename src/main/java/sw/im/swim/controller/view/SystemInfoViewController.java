@@ -44,14 +44,7 @@ public class SystemInfoViewController {
 
         ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
 
-        List<ServerInfoEntityDto> list = serverInfoService.getAll();
-        list.forEach(serverInfoEntityDto ->
-                {
-                    if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
-                        mav.addObject("dto", serverInfoEntityDto);
-                    }
-                }
-        );
+        mav.addObject("dto", GeneralConfig.CURRENT_SERVER_INFO);
         mav.addObject("serverInfo", serverInfo);
 
         return mav;

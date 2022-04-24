@@ -24,7 +24,7 @@ public class NotiProducer implements Runnable {
     @Override
     public void run() {
 
-        log.debug("AdminLogType = " + NOTI_TYPE + "\t" + GeneralConfig.NOTI_SETTING_MAP.size());
+        log.debug(NOTI_TYPE + "\t" + GeneralConfig.NOTI_SETTING_MAP.size());
 
         boolean FLAG_MASTER = false;
         HashMap<NotiType, Boolean> notiMap = new HashMap<>();

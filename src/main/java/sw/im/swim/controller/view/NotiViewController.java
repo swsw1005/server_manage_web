@@ -5,9 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NotiEntityDto;
-import sw.im.swim.service.NginxServerSubService;
 import sw.im.swim.service.NotiService;
 
 import javax.servlet.http.HttpServletRequest;

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.SystemPropertyUtils;
 import sw.im.swim.bean.dto.FaviconEntityDto;
+import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.*;
@@ -40,6 +41,8 @@ public class FixedCronJob {
     private final NotiService notiService;
 
     private final SpeedTestService speedTestService;
+
+    private final ServerInfoService serverInfoService;
 
     @Scheduled(cron = "17 0/1 * * * *")
     public void faviconAutoRegister() {
@@ -126,7 +129,7 @@ public class FixedCronJob {
 
             if (currIp.equals(IP) == false) {
 
-                log.error("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
+                log.warn("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
 
                 if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
                     final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
@@ -154,21 +157,24 @@ public class FixedCronJob {
 
     @Scheduled(cron = "0/5 * * * * *")
     public void databaseServerBackup() {
-
-        try {
-            Thread.sleep(1500);
-        } catch (Exception e) {
-        }
-
         ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
         ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(new AdminLogEmailWorker(adminLogService));
         ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
-
     }
 
 
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
+        List<ServerInfoEntityDto> list = serverInfoService.getAll();
+        ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
+        list.forEach(serverInfoEntityDto ->
+                {
+                    if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
+                        GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
+                    }
+                }
+        );
+
         notiService.getAll();
     }
 

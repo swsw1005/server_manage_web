@@ -10,6 +10,7 @@ import sw.im.swim.bean.dto.AdminLogEntityDto;
 import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.entity.AdminLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.AdminLogRepository;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
@@ -52,7 +53,7 @@ public class AdminLogService {
                 .build();
         adminLogRepository.save(adminLogEntity);
 
-        NotiProducer notiProducer = new NotiProducer(msg, title);
+        NotiProducer notiProducer = new NotiProducer(msg, AdminLogType.STARTUP);
 
         ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
 

@@ -72,6 +72,10 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean NOTI_DB_FAIL_NATEON = false;
     private boolean NOTI_DB_FAIL_SLACK = false;
     ////////////////////////////////////////
+    private boolean FAIL2BAN = false;
+    private boolean FAIL2BAN_NATEON = false;
+    private boolean FAIL2BAN_SLACK = false;
+    ////////////////////////////////////////
 
 
 }

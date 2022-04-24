@@ -94,7 +94,7 @@ public class AdminSettingService {
 
                         default:
                             if (fieldName.contains("TOKEN") && (newFieldValue == null || newFieldValue.length() < 3)) {
-                                updateField.set(dto, UUID.randomUUID().toString().substring(0, 10));
+                                updateField.set(dto, UUID.randomUUID().toString().substring(0, 20));
                             } else {
                                 updateField.set(dto, newFieldValue);
                             }

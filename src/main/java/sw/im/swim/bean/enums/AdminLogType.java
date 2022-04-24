@@ -10,4 +10,5 @@ public enum AdminLogType {
     DNS,
     MAIL,
     STARTUP,
+    FAIL2BAN,
 }
