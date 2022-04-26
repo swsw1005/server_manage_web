@@ -48,6 +48,8 @@ public class Fail2banLogService {
 
             String msg = " [ " + dto.getCountry() + " ] " + " | " + dto.getIp() + " | " + dto.getJailType() + " | " + dto.getJobType() + " | " + dto.getServer();
 
+            log.debug(msg);
+
             NotiProducer notiProducer = new NotiProducer(msg, AdminLogType.FAIL2BAN);
             ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
 

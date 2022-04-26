@@ -4,7 +4,6 @@ package sw.im.swim.bean.entity;
 import lombok.*;
 import sw.im.swim.bean.enums.JailType;
 import sw.im.swim.bean.enums.JobType;
-import sw.im.swim.bean.enums.NotiType;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -40,13 +39,13 @@ public class Fail2banLogEntity {
     @Enumerated(EnumType.STRING)
     private JobType jobType;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String ip;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String server;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = true, length = 20)
     private String country;
 
 }

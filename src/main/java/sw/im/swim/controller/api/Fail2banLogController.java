@@ -30,14 +30,19 @@ public class Fail2banLogController {
 
     @RequestMapping(value = "/fail2ban/{jail}/{job}", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> fail2banLogInsert(
-            @PathVariable(name = "jail") JailType jailType,
-            @PathVariable(name = "job") JobType jobType,
+            @PathVariable(name = "jail") String jailTypeStr,
+            @PathVariable(name = "job") String jobTypeStr,
             Fail2banLogEntityDto dto,
             HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            log.error("jail : " + jailType + "  job : " + jobType);
+            log.error("raw String => jail : " + jailTypeStr + "  job : " + jobTypeStr);
+
+            JailType jailType = JailType.valueOf(jailTypeStr.toUpperCase());
+            JobType jobType = JobType.valueOf(jobTypeStr.toUpperCase());
+
+            log.error("Enum => jail : " + jailType + "  job : " + jobType);
 
             dto.setJailType(jailType);
             dto.setJobType(jobType);
