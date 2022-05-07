@@ -31,29 +31,27 @@
         </encoder>
     </appender>
 
-
-    <logger name="sw.im" level="debug" additivity="false">
-        <appender-ref ref="STDOUT"/>
+    <logger name="sw.im.swim" level="debug" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 
-    <!-- 	<logger name="com.zaxxer.hikari" level="warn" additivity="true"> -->
-    <!-- 		<appender-ref ref="STDOUT" /> -->
-    <!-- 		<appender-ref ref="FILE" /> -->
-    <!-- 	</logger> -->
+    <logger name="com.zaxxer.hikari" level="warn" additivity="true">
+        <appender-ref ref="STDOUT"/>
+<!--        <appender-ref ref="FILE"/>-->
+    </logger>
 
-    <!-- 	<logger name="org.mybatis.spring" level="warn" additivity="true"> -->
-    <!-- 		<appender-ref ref="STDOUT" /> -->
-    <!-- 		<appender-ref ref="FILE" /> -->
-    <!-- 	</logger> -->
+    <logger name="org.mybatis.spring" level="warn" additivity="true">
+        <appender-ref ref="STDOUT"/>
+<!--        <appender-ref ref="FILE"/>-->
+    </logger>
 
-    <!-- 	<logger name="org.apache.ibatis" level="warn" additivity="true"> -->
-    <!-- 		<appender-ref ref="STDOUT" /> -->
-    <!-- 		<appender-ref ref="FILE" /> -->
-    <!-- 	</logger> -->
+    <logger name="org.apache.ibatis" level="warn" additivity="true">
+        <appender-ref ref="STDOUT"/>
+<!--        <appender-ref ref="FILE"/>-->
+    </logger>
 
     <root level="INFO">
-        <!-- <appender-ref ref="STDOUT"/> -->
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
 </configuration>

@@ -11,7 +11,7 @@ import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
-import sw.im.swim.repository.NginxServerEntityRepository;
+import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
 import sw.im.swim.util.AesUtil;
@@ -27,8 +27,9 @@ public class ServerInfoService {
 
     private final ServerInfoEntityRepository serverInfoEntityRepository;
     private final WebServerEntityRepository webServerEntityRepository;
-    private final NginxServerEntityRepository nginxServerEntityRepository;
+//    private final NginxServerEntityRepository nginxServerEntityRepository;
     private final DatabaseServerEntityRepository databaseServerEntityRepository;
+    private final NginxPolicyServerEntityRepository nginxPolicyServerEntityRepository;
 
     private final ModelMapper modelMapper;
 
@@ -77,8 +78,27 @@ public class ServerInfoService {
             entity.delete();
             serverInfoEntityRepository.save(entity);
 
+            /**
+             * 웹서버 삭제
+             */
             List<WebServerEntity> webServerEntityList = webServerEntityRepository.getByServerInfo(entity.getSid());
+
+            for (WebServerEntity webServerEntity : webServerEntityList) {
+                webServerEntity.delete();
+                webServerEntityRepository.save(webServerEntity);
+                nginxPolicyServerEntityRepository.deleteAllByNginxServerEntityEquals(webServerEntity.getSid());
+            }
+
+
+            /**
+             * DB서버 삭제
+             */
             List<DatabaseServerEntity> databaseServerEntityList = databaseServerEntityRepository.getByServerInfo(entity.getSid());
+
+            for (DatabaseServerEntity databaseServerEntity : databaseServerEntityList) {
+                databaseServerEntity.delete();
+                databaseServerEntityRepository.save(databaseServerEntity);
+            }
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

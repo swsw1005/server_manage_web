@@ -93,11 +93,13 @@ function nameInherite(selector, dist) {
 }
 
 function closeInputModal(formId) {
-    document.getElementById(formId).style.display = "none";
-    document.getElementById(formId).classList.add("modalFadeOut");
-    document.getElementById(formId).classList.remove("modalFadeIn");
-    document.getElementById(formId).innerHTML = "";
-
+    try {
+        document.getElementById(formId).style.display = "none";
+        document.getElementById(formId).classList.add("modalFadeOut");
+        document.getElementById(formId).classList.remove("modalFadeIn");
+        document.getElementById(formId).innerHTML = "";
+    } catch (error) {
+    }
     callList();
 
     try {
@@ -115,7 +117,13 @@ function callList() {
         data: {}
         ,
         success: function (result, status, statusCode) {
-            document.getElementById("listLocation").innerHTML = result;
+            if (document.getElementById("listLocation") == null) {
+                setTimeout(() => {
+                    callList();
+                }, 1000);
+            } else {
+                document.getElementById("listLocation").innerHTML = result;
+            }
         },
         error: function (result, status, statusCode) {
             Notify(

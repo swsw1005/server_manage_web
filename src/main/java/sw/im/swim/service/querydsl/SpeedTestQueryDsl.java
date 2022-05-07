@@ -49,8 +49,6 @@ public class SpeedTestQueryDsl {
 
     public List<SpeedTestResultEntity> getListByLimitAndSearch(SpeedTestResultDto speedTestResultDto, Pageable pageable) {
 
-        log.error("  " + new Gson().toJson(speedTestResultDto) + "  \t pageable.getOffset() " + pageable.getOffset() + " \t pageable.getPageSize() " + pageable.getPageSize() + " \t pageable.getPageNumber() " + pageable.getPageNumber());
-
         List<SpeedTestResultEntity> list =
                 queryFactory.selectFrom(qSpeedTestResultEntity)
                         .where(
@@ -63,8 +61,6 @@ public class SpeedTestQueryDsl {
                         .limit(pageable.getPageSize())
                         .fetch();
 
-        log.error("list.size   " + list.size());
-
         List<Long> countQuery =
                 queryFactory.select(qSpeedTestResultEntity.sid)
                         .from(qSpeedTestResultEntity)
@@ -74,8 +70,6 @@ public class SpeedTestQueryDsl {
                                 nameEq(speedTestResultDto)
                         )
                         .fetch();
-
-        log.error("countQuery.size   " + countQuery.size());
 
         return list;
     }

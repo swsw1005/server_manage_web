@@ -26,7 +26,7 @@ public class AdminService {
         try {
             AdminEntityDto dto = findByEmail(email);
 
-            log.debug(" password => " + password);
+//            log.debug(" password => " + password);
 
             final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
 

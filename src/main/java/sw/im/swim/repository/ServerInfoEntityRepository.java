@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ServerInfoEntityRepository extends JpaRepository<ServerInfoEntity, Long> {
 
-    @Query("select si from server_info si order by si.ip asc ")
+    @Query("select si from server_info si where si.deletedAt is null order by si.ip asc ")
     List<ServerInfoEntity> findAll();
 
 }

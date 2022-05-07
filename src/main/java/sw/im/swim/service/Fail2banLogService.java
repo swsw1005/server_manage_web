@@ -1,11 +1,11 @@
 package sw.im.swim.service;
 
 import com.google.gson.Gson;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.Fail2banLogEntityDto;
 import sw.im.swim.bean.entity.Fail2banLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
@@ -15,15 +15,31 @@ import sw.im.swim.repository.Fail2banLogEntityRepository;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
-@Transactional
+@Transactional(rollbackOn = Exception.class, value = Transactional.TxType.REQUIRED)
 @RequiredArgsConstructor
 public class Fail2banLogService {
 
+    private final Fail2banLogEntityRepository fail2banLogEntityRepository;
+
     private final ModelMapper modelMapper;
 
-    private final Fail2banLogEntityRepository fail2banLogEntityRepository;
+//    public Fail2banLogService(@NonNull Fail2banLogEntityRepository fail2banLogEntityRepository, @NonNull ModelMapper modelMapper) {
+//
+//        log.error("\n\n\n\t 갸악 \n\n");
+//        log.error("fail2banLogEntityRepository    " + fail2banLogEntityRepository);
+//        log.error("modelMapper    " + modelMapper);
+//
+//        this.fail2banLogEntityRepository = fail2banLogEntityRepository;
+//        this.modelMapper = modelMapper;
+//
+//        log.error("fail2banLogEntityRepository    " + this.fail2banLogEntityRepository);
+//        log.error("modelMapper    " + this.modelMapper);
+//
+//    }
 
     public final Fail2banLogEntityDto insertLog(Fail2banLogEntityDto dto) throws TokenException {
         try {
@@ -44,7 +60,10 @@ public class Fail2banLogService {
 
             log.debug("fail2ban entity : " + new Gson().toJson(entity));
 
-            Fail2banLogEntity a = fail2banLogEntityRepository.save(entity);
+            log.error("fail2banLogEntityRepository   " + fail2banLogEntityRepository);
+            log.error("this.fail2banLogEntityRepository   " + this.fail2banLogEntityRepository);
+
+            Fail2banLogEntity a = this.fail2banLogEntityRepository.save(entity);
 
             String msg = " [ " + dto.getCountry() + " ] " + " | " + dto.getIp() + " | " + dto.getJailType() + " | " + dto.getJobType() + " | " + dto.getServer();
 

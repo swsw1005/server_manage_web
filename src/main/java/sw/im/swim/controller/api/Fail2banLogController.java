@@ -37,12 +37,12 @@ public class Fail2banLogController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            log.error("raw String => jail : " + jailTypeStr + "  job : " + jobTypeStr);
+            log.info("[/fail2ban/{jail}/{job}] raw String => jail : " + jailTypeStr + "  job : " + jobTypeStr);
 
             JailType jailType = JailType.valueOf(jailTypeStr.toUpperCase());
             JobType jobType = JobType.valueOf(jobTypeStr.toUpperCase());
 
-            log.error("Enum => jail : " + jailType + "  job : " + jobType);
+            log.debug("Enum => jail : " + jailType + "  job : " + jobType);
 
             dto.setJailType(jailType);
             dto.setJobType(jobType);

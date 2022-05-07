@@ -111,6 +111,8 @@ public class ServerSSHUtils {
                 }
             }
 
+        } catch (ArrayIndexOutOfBoundsException e) {
+            log.warn("Maybe No Banned IP...");
         } catch (NullPointerException e) {
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

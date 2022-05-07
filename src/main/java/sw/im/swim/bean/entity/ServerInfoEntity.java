@@ -28,7 +28,7 @@ public class ServerInfoEntity extends EntityBase {
     @Column(nullable = false, length = 60, name = "ssh_password")
     private String password;
 
-    @Column(nullable = false, length = 60, unique = true)
+    @Column(nullable = false, length = 60)
     private String ip;
 
     @Column(nullable = true, length = 10, name = "ssh_port")
