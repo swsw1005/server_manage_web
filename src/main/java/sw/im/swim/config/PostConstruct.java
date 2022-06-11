@@ -1,6 +1,5 @@
 package sw.im.swim.config;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
@@ -10,14 +9,13 @@ import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.enums.AdminLogType;
-import sw.im.swim.bean.enums.DatabaseServerUtil;
+import sw.im.swim.bean.util.DatabaseServerUtil;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.service.AdminSettingService;
 import sw.im.swim.service.NotiService;
 import sw.im.swim.service.SpeedTestService;
 import sw.im.swim.util.AesUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
-import sw.im.swim.util.nginx.AskiiArtUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +70,6 @@ public class PostConstruct {
             new File(DatabaseServerUtil.DB_DUMP_FILE_TMP).delete();
         } catch (Exception e) {
         }
-
 
         try {
 

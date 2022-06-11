@@ -41,13 +41,13 @@ public enum DbType {
     ),
     ;
 
-    final String ROOT_DB_NAME;
-    final String JDBC_DRIVER_NAME;
-    final String JDBC_URL;
-    final String CHECK_QUERY;
-    final String DB_LIST_COMMAND;
-    final String DB_LIST_EXCLUDE;
-    final String DUMP_COMMAND;
+    final public String ROOT_DB_NAME;
+    final public String JDBC_DRIVER_NAME;
+    final public String JDBC_URL;
+    final public String CHECK_QUERY;
+    final public String DB_LIST_COMMAND;
+    final public String DB_LIST_EXCLUDE;
+    final public String DUMP_COMMAND;
 
     DbType(
             final String ROOT_DB_NAME,

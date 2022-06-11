@@ -1,6 +1,5 @@
 package sw.im.swim.worker.noti;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.AdminLogEntityDto;

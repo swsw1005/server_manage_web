@@ -4,19 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
-import sw.im.swim.bean.enums.DatabaseServerUtil;
 import sw.im.swim.bean.enums.DbType;
+import sw.im.swim.bean.util.DatabaseServerUtil;
 import sw.im.swim.service.AdminLogService;
-import sw.im.swim.service.DatabaseServerService;
-import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
