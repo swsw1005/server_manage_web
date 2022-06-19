@@ -1,0 +1,16 @@
+version: "3"
+services:
+    postgres-5432:
+        image: "postgres:12"
+        container_name: "server_manager_db"
+        environment:
+            LC_COLLATE: C
+            LC_ALL: C.UTF-8
+            POSTGRES_DB: server_manager
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: q1w2e3
+        restart: "unless-stopped"
+        ports:
+            - 5433:5432
+        volumes:
+            - ${PWD}/volume/data:/var/lib/postgresql/data
