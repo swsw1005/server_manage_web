@@ -1,12 +1,8 @@
 package sw.im.swim.worker.nginx;
 
-import java.io.File;
-import java.util.*;
-
-import org.apache.commons.io.FileUtils;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
@@ -16,6 +12,9 @@ import sw.im.swim.service.NginxPolicySubService;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
 import sw.im.swim.util.nginx.NginxServiceControllUtil;
+
+import java.io.File;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor

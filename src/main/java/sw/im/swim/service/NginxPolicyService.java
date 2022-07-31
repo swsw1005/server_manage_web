@@ -10,12 +10,14 @@ import sw.im.swim.bean.entity.DomainEntity;
 import sw.im.swim.bean.entity.NginxPolicyEntity;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DomainEntityRepository;
 import sw.im.swim.repository.FaviconEntityRepository;
 import sw.im.swim.repository.NginxPolicyEntityRepository;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.NginxServerEntityRepository;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
+import sw.im.swim.worker.nginx.NginxV2Worker;
 import sw.im.swim.worker.nginx.NginxWorker;
 
 import javax.transaction.Transactional;
@@ -262,12 +264,23 @@ public class NginxPolicyService {
                 FAVICON_SET.add(favicon_);
             } // for i end
 
-            NginxWorker nginxWorker = new NginxWorker(policyEntityDto,
-                    nginxServerEntityList,
-                    adminLogService,
-                    nginxPolicySubService
-            );
-            ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
+            final boolean isNginxCertModeExternal = GeneralConfig.ADMIN_SETTING.isNGINX_EXTERNAL_CERTBOT();
+
+            if (isNginxCertModeExternal) {
+                NginxV2Worker nginxWorker = new NginxV2Worker(policyEntityDto,
+                        nginxServerEntityList,
+                        adminLogService
+                );
+                ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
+            } else {
+                NginxWorker nginxWorker = new NginxWorker(policyEntityDto,
+                        nginxServerEntityList,
+                        adminLogService,
+                        nginxPolicySubService
+                );
+                ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
+            }
+
 
         } catch (Exception e) {
         }
@@ -342,4 +355,5 @@ public class NginxPolicyService {
         throw new Exception("정책 생성 실패");
 
     }
+
 }

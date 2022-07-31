@@ -134,6 +134,19 @@
     </div>
 
     <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-41-row border-top">
+        <div>
+            NGINX_EXTERNAL_CERTBOT
+        </div>
+        <div class="toggle-wrapper toggle-${adminSetting.NGINX_EXTERNAL_CERTBOT}"
+             onclick="toggleAdminSetting(this)">
+            <i class="fas fa-toggle-on"></i>
+            <i class="fas fa-toggle-off"></i>
+            <input type="text" name="NGINX_EXTERNAL_CERTBOT" value="${adminSetting.NGINX_EXTERNAL_CERTBOT}">
+        </div>
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
         <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/dbbackup')">
             DB_BACKUP_CRON

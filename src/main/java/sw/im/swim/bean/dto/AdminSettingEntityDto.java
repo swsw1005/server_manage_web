@@ -30,6 +30,8 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
     private boolean DNS_UPDATE = false;
     ////////////////////////////////////////
+    private boolean NGINX_EXTERNAL_CERTBOT = true;
+    ////////////////////////////////////////
     private String DB_BACKUP_CRON = "";
     ////////////////////////////////////////
     private String INTERNET_TEST_CRON = "";

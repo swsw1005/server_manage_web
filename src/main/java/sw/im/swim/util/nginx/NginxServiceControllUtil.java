@@ -16,6 +16,7 @@ import java.util.Set;
 public class NginxServiceControllUtil {
 
     private static final String[] NGINX_SERVICE_START = new String[]{"sh", "-c", "systemctl start nginx"};
+    private static final String[] NGINX_SERVICE_RESTART = new String[]{"sh", "-c", "service nginx restart"};
     private static final String[] NGINX_SERVICE_STOP = new String[]{"sh", "-c", "systemctl stop nginx"};
     private static final String[] NGINX_SERVICE_STATUS = new String[]{"sh", "-c", "systemctl status nginx"};
     private static final String[] NGINX_STATUS_ACTIVE_INDICATORS = new String[]{
@@ -145,6 +146,17 @@ public class NginxServiceControllUtil {
             return NGINX_STATUS_JUDGE(var2);
 
         } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public static final boolean NGINX_RESTART() {
+        try {
+
+            ProcessExecUtil.RUN_READ_COMMAND(NGINX_SERVICE_RESTART);
+
+        } catch (Exception e) {
+            log.error(e + "   " + e.getMessage(), e);
         }
         return false;
     }

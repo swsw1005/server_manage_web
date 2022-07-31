@@ -3,19 +3,18 @@ package sw.im.swim.controller.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
-import sw.im.swim.bean.dto.NginxServerEntityDto;
-import sw.im.swim.bean.entity.NginxPolicyEntity;
-import sw.im.swim.bean.entity.NginxServerEntity;
-import sw.im.swim.repository.NginxPolicyServerEntityRepository;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.NginxPolicyService;
-import sw.im.swim.service.NginxServerService;
-import sw.im.swim.util.date.DateFormatUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -81,23 +80,13 @@ public class NginxPolicyController {
 //    }
 
     @RequestMapping(value = "/nginxpolicyUpdate", method = {RequestMethod.POST})
-    public Map<String, Object> nginxpolicyUpdate(
-            @RequestParam(name = "name", required = false, defaultValue = "") final String name,
-            @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
-            @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
-            @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString,
-            @RequestParam(name = "domainInfoSid", required = false, defaultValue = "") final String domainInfoSid,
-            @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
-            HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> nginxpolicyUpdate(@RequestParam(name = "name", required = false, defaultValue = "") final String name, @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections, @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed, @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString, @RequestParam(name = "domainInfoSid", required = false, defaultValue = "") final String domainInfoSid, @RequestParam(name = "sid", required = false, defaultValue = "") final String sid, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
-            NginxPolicyEntityDto dto = nginxPolicyService.update(name,
-                    Integer.parseInt(workerProcessed),
-                    Integer.parseInt(workerConnections),
-                    nginxServerSidString,
-                    Long.parseLong(domainInfoSid),
-                    Long.parseLong(sid)
-            );
+            NginxPolicyEntityDto dto = nginxPolicyService.update(name, Integer.parseInt(workerProcessed), Integer.parseInt(workerConnections), nginxServerSidString, Long.parseLong(domainInfoSid), Long.parseLong(sid));
+
+            nginxPolicyService.ADJUST_NGINX_POLICY();
+
             map.put("entity", dto);
             map.put("code", 0);
         } catch (Exception e) {
@@ -161,10 +150,21 @@ public class NginxPolicyController {
 //        return map;
 //    }
 
+    /**
+     * <PRE>
+     * ADMIN_SETTING.NGINX_EXTERNAL_CERTBOT
+     * if true
+     * DO NOTHING
+     * if false
+     * nginx 설정을 작성하고,
+     * </PRE>
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/nginxpolicy", method = {RequestMethod.PATCH})
-    public Map<String, Object> adjustNginxPolicy(
-            HttpServletRequest request, HttpServletResponse response
-    ) {
+    public Map<String, Object> adjustNginxPolicy(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
             nginxPolicyService.ADJUST_NGINX_POLICY();
