@@ -20,12 +20,25 @@ public class NginxConfCreateUtil {
 
     private static final String[] HEAD(int workerProcessed, int workerConnections) {
 
-        String[] result = {"user www-data;", "worker_processes " + workerProcessed + ";", "pid /run/nginx.pid;",
-                "include /etc/nginx/modules-enabled/*.conf;", "", "events {",
+        String[] result = {"user www-data;",
+                //
+                "worker_processes " + workerProcessed + ";",
+                //
+                "pid /run/nginx.pid;",
+                //
+                "include /etc/nginx/modules-enabled/*.conf;",
+                //
+                "",
+                //
+                "events {",
                 // ------------------------------------
                 TAB + "worker_connections " + workerConnections + ";",
-                // ------------------------------------
-                TAB + "# multi_accept on;", "}", ""};
+                //
+                TAB + "# multi_accept on;",
+                //
+                "}",
+                //
+                ""};
 
         return result;
     }
@@ -97,7 +110,7 @@ public class NginxConfCreateUtil {
         resultList.add(TAB + "##");
         resultList.add(TAB + "include /etc/nginx/conf.d/*.conf;");
         resultList.add(TAB + "### root 도메인도 이 파일에서 관리한다.");
-        resultList.add(TAB + "#include /etc/nginx/sites-enabled/*;");
+        resultList.add(TAB + "include /etc/nginx/sites-enabled/*;");
         resultList.add("");
         resultList.add("");
 
