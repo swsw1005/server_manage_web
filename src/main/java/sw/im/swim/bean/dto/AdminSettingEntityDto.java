@@ -15,6 +15,9 @@ import java.io.Serializable;
 @Data
 public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
+    private String ROOT_DOMAIN = "";
+    private int CERT_EXPIRE_NOTI = 10;
+    ////////////////////////////////////////
     private String SMTP_USER = "";
     private String SMTP_PASSWORD = "";
     private String SMTP_HOST = "smtp.gmail.com";

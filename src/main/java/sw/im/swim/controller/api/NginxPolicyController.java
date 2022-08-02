@@ -80,10 +80,17 @@ public class NginxPolicyController {
 //    }
 
     @RequestMapping(value = "/nginxpolicyUpdate", method = {RequestMethod.POST})
-    public Map<String, Object> nginxpolicyUpdate(@RequestParam(name = "name", required = false, defaultValue = "") final String name, @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections, @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed, @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString, @RequestParam(name = "domainInfoSid", required = false, defaultValue = "") final String domainInfoSid, @RequestParam(name = "sid", required = false, defaultValue = "") final String sid, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> nginxpolicyUpdate(@RequestParam(name = "name", required = false, defaultValue = "") final String name,
+                                                 @RequestParam(name = "workerConnections", required = false, defaultValue = "") final String workerConnections,
+                                                 @RequestParam(name = "workerProcessed", required = false, defaultValue = "") final String workerProcessed,
+                                                 @RequestParam(name = "nginxServerSidString", required = false, defaultValue = "") final String nginxServerSidString,
+                                                 @RequestParam(name = "sid", required = false, defaultValue = "") final String sid,
+                                                 HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         try {
-            NginxPolicyEntityDto dto = nginxPolicyService.update(name, Integer.parseInt(workerProcessed), Integer.parseInt(workerConnections), nginxServerSidString, Long.parseLong(domainInfoSid), Long.parseLong(sid));
+            NginxPolicyEntityDto dto = nginxPolicyService.update(name,
+                    Integer.parseInt(workerProcessed),
+                    Integer.parseInt(workerConnections), nginxServerSidString, Long.parseLong(sid));
 
             nginxPolicyService.ADJUST_NGINX_POLICY();
 

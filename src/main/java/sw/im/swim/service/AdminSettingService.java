@@ -103,7 +103,11 @@ public class AdminSettingService {
                     } // switch case end
 
                 } catch (Exception e) {
-                    log.error(e.getMessage() + "__________", e);
+                    if (log.isDebugEnabled()) {
+                        log.error(e + "  " + e.getMessage() + "__________", e);
+                    } else {
+                        log.warn(e + "  " + e.getMessage() + "__");
+                    }
                 } // try catch end
 
             } // for i end

@@ -11,4 +11,5 @@ public enum AdminLogType {
     MAIL,
     STARTUP,
     FAIL2BAN,
+    CERTBOT
 }

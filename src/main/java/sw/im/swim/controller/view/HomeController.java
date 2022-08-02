@@ -39,7 +39,7 @@ public class HomeController {
             AdminEntityDto adminEntityDto = (AdminEntityDto) session.getAttribute("admin");
 
             if (adminEntityDto.getSid() > 0) {
-                rv = new RedirectView(contextPath + "/webserver/home");
+                rv = new RedirectView(contextPath + "/nginxpolicy/home");
             }
 
         } catch (Exception e) {

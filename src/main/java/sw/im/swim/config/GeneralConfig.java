@@ -8,6 +8,7 @@ import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.util.server.ServerInfoUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +27,7 @@ public class GeneralConfig {
 
     public static String ENC_KEY = "";
 
+
     public static AdminSettingEntityDto ADMIN_SETTING;
 
     public static final ConcurrentHashMap<String, Boolean> NOTI_SETTING_MAP = new ConcurrentHashMap<>();
@@ -37,5 +39,11 @@ public class GeneralConfig {
     public static ServerInfoUtil.ServerInfo SERVER_INFO = ServerInfoUtil.getServerInfo();
 
     public static ServerInfoEntityDto CURRENT_SERVER_INFO;
+
+    public static String CERT_FILE_FULLCHAIN = "fullchain.pem";
+    public static String CERT_FILE_PRIKEY = "privkey.pem";
+    public static String CERT_FILE_CHAIN = "chain.pem";
+
+    public static Calendar CERT_EXPIRED_AT = null;
 
 }

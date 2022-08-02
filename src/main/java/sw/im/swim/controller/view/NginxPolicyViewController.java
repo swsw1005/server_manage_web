@@ -91,10 +91,6 @@ public class NginxPolicyViewController {
         mav.addObject("nginxServerList", nginxServerList);
         mav.addObject("nginxServerListSize", nginxServerList.size());
 
-
-        List<DomainEntityDto> linkedNginxServerList = nginxServerSubService.getAllDomains();
-        mav.addObject("domainList", linkedNginxServerList);
-
         return mav;
     }
 

@@ -5,9 +5,12 @@ import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.bean.dto.WebServerEntityDto;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.date.DateFormatUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +18,12 @@ import java.util.List;
 
 @Slf4j
 public class NginxConfCreateUtil {
+
+    public static final String CERT_FILE_PREFIX = "/root/pem";
+
+    public static final String CERT_FILE_FULLCHAIN = "fullchain.pem";
+    public static final String CERT_FILE_PRIKEY = "privkey.pem";
+    public static final String CERT_FILE_CHAIN = "chain.pem";
 
     private static final String
             // ------------------------------------
@@ -283,8 +292,6 @@ public class NginxConfCreateUtil {
         final int processed = policyEntityDto.getWorkerProcessed();
         final int connections = policyEntityDto.getWorkerConnections();
 
-        DomainEntityDto ROOT_DOMAIN = policyEntityDto.getDomainEntity();
-
         String pre_ip = "";
 
         for (int i = 0; i < nginxServerEntityList.size(); i++) {
@@ -293,7 +300,7 @@ public class NginxConfCreateUtil {
 
             String tempIp = nginxServerEntity.getWebServerEntity().getServerInfoEntity().getIp();
 
-            if (nginxServerEntity.getDomainEntity().getDomain().equals(ROOT_DOMAIN.getDomain())) {
+            if (nginxServerEntity.getDomainEntity().getDomain().equals(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN())) {
                 // 루트 도메인일때
                 rootDomainList.add("");
                 rootDomainList.add("");
@@ -356,18 +363,43 @@ public class NginxConfCreateUtil {
 
         try {
 
-            String ROOT_DOMAIN_NAME = policyEntityDto.getDomainEntity().getDomain();
+            final String ROOT_DOMAIN_NAME = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
+
+            if (ROOT_DOMAIN_NAME == null || ROOT_DOMAIN_NAME.length() < 5) {
+                throw new Exception("ROOT 도메인이 너무 짧습니다. 올바르게 설정해주세요 : " + ROOT_DOMAIN_NAME + "\t" + ROOT_DOMAIN_NAME.length());
+            }
+
+            new File(CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME).mkdirs();
+
+            GeneralConfig.CERT_FILE_FULLCHAIN = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_FULLCHAIN;
+            GeneralConfig.CERT_FILE_PRIKEY = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_PRIKEY;
+            GeneralConfig.CERT_FILE_CHAIN = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_CHAIN;
+
+            File CERT_FILE_FULLCHAIN = new File(GeneralConfig.CERT_FILE_FULLCHAIN);
+            File CERT_FILE_PRIKEY = new File(GeneralConfig.CERT_FILE_PRIKEY);
+            File CERT_FILE_CHAIN = new File(GeneralConfig.CERT_FILE_CHAIN);
+
+            assertFileExitst(CERT_FILE_FULLCHAIN);
+            assertFileExitst(CERT_FILE_PRIKEY);
+            assertFileExitst(CERT_FILE_CHAIN);
 
             for (NginxServerEntityDto nginxServerEntityDto : nginxServerEntityList) {
 
-                final boolean IS_ROOT_DOMAIN = nginxServerEntityDto.getDomainEntity().getDomain().equals(ROOT_DOMAIN_NAME);
+                final WebServerEntityDto webServerEntityDto = nginxServerEntityDto.getWebServerEntity();
+                final DomainEntityDto domainEntityDto = nginxServerEntityDto.getDomainEntity();
 
                 final String NAME = nginxServerEntityDto.getName();
-                final String IP = nginxServerEntityDto.getWebServerEntity().getServerInfoEntity().getIp();
-                final String HTTPS = nginxServerEntityDto.getWebServerEntity().HTTPS_PREFIX();
-                final String ADDRESS = nginxServerEntityDto.getWebServerEntity().getAddress();
-                final String DOMAIN = nginxServerEntityDto.getDomainEntity().getDomain();
+                final String IP = webServerEntityDto.getServerInfoEntity().getIp();
+                final String HTTPS = webServerEntityDto.HTTPS_PREFIX();
+                final String ADDRESS = webServerEntityDto.getAddress();
                 final String FAVICON = nginxServerEntityDto.getFaviconEntity().getPath();
+                String DOMAIN = domainEntityDto.getDomain();
+
+                if (!DOMAIN.contains(ROOT_DOMAIN_NAME)) {
+                    DOMAIN += "." + ROOT_DOMAIN_NAME;
+                }
+
+                final boolean IS_ROOT_DOMAIN = DOMAIN.equals(ROOT_DOMAIN_NAME);
 
                 List<String> list = new ArrayList<>();
 
@@ -383,6 +415,7 @@ public class NginxConfCreateUtil {
                 } else {
                     list.add(TAB + "server_name " + DOMAIN + ";");
                 }
+                list.add("");
 
                 list.add(TAB + "proxy_set_header Host $http_host;");
                 list.add(TAB + "proxy_set_header Connection \"\";");
@@ -424,9 +457,9 @@ public class NginxConfCreateUtil {
                 list.add(TAB + "ssl_protocols TLSv1 TLSv1.1 TLSv1.2;");
                 list.add(TAB + "ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';");
                 list.add(TAB + "ssl_prefer_server_ciphers on;");
-                list.add(TAB + "ssl_certificate              /root/pem/" + ROOT_DOMAIN_NAME + "/fullchain.pem;");
-                list.add(TAB + "ssl_certificate_key          /root/pem/" + ROOT_DOMAIN_NAME + "/privkey.pem;");
-                list.add(TAB + "ssl_trusted_certificate      /root/pem/" + ROOT_DOMAIN_NAME + "/chain.pem;");
+                list.add(TAB + "ssl_certificate          " + GeneralConfig.CERT_FILE_FULLCHAIN + ";");
+                list.add(TAB + "ssl_certificate_key      " + GeneralConfig.CERT_FILE_PRIKEY + ";");
+                list.add(TAB + "ssl_trusted_certificate  " + GeneralConfig.CERT_FILE_CHAIN + ";");
 
                 list.add("");
                 list.add("}");
@@ -463,10 +496,27 @@ public class NginxConfCreateUtil {
             }
 
         } catch (Exception e) {
-
+            log.error(e + "  " + e.getMessage(), e);
         }
 
 
+    }
+
+    private static void assertFileExitst(File certFile) throws FileNotFoundException {
+        try {
+
+            if (!certFile.exists()) {
+                throw new FileNotFoundException("file not exist : " + certFile.getAbsolutePath());
+            }
+            if (!certFile.canRead()) {
+                throw new FileNotFoundException("file cannot read : " + certFile.getAbsolutePath());
+            }
+            if (certFile.length() < 10) {
+                throw new FileNotFoundException("file too small : " + certFile.getAbsolutePath() + "\t size : " + certFile.length());
+            }
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public static List<String> DEFAULT_NGINX_CONF(NginxPolicyEntityDto policyEntityDto) throws Exception {

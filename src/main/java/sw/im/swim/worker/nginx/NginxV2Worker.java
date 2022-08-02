@@ -41,7 +41,7 @@ public class NginxV2Worker implements Runnable {
     @Override
     public void run() {
 
-        log.info("\n" + "=======================================" + "\n" + "START NGINX JOB !!!!!!" + "\n" + "=======================================");
+        log.info("===== START NGINX JOB !!!!!! =====");
 
         try {
             FileUtils.forceMkdir(new File(NGINX_CONF_DIR));

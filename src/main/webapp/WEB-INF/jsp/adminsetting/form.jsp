@@ -18,6 +18,22 @@
 
     <div class="modal-form-half-row border-top">
         <div>
+            ROOT_DOMAIN
+        </div>
+        <input type="text" name="ROOT_DOMAIN" value="${adminSetting.ROOT_DOMAIN}">
+    </div>
+
+    <div class="modal-form-41-row border-top">
+        <div>
+            인증서 만료 알림 (n일전)
+        </div>
+        <div>
+            <input type="text" name="CERT_EXPIRE_NOTI" value="${adminSetting.CERT_EXPIRE_NOTI}">
+        </div>
+    </div>
+
+    <div class="modal-form-half-row border-top">
+        <div>
             SMTP_USER
         </div>
         <input type="text" name="SMTP_USER" value="${adminSetting.SMTP_USER}">

@@ -28,33 +28,6 @@
         </div>
         <input type="number" name="workerConnections" value="${nginxPolicy.workerConnections}">
     </div>
-      
-
-    <div class="modal-form-23-row">
-        <div>
-            ROOT 도메인
-        </div>
-        <select name="domainInfoSid" class="w3-select">
-            <option value="null">
-                ----- 선택 -----
-            </option>
-            <c:forEach var="dto" items="${domainList}">
-
-              <c:if test="${ dto.sid eq nginxPolicy.domainEntity.sid }">
-                <option value="${dto.sid}" selected>
-                  ${dto.domain}
-                </option>
-              </c:if>
-              <c:if test="${ dto.sid ne nginxPolicy.domainEntity.sid }">
-                <option value="${dto.sid}">
-                  ${dto.domain}
-                </option>
-              </c:if>
-            
-            </c:forEach>
-        </select>
-    </div>
-
 
     <div class="modal-form-row">
         <div>

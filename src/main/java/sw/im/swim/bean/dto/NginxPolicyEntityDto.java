@@ -14,7 +14,7 @@ public class NginxPolicyEntityDto implements Serializable {
     private Calendar updatedAt;
     private Calendar deletedAt;
     private String name;
-    private DomainEntityDto domainEntity;
+//    private DomainEntityDto domainEntity;
     private int workerProcessed;
     private int workerConnections;
     protected Calendar lastCertUpdatedAt;

@@ -11,11 +11,8 @@ import sw.im.swim.bean.entity.NginxPolicyEntity;
 import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.repository.DomainEntityRepository;
-import sw.im.swim.repository.FaviconEntityRepository;
-import sw.im.swim.repository.NginxPolicyEntityRepository;
-import sw.im.swim.repository.NginxPolicyServerEntityRepository;
-import sw.im.swim.repository.NginxServerEntityRepository;
+import sw.im.swim.repository.*;
+import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.nginx.NginxV2Worker;
 import sw.im.swim.worker.nginx.NginxWorker;
@@ -45,37 +42,20 @@ public class NginxPolicyService {
     private final NginxPolicySubService nginxPolicySubService;
 
     private final DomainEntityRepository domainEntityRepository;
+
     private final FaviconEntityRepository faviconEntityRepository;
 
     private final AdminLogService adminLogService;
 
-//    public NginxPolicyEntityDto insertNew(String name, int workerProcessed, int workerConnections, long domainInfoSid) {
-//
-//        NginxPolicyEntity entity = NginxPolicyEntity.builder()
-//                .name(name)
-//                .workerProcessed(workerProcessed)
-//                .workerConnections(workerConnections)
-//                .domainEntity(new DomainEntity(domainInfoSid))
-//                .build();
-//
-//        NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
-//        return modelMapper.map(entity_, NginxPolicyEntityDto.class);
-//    }
 
-    public NginxPolicyEntityDto update(String name,
-                                       int workerProcessed, int workerConnections,
-                                       String nginxServerSidString,
-                                       long domainInfoSid, long sid
-    ) throws Exception {
+    public NginxPolicyEntityDto update(String name, int workerProcessed, int workerConnections, String nginxServerSidString, long sid) throws Exception {
 
         try {
-            log.warn("000 == " + "시작");
+            log.info("000 == " + "시작");
 
             NginxPolicyEntity entity = nginxPolicyEntityRepository.getAllByDeletedAtIsNull().get(0);
 
-            DomainEntity domainEntity = domainEntityRepository.getById(domainInfoSid);
-
-            log.warn("111 == " + entity.getSid() + "  " + entity.getName());
+            log.info("111 == " + entity.getSid() + "  " + entity.getName());
 
             if (name != null && name.length() > 2) {
                 entity.setName(name);
@@ -83,37 +63,39 @@ public class NginxPolicyService {
 
             entity.setWorkerProcessed(workerProcessed);
             entity.setWorkerConnections(workerConnections);
-            entity.setDomainEntity(domainEntity);
 
             NginxPolicyEntity entity_ = nginxPolicyEntityRepository.save(entity);
 
-            log.warn("222 == update == " + entity.getSid() + "  " + entity.getName());
+            log.info("222 == update == " + entity.getSid() + "  " + entity.getName());
 
             nginxPolicyServerEntityRepository.deleteAllByNginxPolicyEntityEquals(sid);
 
             String[] nginxServerSidArr = nginxServerSidString.split(",");
 
-            log.warn("333 ==   " + nginxServerSidString + "    " + nginxServerSidArr.length);
+            Set<Long> nginxServerSidSet = new HashSet<>();
+            for (String s : nginxServerSidArr) {
+                try {
+                    nginxServerSidSet.add(Long.parseLong(s));
+                } catch (Exception e) {
+                }
+            }
+
+            log.info("333 ==   " + nginxServerSidString + "    " + nginxServerSidArr.length + " => " + nginxServerSidSet.size());
 
             List<NginxPolicyServerEntity> n_p_s_e_list = new ArrayList<>();
             List<NginxServerEntity> nginxServerEntities = new ArrayList<>();
-            for (int i = 0; i < nginxServerSidArr.length; i++) {
+            for (Long l : nginxServerSidSet) {
 
-                String tempNginxServerSid = nginxServerSidArr[i].trim();
-
-                NginxServerEntity tempNginxServer = nginxServerEntityRepository
-                        .getById(Long.parseLong(tempNginxServerSid));
+                NginxServerEntity tempNginxServer = nginxServerEntityRepository.getById(l);
 
                 tempNginxServer.getName();
 
-                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_)
-                        .nginxServerEntity(tempNginxServer)
-                        .build();
+                NginxPolicyServerEntity npse = NginxPolicyServerEntity.builder().nginxPolicyEntity(entity_).nginxServerEntity(tempNginxServer).build();
 
                 nginxServerEntities.add(tempNginxServer);
                 n_p_s_e_list.add(npse);
             }
-            log.warn("444 ==  list.size()  " + n_p_s_e_list.size());
+            log.info("444 ==  nginx 서버 블록 size : " + n_p_s_e_list.size());
 
             nginxPolicyServerEntityRepository.saveAll(n_p_s_e_list);
 
@@ -267,66 +249,26 @@ public class NginxPolicyService {
             final boolean isNginxCertModeExternal = GeneralConfig.ADMIN_SETTING.isNGINX_EXTERNAL_CERTBOT();
 
             if (isNginxCertModeExternal) {
-                NginxV2Worker nginxWorker = new NginxV2Worker(policyEntityDto,
-                        nginxServerEntityList,
-                        adminLogService
-                );
+                NginxV2Worker nginxWorker = new NginxV2Worker(policyEntityDto, nginxServerEntityList, adminLogService);
                 ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
             } else {
-                NginxWorker nginxWorker = new NginxWorker(policyEntityDto,
-                        nginxServerEntityList,
-                        adminLogService,
-                        nginxPolicySubService
-                );
+                NginxWorker nginxWorker = new NginxWorker(policyEntityDto, nginxServerEntityList, adminLogService, nginxPolicySubService);
                 ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
             }
 
 
         } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.error(e + "  " + e.getMessage(), e);
+            } else {
+                log.error(e + "  " + e.getMessage());
+            }
+        } finally {
+            CertDateUtil.GET_CERT_DATE();
         }
         return msg;
     }
 
-    public String getRootDomain() {
-
-        try {
-            List<NginxPolicyEntity> list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();
-
-            NginxPolicyEntity nginxPolicyEntity = null;
-
-            long time = 1L;
-
-            for (int i = 0; i < list.size(); i++) {
-
-                NginxPolicyEntity temp = list.get(i);
-
-                long created = -1;
-                try {
-                    created = temp.getCreatedAt().getTimeInMillis();
-                } catch (Exception e) {
-                }
-
-                long updated = -1;
-                try {
-                    updated = temp.getUpdatedAt().getTimeInMillis();
-                } catch (Exception e) {
-                }
-
-                long tempTime = Math.max(created, updated);
-
-                if (tempTime >= time) {
-                    nginxPolicyEntity = temp;
-                    time = tempTime;
-                }
-            }
-
-            return nginxPolicyEntity.getDomainEntity().getDomain();
-
-        } catch (Exception e) {
-        }
-
-        return null;
-    }
 
     public NginxPolicyEntityDto get() throws Exception {
 
@@ -337,9 +279,7 @@ public class NginxPolicyService {
 
                 List<DomainEntity> domainList = domainEntityRepository.getAllDomains();
 
-                NginxPolicyEntity tempNewEntity = NginxPolicyEntity.builder()
-                        .domainEntity(domainList.get(0))
-                        .build();
+                NginxPolicyEntity tempNewEntity = NginxPolicyEntity.builder().build();
                 nginxPolicyEntityRepository.save(tempNewEntity);
 
                 list = nginxPolicyEntityRepository.getAllByDeletedAtIsNull();

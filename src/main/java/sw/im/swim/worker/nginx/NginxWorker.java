@@ -128,7 +128,7 @@ public class NginxWorker implements Runnable {
                 domains.add(domain);
             }
 
-            String ROOT_DOMAIN = policyEntityDto.getDomainEntity().getDomain();
+            String ROOT_DOMAIN = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
             boolean certbotSuccess = NginxServiceControllUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
             log.info("certbotSuccess | " + certbotSuccess);
             if (!certbotSuccess) {

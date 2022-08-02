@@ -10,12 +10,11 @@ import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.util.DatabaseServerUtil;
-import sw.im.swim.service.AdminLogService;
-import sw.im.swim.service.AdminSettingService;
-import sw.im.swim.service.NotiService;
-import sw.im.swim.service.SpeedTestService;
+import sw.im.swim.service.*;
 import sw.im.swim.util.AesUtil;
+import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
+import sw.im.swim.util.nginx.NginxConfCreateUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,6 +45,8 @@ public class PostConstruct {
     private final NotiService notiService;
 
     private final SpeedTestService speedTestService;
+
+    private final NginxPolicyService nginxPolicyService;
 
     @javax.annotation.PostConstruct
     public void INIT() throws SchedulerException {
@@ -86,12 +87,14 @@ public class PostConstruct {
             System.exit(0);
         }
 
+        nginxPolicyService.ADJUST_NGINX_POLICY();
+
         log.info("Application START (2/2)!!!!");
 
-        List<String> speedTestHostList = speedTestService.getHostList();
-        List<String> speedTestNameList = speedTestService.getNameList();
-        List<String> speedTestCountryList = speedTestService.getCountryList();
-        List<SpeedTestResultDto> list = speedTestService.getList(null, 0, 100);
+//        List<String> speedTestHostList = speedTestService.getHostList();
+//        List<String> speedTestNameList = speedTestService.getNameList();
+//        List<String> speedTestCountryList = speedTestService.getCountryList();
+//        List<SpeedTestResultDto> list = speedTestService.getList(null, 0, 100);
 
     }
 
@@ -113,19 +116,19 @@ public class PostConstruct {
         vo = new CronVO("0 0/5 * * * ?", "!! every 5 minute", 0, 0, "");
         list.add(vo);
 
-        vo = new CronVO("0 1 0/1 * * ?", "every 1 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/1 * * ?", "every 1 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 2 0/2 * * ?", "every 2 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/2 * * ?", "every 2 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 1 0/3 * * ?", "every 3 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/3 * * ?", "every 3 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 2 0/4 * * ?", "every 4 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/4 * * ?", "every 4 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 3 0/6 * * ?", "every 6 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/6 * * ?", "every 6 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 4 0/12 * * ?", "every 12 hour", 0, 59, "분");
+        vo = new CronVO("0 0 0/12 * * ?", "every 12 hour", 0, 59, "분");
         list.add(vo);
-        vo = new CronVO("0 5 0 * * ?", "every 24 hour", 0, 23, "시");
+        vo = new CronVO("0 0 0 * * ?", "every 24 hour", 0, 23, "시");
         list.add(vo);
 
         GeneralConfig.CRON_EXPRESSION_LIST.clear();

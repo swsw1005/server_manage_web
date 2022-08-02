@@ -59,7 +59,7 @@ public class AdminService {
             AdminEntity entity = adminEntityRepository.findByEmailEquals(email);
             return modelMapper.map(entity, AdminEntityDto.class);
         } catch (Exception e) {
-            throw new Exception("wrong email");
+            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
         }
     }
 

@@ -1,29 +1,30 @@
 package sw.im.swim.component;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.mchange.v2.lang.SystemUtils;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.SystemPropertyUtils;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.exception.CertException;
 import sw.im.swim.service.*;
+import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.util.server.ServerInfoUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
-import sw.im.swim.worker.database.DatabaseHealchChecker;
 import sw.im.swim.worker.noti.AdminLogEmailWorker;
+import sw.im.swim.worker.noti.NotiProducer;
 import sw.im.swim.worker.speedtest.SpeedTestWorker;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -123,7 +124,7 @@ public class FixedCronJob {
 
             String currIp = GeneralConfig.CURRENT_IP;
 
-            log.info("?? IP CHANGE ?? :: " + currIp + "  =>  " + IP);
+            log.debug("?? IP CHANGE ?? :: " + currIp + "  =>  " + IP);
 
             GeneralConfig.CURRENT_IP = IP;
 
@@ -132,7 +133,7 @@ public class FixedCronJob {
                 log.warn("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
 
                 if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
-                    final String ROOT_DOMAIN = nginxPolicyService.getRootDomain();
+                    final String ROOT_DOMAIN = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
 
                     DNSUtil.updateIp(ROOT_DOMAIN);
                     adminLogService.insertLog(AdminLogType.DNS, "SUCCESS", " IP CHANGE [" + currIp + "] > [" + IP + "]");
@@ -148,7 +149,7 @@ public class FixedCronJob {
         try {
             GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e + "  " + e.getMessage(), e);
         }
 
 
@@ -162,18 +163,62 @@ public class FixedCronJob {
         ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
     }
 
+    //    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0 0 9,21 * * ?")
+    public void certExpireNoti() {
+        try {
+
+            CertDateUtil.GET_CERT_DATE();
+
+            final int CERT_EXPIRE_NOTI = GeneralConfig.ADMIN_SETTING.getCERT_EXPIRE_NOTI();
+
+            Calendar now = Calendar.getInstance();
+            Calendar expiredAt = GeneralConfig.CERT_EXPIRED_AT;
+
+            if (expiredAt == null) {
+                throw new NullPointerException("nginx cert not set yet....");
+            }
+
+            now.setTimeZone(GeneralConfig.TIME_ZONE);
+            expiredAt.setTimeZone(GeneralConfig.TIME_ZONE);
+
+            long intervalMilleSeconds = expiredAt.getTimeInMillis() - now.getTimeInMillis();
+
+            if (intervalMilleSeconds < 0) {
+                throw new Exception("maybe already expired .... " + Math.abs(intervalMilleSeconds));
+            }
+
+            long intervalDay = TimeUnit.MICROSECONDS.toDays(intervalMilleSeconds);
+            long intervalHour = TimeUnit.MICROSECONDS.toHours(intervalMilleSeconds);
+
+            if (intervalDay > CERT_EXPIRE_NOTI) {
+                // 아직 만료시점이 되지 않았다.
+            } else if (intervalDay < 1) {
+                throw new CertException(" your cert mayby expire TODAY !!!!!!  left " + intervalHour + " hours !!!!");
+            } else {
+                throw new CertException(" your cert expire soon !! -> " + intervalDay + " days");
+            }
+
+        } catch (CertException e) {
+            NotiProducer notiProducer = new NotiProducer(e + " : " + e.getMessage(), AdminLogType.CERTBOT);
+            ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
+        } catch (Exception e) {
+            NotiProducer notiProducer = new NotiProducer("CERT noti ERROR : " + e + " : " + e.getMessage(), AdminLogType.CERTBOT);
+            ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
+            log.error(e + "  " + e.getMessage(), e);
+        }
+    }
+
 
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
         List<ServerInfoEntityDto> list = serverInfoService.getAll();
         ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
-        list.forEach(serverInfoEntityDto ->
-                {
-                    if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
-                        GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
-                    }
-                }
-        );
+        list.forEach(serverInfoEntityDto -> {
+            if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
+                GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
+            }
+        });
 
         notiService.getAll();
     }
