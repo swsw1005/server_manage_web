@@ -32,6 +32,29 @@
         </div>
     </div>
 
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-half-row">
+        <div>
+            인증서 만료 알림
+        </div>
+        <select name="CERT_NOTI_CRON" class="w3-select">
+            <option value="">
+                ----- 선택 -----
+            </option>
+            <c:forEach var="dto" items="${cronList}">
+                <c:if test="${dto.cron eq adminSetting.CERT_NOTI_CRON}">
+                    <option value="${dto.cron}" selected>${dto.name}</option>
+                </c:if>
+                <c:if test="${dto.cron ne adminSetting.CERT_NOTI_CRON}">
+                    <option value="${dto.cron}">${dto.name}</option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- ---------------------------------------------------------- -->
+
     <div class="modal-form-half-row border-top">
         <div>
             SMTP_USER
@@ -118,7 +141,7 @@
     </div>
 
     <div class="modal-form-half-row">
-        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/mail')">
+        <div>
             ADMIN_LOG_MAIL_CRON
         </div>
         <select name="ADMIN_LOG_MAIL_CRON" class="w3-select">
@@ -164,7 +187,7 @@
 
     <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
-        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/dbbackup')">
+        <div>
             DB_BACKUP_CRON
         </div>
         <select name="DB_BACKUP_CRON" class="w3-select">
@@ -184,7 +207,7 @@
 
     <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
-        <div onclick="adminSettingAjax('${contextPath}/api/v1/adminsetting/speedtest')">
+        <div>
             인터넷 속도 측정 주기
         </div>
         <select name="INTERNET_TEST_CRON" class="w3-select">
@@ -546,6 +569,18 @@
         </div>
     </div>
 
+
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-41-row border-top">
+        <div>
+            NGINX_LOG_FORMAT
+        </div>
+    </div>
+
+    <div>
+        <textarea style="width: 100%; height: 30vh; padding: 3px;"
+                  name="NGINX_LOG_FORMAT">${adminSetting.NGINX_LOG_FORMAT}</textarea>
+    </div>
 
     <!-- ---------------------------------------------------------- -->
 </form>

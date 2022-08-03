@@ -29,6 +29,13 @@
         <input type="number" name="workerConnections" value="${nginxPolicy.workerConnections}">
     </div>
 
+        <h5>
+            인증서 유효기간 :: ${leftDay} 일 남음
+        </h5>
+        <div>
+            ${startDate} ~ ${endDate}
+        </div>
+
     <div class="modal-form-row">
         <div>
             nginx server

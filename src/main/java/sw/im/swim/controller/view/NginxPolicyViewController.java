@@ -1,5 +1,6 @@
 package sw.im.swim.controller.view;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,9 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.util.date.DateFormatUtil;
 
 @Slf4j
 @Controller
@@ -90,6 +93,15 @@ public class NginxPolicyViewController {
         }
         mav.addObject("nginxServerList", nginxServerList);
         mav.addObject("nginxServerListSize", nginxServerList.size());
+
+        Date date1 = GeneralConfig.CERT_STARTED_AT.getTime();
+        Date date2 = GeneralConfig.CERT_EXPIRED_AT.getTime();
+
+        int leftDay = GeneralConfig.CERT_LEFT_DAY();
+
+        mav.addObject("startDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date1));
+        mav.addObject("endDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date2));
+        mav.addObject("leftDay", leftDay);
 
         return mav;
     }

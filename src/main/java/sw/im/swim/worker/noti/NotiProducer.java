@@ -39,7 +39,7 @@ public class NotiProducer implements Runnable {
         try {
             FLAG_MASTER = GeneralConfig.NOTI_SETTING_MAP.get(masterFlag);
         } catch (NullPointerException e) {
-            log.error(masterFlag + "\t" + FLAG_MASTER + " => " + e.getMessage());
+            log.error("해당하는 flag가 없습니다. \t" + masterFlag + "\t" + FLAG_MASTER + " => " + e.getMessage());
         } catch (Exception e) {
             log.error(masterFlag + "\t" + FLAG_MASTER + " => " + e.getMessage(), e);
         }

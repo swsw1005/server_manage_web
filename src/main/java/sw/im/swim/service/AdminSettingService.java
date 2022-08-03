@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.entity.AdminSettingEntity;
 import sw.im.swim.component.AdminLogMailJob;
+import sw.im.swim.component.CheckCertJob;
 import sw.im.swim.component.DatabaseBackupJob;
 import sw.im.swim.component.InternetTestJob;
 import sw.im.swim.config.GeneralConfig;
@@ -95,6 +96,8 @@ public class AdminSettingService {
                         default:
                             if (fieldName.contains("TOKEN") && (newFieldValue == null || newFieldValue.length() < 3)) {
                                 updateField.set(dto, UUID.randomUUID().toString().substring(0, 20));
+                            } else if (fieldName.contains("NGINX_LOG_FORMAT") && (newFieldValue == null || newFieldValue.length() < 3)) {
+                                updateField.set(dto, GeneralConfig.NGINX_LOG_FORMAT_DEFAULT);
                             } else {
                                 updateField.set(dto, newFieldValue);
                             }
@@ -198,6 +201,7 @@ public class AdminSettingService {
         cronSetting("DB_BACKUP", newDto.getDB_BACKUP_CRON(), DatabaseBackupJob.class);
         cronSetting("ADMIN_LOG_MAIL", newDto.getADMIN_LOG_MAIL_CRON(), AdminLogMailJob.class);
         cronSetting("INTERNET_TEST", newDto.getINTERNET_TEST_CRON(), InternetTestJob.class);
+        cronSetting("CERT_CHECK", newDto.getCERT_NOTI_CRON(), CheckCertJob.class);
 
     }
 

@@ -97,9 +97,7 @@ public class NginxConfCreateUtil {
         resultList.add(TAB + "# '\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
         resultList.add("");
         resultList.add(TAB + "# swim_log");
-        resultList.add(TAB + "log_format main '[$time_local] | $remote_addr | $remote_user '");
-        resultList.add(TAB + "'\"$request\" $status $body_bytes_sent '");
-        resultList.add(TAB + "'\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
+        resultList.add(TAB + "log_format main '" + GeneralConfig.ADMIN_SETTING.getNGINX_LOG_FORMAT().trim() + "';");
         resultList.add("");
         resultList.add(TAB + "# access_log /var/log/nginx/access.log main;");
         resultList.add(TAB + "# error_log /var/log/nginx/error.log;");
@@ -580,10 +578,7 @@ public class NginxConfCreateUtil {
             resultList.add(TAB + "# '\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
             resultList.add("");
             resultList.add(TAB + "# swim_log");
-            resultList.add(TAB + "log_format main '[$time_local] | $remote_addr | $remote_user '");
-//            resultList.add(TAB + "'\"$request\" $status $body_bytes_sent '");
-            resultList.add(TAB + "' $scheme://$host$request_uri \"$request\" $status $body_bytes_sent - '");
-            resultList.add(TAB + "'\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
+            resultList.add(TAB + "log_format main '" + GeneralConfig.ADMIN_SETTING.getNGINX_LOG_FORMAT().trim() + "';");
             resultList.add("");
             resultList.add("");
             resultList.add(TAB + "access_log /var/log/nginx/access.log main;");

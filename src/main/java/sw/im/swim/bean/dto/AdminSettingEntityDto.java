@@ -17,6 +17,7 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
     private String ROOT_DOMAIN = "";
     private int CERT_EXPIRE_NOTI = 10;
+    private String CERT_NOTI_CRON = "";
     ////////////////////////////////////////
     private String SMTP_USER = "";
     private String SMTP_PASSWORD = "";
@@ -41,6 +42,8 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
     private String FAIL2BAN_TOKEN = "";
     ////////////////////////////////////////
+    private String NGINX_LOG_FORMAT = "";
+    ////////////////////////////////////////
     private boolean SERVER_HEALTH_CHECK = false;
     private boolean WEB_SERVER_HEALTH_CHECK = false;
     private boolean DB_HEALTH_CHECK = false;
@@ -52,6 +55,10 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean NOTI_STARTUP = false;
     private boolean NOTI_STARTUP_NATEON = false;
     private boolean NOTI_STARTUP_SLACK = false;
+    ////////////////////////////////////////
+    private boolean NOTI_CERTBOT = true;
+    private boolean NOTI_CERTBOT_NATEON = true;
+    private boolean NOTI_CERTBOT_SLACK = true;
     ////////////////////////////////////////
     private boolean NOTI_MAIL = false;
     private boolean NOTI_MAIL_NATEON = false;
