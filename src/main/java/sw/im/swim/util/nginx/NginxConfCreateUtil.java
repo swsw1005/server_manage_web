@@ -523,11 +523,9 @@ public class NginxConfCreateUtil {
 
         List<String> list1 = AskiiArtUtil.CREATE_NGINX_BANNER(DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(new Date()));
         List<String> list2 = AskiiArtUtil.CREATE_NGINX_BANNER(DateFormatUtil.DATE_FORMAT_HH_mm_ss.format(new Date()));
-        List<String> list3 = AskiiArtUtil.CREATE_NGINX_BANNER("external cert + sites-enable");
 
         list.addAll(list1);
         list.addAll(list2);
-        list.addAll(list3);
 
         try {
 

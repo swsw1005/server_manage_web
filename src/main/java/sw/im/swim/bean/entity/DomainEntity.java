@@ -31,4 +31,9 @@ public class DomainEntity {
     @Column(nullable = false, length = 60, unique = true)
     private String domain;
 
+    @Column(name = "individual_cert_flag",
+            nullable = true)
+    @Builder.Default
+    private Boolean individualCert = false;
+
 }

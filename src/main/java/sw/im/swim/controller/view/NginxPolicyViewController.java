@@ -18,6 +18,7 @@ import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.service.CertBotService;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
@@ -102,6 +103,7 @@ public class NginxPolicyViewController {
         mav.addObject("startDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date1));
         mav.addObject("endDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date2));
         mav.addObject("leftDay", leftDay);
+        mav.addObject("certMessage", "use this script file to generate pem/key file via certbot !  ( " + CertBotService.CERTBOT_SCRIPT_FILE + " )");
 
         return mav;
     }

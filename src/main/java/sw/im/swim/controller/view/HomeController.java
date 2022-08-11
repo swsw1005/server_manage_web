@@ -85,5 +85,11 @@ public class HomeController {
         return mav;
     }
 
+    @GetMapping("/login/test")
+    public ModelAndView loginTest(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("test/test");
+        return mav;
+    }
+
 
 }

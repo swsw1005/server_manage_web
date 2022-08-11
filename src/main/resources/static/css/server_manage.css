@@ -631,7 +631,7 @@ input[type="radio"] {
     border: 1px solid white;
     background: #3a3a3a;
     margin: 3px;
-    height: calc(100vh - 300px);
+    height: calc(100vh - 380px);
     overflow-y: scroll;
 }
 
@@ -644,8 +644,8 @@ input[type="radio"] {
 
 .nginx-server-label-wrapper {
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
+    /*display: flex;*/
+    /*flex-direction: column;*/
 }
 
 #nginx-server-selected-location {

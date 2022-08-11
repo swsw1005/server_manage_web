@@ -165,6 +165,7 @@ public class NginxPolicyService {
      */
     public String ADJUST_NGINX_POLICY() {
         String msg = "";
+        List<NginxServerEntityDto> nginxServerEntityList = new ArrayList<>();
         try {
             log.error("============================================");
             msg = "NO NGINX_POLICY";
@@ -201,7 +202,6 @@ public class NginxPolicyService {
             /**
              * -----------------------
              */
-            List<NginxServerEntityDto> nginxServerEntityList = new ArrayList<>();
             for (int i = 0; i < dtos.size(); i++) {
                 NginxServerEntityDto dto = dtos.get(i);
                 if (nginxServerSet.contains(dto.getSid())) {
@@ -256,15 +256,15 @@ public class NginxPolicyService {
                 ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
             }
 
-
         } catch (Exception e) {
-            if (log.isDebugEnabled()) {
+            if (log.isInfoEnabled()) {
                 log.error(e + "  " + e.getMessage(), e);
             } else {
                 log.error(e + "  " + e.getMessage());
             }
         } finally {
             CertDateUtil.GET_CERT_DATE();
+            CertBotService.CREATE_CERTBOT_FILE(nginxServerEntityList);
         }
         return msg;
     }

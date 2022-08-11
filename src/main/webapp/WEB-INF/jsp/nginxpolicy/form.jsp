@@ -31,6 +31,7 @@
 
         <h5>
             인증서 유효기간 :: ${leftDay} 일 남음
+            <i class="fas fa-question-circle" title="${certMessage}"></i>
         </h5>
         <div>
             ${startDate} ~ ${endDate}
@@ -55,19 +56,15 @@
                         </c:if>
                     </div>
 
-                    <label class="nginx-server-label-wrapper" for="nginx-server-chk=${dto.sid}">
-                        <div>
-                            ${dto.name}
-                            | ${dto.domainEntity.domain}
+                    <label class="nginx-server-label-wrapper w3-hover-aqua" for="nginx-server-chk=${dto.sid}">
+                        <div class="w3-tag w3-green w3-border w3-border-white w3-small">
+                                ${dto.name}
                         </div>
                         <div>
-                            <c:if test="${dto.seperateLog}">
-                            로그 분리
-                            </c:if>
-                            <c:if test="${!dto.seperateLog}">
-                            로그 통합
-                            </c:if>
-                            | ${dto.faviconEntity.path}
+                                ${dto.domainEntity.absoluteDomain}
+                        </div>
+                        <div class="w3-tag w3-small">
+                                ${dto.faviconEntity.path}
                         </div>
                         <div>
                             <c:if test="${dto.webServerEntity.https}">
