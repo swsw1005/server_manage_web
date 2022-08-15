@@ -1,9 +1,18 @@
 package sw.im.swim.util.server;
 
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import sw.im.swim.worker.noti.NotiWorker;
 
 import java.io.BufferedReader;
@@ -17,6 +26,53 @@ import java.util.regex.Pattern;
 public class ServerInfoUtil {
 
     private static final String[] arr = {"KB", "MB", "GB", "TB"};
+
+
+    public static final PublicIpInfo GET_PUBLIC_IP() {
+
+        String IP_GET_URL = "http://ipinfo.io";
+
+        PublicIpInfo publicIpInfo = new PublicIpInfo();
+
+        String[] arr = {
+                "ip", "city", "region", "country", "loc", "org", "timezone", "postal"
+        };
+
+        CloseableHttpResponse response = null;
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();) {
+
+            HttpPost httpPost = new HttpPost(IP_GET_URL);
+
+            response = httpClient.execute(httpPost);
+
+            ResponseHandler<String> handler = new BasicResponseHandler();
+            String body = handler.handleResponse(response);
+
+            log.debug("ip body == " + body);
+
+            JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+
+            publicIpInfo.setIp(jsonObject.get("ip").getAsString());
+            publicIpInfo.setCity(jsonObject.get("city").getAsString());
+            publicIpInfo.setRegion(jsonObject.get("region").getAsString());
+            publicIpInfo.setCountry(jsonObject.get("country").getAsString());
+            publicIpInfo.setLoc(jsonObject.get("loc").getAsString());
+            publicIpInfo.setOrg(jsonObject.get("org").getAsString());
+            publicIpInfo.setTimezone(jsonObject.get("timezone").getAsString());
+            publicIpInfo.setPostal(jsonObject.get("postal").getAsString());
+
+        } catch (Exception e) {
+            log.error("----", e);
+        } finally {
+            try {
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return publicIpInfo;
+
+    }
+
 
     public static ServerInfo getServerInfo() {
         ServerInfo serverInfo = new ServerInfo();
@@ -72,7 +128,7 @@ public class ServerInfoUtil {
                     }
 
                     if (cpuInfo != null) {
-                        if (cpuInfo.getCache() != null && cpuInfo.getClock() != null && cpuInfo.getCore() != null && cpuInfo.getName() != null) {
+                        if (cpuInfo.getCache() != null && cpuInfo.getClock() != null && cpuInfo.getName() != null) {
                             cpuList.add(cpuInfo);
 
                             boolean alreadyFound = cpuCntMap.keySet().contains(cpuInfo.getName());
@@ -390,6 +446,44 @@ public class ServerInfoUtil {
         return serverInfo;
     } // end getServerInfoFromIfconfig()
 
+    @Getter
+    @Setter
+    public static class DiskInfo {
+
+        private String fileSystem;
+        private long size;
+        private long used;
+        private long avail;
+        private String mountedOn;
+
+        public String getSizeH() {
+            return format(size);
+        }
+
+        public String getUsedH() {
+            return format(used);
+        }
+
+        public String getAvailH() {
+            return format(avail);
+        }
+
+        public double getUsableRatio() {
+            try {
+                return ((double) used) / ((double) size);
+            } catch (Exception e) {
+                return 0.0;
+            }
+        }
+
+        public String getUsablePercentage() {
+            return String.format("%5.2f", getUsableRatio());
+        }
+
+    }
+
+    @Getter
+    @Setter
     public static class CpuInfo {
 
         // cpu
@@ -399,47 +493,26 @@ public class ServerInfoUtil {
         private int core = 1;
         private int thread = 1;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getClock() {
-            return clock;
-        }
-
-        public void setClock(String clock) {
-            this.clock = clock;
-        }
-
-        public String getCache() {
-            return cache;
-        }
-
-        public void setCache(String cache) {
-            this.cache = cache;
-        }
-
-        public Integer getCore() {
-            return core;
-        }
-
-        public void setCore(Integer core) {
-            this.core = core;
-        }
-
-        public Integer getThread() {
-            return thread;
-        }
-
-        public void setThread(Integer thread) {
-            this.thread = thread;
-        }
     }
 
+    @Getter
+    @Setter
+    public static class PublicIpInfo {
+
+        // cpu
+        private String ip;
+        private String city;
+        private String region;
+        private String country;
+        private String loc;
+        private String org;
+        private String timezone;
+        private String postal;
+
+    }
+
+    @Getter
+    @Setter
     public static class ServerInfo {
 
         // network
@@ -466,127 +539,7 @@ public class ServerInfoUtil {
         // cpu
         private List<CpuInfo> cpuList;
 
-        /////////////////////////////////////////////////////////////////////////
-
-        public String getIpAddress() {
-            return ipAddress;
-        }
-
-        public void setIpAddress(String ipAddress) {
-            this.ipAddress = ipAddress;
-        }
-
-        public String getSubnetMask() {
-            return subnetMask;
-        }
-
-        public void setSubnetMask(String subnetMask) {
-            this.subnetMask = subnetMask;
-        }
-
-        public String getGateway() {
-            return gateway;
-        }
-
-        public void setGateway(String gateway) {
-            this.gateway = gateway;
-        }
-
-        public String getMac() {
-            return mac;
-        }
-
-        public void setMac(String mac) {
-            this.mac = mac;
-        }
-
-        public String getOs() {
-            return os;
-        }
-
-        public void setOs(String os) {
-            this.os = os;
-        }
-
-        public String getKernel() {
-            return kernel;
-        }
-
-        public void setKernel(String kernel) {
-            this.kernel = kernel;
-        }
-
-        public Long getTotalMem() {
-            return totalMem;
-        }
-
-        public void setTotalMem(Long totalMem) {
-            this.totalMem = totalMem;
-        }
-
-        public Long getAvailableMem() {
-            return availableMem;
-        }
-
-        public void setAvailableMem(Long availableMem) {
-            this.availableMem = availableMem;
-        }
-
-        public Long getSwapMem() {
-            return swapMem;
-        }
-
-        public void setSwapMem(Long swapMem) {
-            this.swapMem = swapMem;
-        }
-
-        public Long getFreeMem() {
-            return freeMem;
-        }
-
-        public void setFreeMem(Long freeMem) {
-            this.freeMem = freeMem;
-        }
-
-        public String getTotalMemStr() {
-            return totalMemStr;
-        }
-
-        public void setTotalMemStr(String totalMemStr) {
-            this.totalMemStr = totalMemStr;
-        }
-
-        public String getAvailableMemStr() {
-            return availableMemStr;
-        }
-
-        public void setAvailableMemStr(String availableMemStr) {
-            this.availableMemStr = availableMemStr;
-        }
-
-        public String getSwapMemStr() {
-            return swapMemStr;
-        }
-
-        public void setSwapMemStr(String swapMemStr) {
-            this.swapMemStr = swapMemStr;
-        }
-
-        public String getFreeMemStr() {
-            return freeMemStr;
-        }
-
-        public void setFreeMemStr(String freeMemStr) {
-            this.freeMemStr = freeMemStr;
-        }
-
-        public List<CpuInfo> getCpuList() {
-            return cpuList;
-        }
-
-        public void setCpuList(List<CpuInfo> cpuList) {
-            this.cpuList = cpuList;
-        }
+        private List<DiskInfo> diskList;
     }
 
     public static void main(String[] args) {

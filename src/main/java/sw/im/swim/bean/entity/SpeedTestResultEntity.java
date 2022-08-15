@@ -41,44 +41,44 @@ public class SpeedTestResultEntity {
     @Column(nullable = false, length = 100)
     private Double ping;
 
-    @Column()
+    @Column(name = "client_latitude")
     private Double client_latitude;
 
-    @Column()
+    @Column(name = "client_longitude")
     private Double client_longitude;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "client_ip",nullable = false, length = 200)
     private String client_ip;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "client_isp",nullable = false, length = 200)
     private String client_isp;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "client_country",nullable = false, length = 200)
     private String client_country;
 
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_latitude", nullable = false, length = 200)
     private Double server_latitude;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_longitude", nullable = false, length = 200)
     private Double server_longitude;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_name", nullable = false, length = 200)
     private String server_name;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_country", nullable = false, length = 200)
     private String server_country;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_sponsor", nullable = false, length = 200)
     private String server_sponsor;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_host", nullable = false, length = 200)
     private String server_host;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_url", nullable = false, length = 200)
     private String server_url;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "server_latency", nullable = false, length = 200)
     private Double server_latency;
 
 

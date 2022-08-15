@@ -3,20 +3,21 @@
 
     <property name="LOG_HOME" value="/usr/local/server-manager/logs"/>
 
-    <property name="LOG_DB_PATH_NAME" value="${LOG_HOME}/db_backup_log"/>
-    <property name="LOG_SPEEDTEST_PATH_NAME" value="${LOG_HOME}/speedtest_log"/>
-    <property name="FAIL2BAN_LOG_PATH_NAME" value="${LOG_HOME}/fail2ban_log"/>
-    <property name="LOG_PATH_NAME" value="${LOG_HOME}/servermanager_log"/>
+    <property name="LOG_DEFAULT" value="${LOG_HOME}/servermanager_log"/>
+    <property name="LOG_DB" value="${LOG_HOME}/db_backup_log"/>
+    <property name="LOG_SPEEDTEST" value="${LOG_HOME}/speedtest_log"/>
+    <property name="LOG_FAIL2BAN" value="${LOG_HOME}/fail2ban_log"/>
+    <property name="LOG_SCHEDULE" value="${LOG_HOME}/schedule_log"/>
 
     <property name="LOG_PATTERN"
               value="%d |-%-5level [%thread] %logger{5} - %method\\(%line\\) : %msg%n"/>
 
     <!-- FILE Appender ................................... -->
     <appender name="FILE_DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH_NAME}</file>
+        <file>${LOG_DEFAULT}</file>
         <!-- 일자별로 로그파일 적용하기 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH_NAME}.%d{yyyyMMdd}</fileNamePattern>
+            <fileNamePattern>${LOG_DEFAULT}.%d{yyyyMMdd}</fileNamePattern>
             <maxHistory>20</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
         </rollingPolicy>
         <encoder>
@@ -26,11 +27,11 @@
     </appender>
     <!-- FILE Appender ................................... -->
     <appender name="FILE_DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DB_PATH_NAME}</file>
+        <file>${LOG_DB}</file>
         <!-- 일자별로 로그파일 적용하기 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DB_PATH_NAME}.%d{yyyyMMdd}</fileNamePattern>
-            <maxHistory>20</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
+            <fileNamePattern>${LOG_DB}.%d{yyyyMMdd}</fileNamePattern>
+            <maxHistory>10</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
         </rollingPolicy>
         <encoder>
             <!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%F]%M\(%L\) : %m%n</pattern> -->
@@ -39,11 +40,11 @@
     </appender>
     <!-- FILE Appender ................................... -->
     <appender name="FILE_SPEED" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_SPEEDTEST_PATH_NAME}</file>
+        <file>${LOG_SPEEDTEST}</file>
         <!-- 일자별로 로그파일 적용하기 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_SPEEDTEST_PATH_NAME}.%d{yyyyMMdd}</fileNamePattern>
-            <maxHistory>20</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
+            <fileNamePattern>${LOG_SPEEDTEST}.%d{yyyyMMdd}</fileNamePattern>
+            <maxHistory>4</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
         </rollingPolicy>
         <encoder>
             <!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%F]%M\(%L\) : %m%n</pattern> -->
@@ -51,13 +52,13 @@
         </encoder>
     </appender>
     <!-- FILE Appender ................................... -->
-    <appender name="FAIL2BAN_FILE"
+    <appender name="FILE_FAIL2BAN"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${FAIL2BAN_LOG_PATH_NAME}</file>
+        <file>${LOG_FAIL2BAN}</file>
         <!-- 일자별로 로그파일 적용하기 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${FAIL2BAN_LOG_PATH_NAME}.%d{yyyyMMdd}</fileNamePattern>
-            <maxHistory>20</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
+            <fileNamePattern>${LOG_FAIL2BAN}.%d{yyyyMMdd}</fileNamePattern>
+            <maxHistory>10</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
         </rollingPolicy>
         <encoder>
             <!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%F]%M\(%L\) : %m%n</pattern> -->
@@ -68,7 +69,6 @@
     <logger name="sw.im.swim" level="debug" additivity="false">
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
-
 
     <logger name="sw.im.swim.service.DatabaseServerService" level="debug" additivity="false">
         <appender-ref ref="FILE_DB"/>
@@ -88,37 +88,27 @@
         <appender-ref ref="FILE_SPEED"/>
     </logger>
 
-
     <logger name="sw.im.swim.controller.api.Fail2banLogController" level="debug" additivity="false">
-        <appender-ref ref="FAIL2BAN_FILE"/>
+        <appender-ref ref="FILE_FAIL2BAN"/>
     </logger>
     <logger name="sw.im.swim.service.Fail2banLogService" level="debug" additivity="false">
-        <appender-ref ref="FAIL2BAN_FILE"/>
+        <appender-ref ref="FILE_FAIL2BAN"/>
     </logger>
     <logger name="sw.im.swim.service.Fail2banService" level="debug" additivity="false">
-        <appender-ref ref="FAIL2BAN_FILE"/>
+        <appender-ref ref="FILE_FAIL2BAN"/>
     </logger>
-
-
-
 
     <logger name="com.zaxxer.hikari" level="warn" additivity="true">
-<!--        <appender-ref ref="STDOUT"/>-->
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
-
     <logger name="org.mybatis.spring" level="warn" additivity="true">
-<!--        <appender-ref ref="STDOUT"/>-->
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
-
     <logger name="org.apache.ibatis" level="warn" additivity="true">
-<!--        <appender-ref ref="STDOUT"/>-->
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
 
     <root level="INFO">
-<!--        <appender-ref ref="STDOUT"/>-->
         <appender-ref ref="FILE_DEFAULT"/>
     </root>
 </configuration>

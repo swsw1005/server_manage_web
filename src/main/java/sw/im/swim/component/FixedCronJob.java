@@ -114,8 +114,24 @@ public class FixedCronJob {
     }
 
 
-    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0 0 0/1 * * *")
+    public void ipinfo() {
+        try {
+            GeneralConfig.PUBLIC_IP_INFO = ServerInfoUtil.GET_PUBLIC_IP();
+        } catch (Exception e) {
+            log.error(e + "  " + e.getMessage(), e);
+        }
+    }
+
+    @Scheduled(cron = "0/10 * * * * *")
     public void dynamicDomainCheck() {
+
+        try {
+            GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
+        } catch (Exception e) {
+            log.error(e + "  " + e.getMessage(), e);
+        }
+
         try {
             GoogleDNSUtil DNSUtil = GoogleDNSUtil.getInstance();
 
@@ -144,14 +160,6 @@ public class FixedCronJob {
         } catch (Exception e) {
             adminLogService.insertLog(AdminLogType.DNS, "FAIL", e.getLocalizedMessage());
         }
-
-
-        try {
-            GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
-        } catch (Exception e) {
-            log.error(e + "  " + e.getMessage(), e);
-        }
-
 
     }
 

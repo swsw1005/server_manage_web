@@ -49,7 +49,7 @@ public class PostConstruct {
     private final NginxPolicyService nginxPolicyService;
 
     @javax.annotation.PostConstruct
-    public void INIT() throws SchedulerException {
+    public void INIT() {
 
         setCronExpression();
 
@@ -59,7 +59,7 @@ public class PostConstruct {
 
         adminSettingService.update(adminSetting);
 
-        String ip = GoogleDNSUtil.getInstance().GET_IP();
+        final String ip = GeneralConfig.PUBLIC_IP_INFO.getIp();
 
         adminLogService.insertLog(AdminLogType.STARTUP, "IP", ip);
 

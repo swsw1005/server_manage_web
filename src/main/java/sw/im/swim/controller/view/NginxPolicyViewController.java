@@ -22,6 +22,7 @@ import sw.im.swim.service.CertBotService;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
+import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.util.date.DateFormatUtil;
 
 @Slf4j
@@ -95,14 +96,19 @@ public class NginxPolicyViewController {
         mav.addObject("nginxServerList", nginxServerList);
         mav.addObject("nginxServerListSize", nginxServerList.size());
 
-        Date date1 = GeneralConfig.CERT_STARTED_AT.getTime();
-        Date date2 = GeneralConfig.CERT_EXPIRED_AT.getTime();
+        CertDateUtil.GET_CERT_DATE();
 
-        int leftDay = GeneralConfig.CERT_LEFT_DAY();
+        try {
+            Date date1 = GeneralConfig.CERT_STARTED_AT.getTime();
+            Date date2 = GeneralConfig.CERT_EXPIRED_AT.getTime();
 
-        mav.addObject("startDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date1));
-        mav.addObject("endDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date2));
-        mav.addObject("leftDay", leftDay);
+            int leftDay = GeneralConfig.CERT_LEFT_DAY();
+
+            mav.addObject("startDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date1));
+            mav.addObject("endDate", DateFormatUtil.DATE_FORMAT_yyyy_MM_dd.format(date2));
+            mav.addObject("leftDay", leftDay);
+        } catch (Exception e) {
+        }
         mav.addObject("certMessage", "use this script file to generate pem/key file via certbot !  ( " + CertBotService.CERTBOT_SCRIPT_FILE + " )");
 
         return mav;

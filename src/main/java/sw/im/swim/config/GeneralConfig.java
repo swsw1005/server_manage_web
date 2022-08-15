@@ -40,6 +40,8 @@ public class GeneralConfig {
 
     public static ServerInfoUtil.ServerInfo SERVER_INFO = ServerInfoUtil.getServerInfo();
 
+    public static ServerInfoUtil.PublicIpInfo PUBLIC_IP_INFO = ServerInfoUtil.GET_PUBLIC_IP();
+
     public static ServerInfoEntityDto CURRENT_SERVER_INFO;
 
     public static String CERT_FILE_FULLCHAIN = "fullchain.pem";

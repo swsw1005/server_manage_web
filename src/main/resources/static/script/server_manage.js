@@ -109,30 +109,38 @@ function closeInputModal(formId) {
 }
 
 function callList() {
-    $.ajax({
-        type: "get",
-        url: "./list",
-        contentType: false,
-        processData: false,
-        data: {}
-        ,
-        success: function (result, status, statusCode) {
-            if (document.getElementById("listLocation") == null) {
-                setTimeout(() => {
-                    callList();
-                }, 1000);
-            } else {
-                document.getElementById("listLocation").innerHTML = result;
-            }
-        },
-        error: function (result, status, statusCode) {
-            Notify(
-                'error',
-                result.responseJSON.error_msg,
-                'error'
-            );
-        }
-    });
+    const listLocNull = document.getElementById("listLocation") == null;
+    const listLocUnde = document.getElementById("listLocation") == undefined;
+    console.log("listLocNull", listLocNull, "listLocUnde", listLocUnde)
+    if (listLocNull || listLocUnde) {
+    } else {
+        setTimeout(() => {
+            $.ajax({
+                type: "get",
+                url: "./list",
+                contentType: false,
+                processData: false,
+                data: {}
+                ,
+                success: function (result, status, statusCode) {
+                    if (document.getElementById("listLocation") == null) {
+                        setTimeout(() => {
+                            callList();
+                        }, 1000);
+                    } else {
+                        document.getElementById("listLocation").innerHTML = result;
+                    }
+                },
+                error: function (result, status, statusCode) {
+                    Notify(
+                        'error',
+                        result.responseJSON.error_msg,
+                        'error'
+                    );
+                }
+            });
+        }, 1000);
+    }
 }
 
 function submitFormAjax(formId, modalId, URL, method, successCallBack, errorCallBack) {

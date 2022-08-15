@@ -18,6 +18,10 @@
 
             <div class="body">
 
+                <a href="${contextPath}/dashboard" class="nav_row">
+                    대시보드
+                </a>
+
                 <a href="${contextPath}/nginxpolicy/home" class="nav_row">
                     nginx 정책 관리
                 </a>

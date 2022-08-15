@@ -40,6 +40,9 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
         };
 
         final String[] viewPatterns = {
+                "/dashboard",
+                "/dashboard/*",
+                "/dashboard/**",
                 "/domain/*",
                 "/domain/**",
                 "/favicon/*",
