@@ -109,12 +109,12 @@ function closeInputModal(formId) {
 }
 
 function callList() {
-    const listLocNull = document.getElementById("listLocation") == null;
-    const listLocUnde = document.getElementById("listLocation") == undefined;
-    console.log("listLocNull", listLocNull, "listLocUnde", listLocUnde)
-    if (listLocNull || listLocUnde) {
-    } else {
-        setTimeout(() => {
+    setTimeout(() => {
+        const listLocNull = document.getElementById("listLocation") == null;
+        const listLocUnde = document.getElementById("listLocation") == undefined;
+        console.log("listLocNull", listLocNull, "listLocUnde", listLocUnde)
+        if (listLocNull || listLocUnde) {
+        } else {
             $.ajax({
                 type: "get",
                 url: "./list",
@@ -123,7 +123,9 @@ function callList() {
                 data: {}
                 ,
                 success: function (result, status, statusCode) {
-                    if (document.getElementById("listLocation") == null) {
+                    const listLocNull = document.getElementById("listLocation") == null;
+                    const listLocUnde = document.getElementById("listLocation") == undefined;
+                    if (listLocNull || listLocUnde) {
                         setTimeout(() => {
                             callList();
                         }, 1000);
@@ -139,8 +141,8 @@ function callList() {
                     );
                 }
             });
-        }, 1000);
-    }
+        }
+    }, 222);
 }
 
 function submitFormAjax(formId, modalId, URL, method, successCallBack, errorCallBack) {

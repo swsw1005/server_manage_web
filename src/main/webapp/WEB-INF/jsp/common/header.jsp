@@ -84,27 +84,3 @@
     </div>
 </nav>
 
-<script>
-
-    // let navBarShowFlag = false;
-
-    document.querySelector("#nav-button").addEventListener(
-        "click", function (event) {
-            var targetElement = event.target.getAttribute("data-display") == 0;
-            // if (navBarShowFlag) {
-            //     hideSideNav();
-            // } else {
-            showSideNav();
-            // }
-
-        }
-    );
-
-    setTimeout(() => {
-        callList();
-    }, 222);
-
-
-
-</script>
-

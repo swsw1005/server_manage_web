@@ -15,5 +15,5 @@
 
 
 <div id="listLocation">
-
+    <i class="fas fa-spinner"></i>
 </div>

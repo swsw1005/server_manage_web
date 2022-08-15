@@ -27,7 +27,7 @@
 <jsp:include page="footer.jsp"/>
 
 <script>
-    function loadMainPage() {
+    function loadMainPage(successCallback) {
         $.ajax({
             type: "get",
             url: "${contextPath}${mainPageUrl}",
@@ -37,6 +37,9 @@
             ,
             success: function (result, status, statusCode) {
                 document.getElementById("content").innerHTML = result;
+                setTimeout(() => {
+                    successCallback();
+                }, 222);
             },
             error: function (result, status, statusCode) {
                 //alert("댓글을 등록하는 중 오류가 발생되었습니다.");
@@ -45,9 +48,28 @@
         });
     }
 
-    setInterval(
-        loadMainPage(), 155
-    );
+
+    // let navBarShowFlag = false;
+
+
+    window.onload = function () {
+        setTimeout(() => {
+            loadMainPage(callList);
+        }, 111);
+
+        document.querySelector("#nav-button").addEventListener(
+            "click", function (event) {
+                var targetElement = event.target.getAttribute("data-display") == 0;
+                // if (navBarShowFlag) {
+                //     hideSideNav();
+                // } else {
+                showSideNav();
+                // }
+
+            }
+        );
+
+    }
 
 </script>
 
