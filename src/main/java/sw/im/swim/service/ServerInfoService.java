@@ -15,6 +15,7 @@ import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
 import sw.im.swim.util.AesUtil;
+import sw.im.swim.util.server.ServerInfoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,21 @@ public class ServerInfoService {
     private final DatabaseServerEntityRepository databaseServerEntityRepository;
     private final NginxPolicyServerEntityRepository nginxPolicyServerEntityRepository;
 
+    private final NotiService notiService;
+
     private final ModelMapper modelMapper;
+
+    public void sync() {
+        List<ServerInfoEntityDto> list = getAll();
+        ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
+        list.forEach(serverInfoEntityDto -> {
+            if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
+                GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
+            }
+        });
+
+        notiService.getAll();
+    }
 
     public List<ServerInfoEntityDto> getAll() {
         List<ServerInfoEntity> list = serverInfoEntityRepository.findAll();

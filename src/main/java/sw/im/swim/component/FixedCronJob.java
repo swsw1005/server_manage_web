@@ -5,26 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import sw.im.swim.bean.dto.FaviconEntityDto;
-import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.exception.CertException;
 import sw.im.swim.service.*;
-import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.util.server.ServerInfoUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.noti.AdminLogEmailWorker;
-import sw.im.swim.worker.noti.NotiProducer;
 import sw.im.swim.worker.speedtest.SpeedTestWorker;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -220,15 +214,7 @@ public class FixedCronJob {
 
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
-        List<ServerInfoEntityDto> list = serverInfoService.getAll();
-        ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
-        list.forEach(serverInfoEntityDto -> {
-            if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
-                GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
-            }
-        });
-
-        notiService.getAll();
+        serverInfoService.sync();
     }
 
     @Scheduled(cron = "7 0/1 * * * *")

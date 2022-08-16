@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="ko">
@@ -20,8 +17,10 @@
 
 <jsp:include page="header.jsp"/>
 
-<div id="content">
-
+<div id="content" class="d-grid justify-content-center">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 </div>
 
 <jsp:include page="footer.jsp"/>
@@ -39,7 +38,7 @@
                 document.getElementById("content").innerHTML = result;
                 setTimeout(() => {
                     successCallback();
-                }, 222);
+                }, 234);
             },
             error: function (result, status, statusCode) {
                 //alert("댓글을 등록하는 중 오류가 발생되었습니다.");
@@ -55,7 +54,7 @@
     window.onload = function () {
         setTimeout(() => {
             loadMainPage(callList);
-        }, 111);
+        }, 123);
 
         document.querySelector("#nav-button").addEventListener(
             "click", function (event) {

@@ -13,7 +13,9 @@
 
 </div> -->
 
-<div id="listLocation">
-
+<div id="listLocation" class="d-grid justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 

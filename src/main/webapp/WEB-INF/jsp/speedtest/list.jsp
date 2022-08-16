@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <h4>
@@ -28,7 +27,7 @@
                     ${dto.server_latitude} / ${dto.server_longitude}
             </div>
 
-            <div class="list_row_500">
+            <div class="list_row_name">
                     down / up / ping : ${dto.downloadSpeed} / ${dto.uploadSpeed} / ${dto.ping}
             </div>
 

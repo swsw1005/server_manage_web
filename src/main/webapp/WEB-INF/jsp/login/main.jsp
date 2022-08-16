@@ -9,13 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
 
-    <link href="${contextPath}/static/css/simple-v1.css" rel="stylesheet" type="text/css"/>
-    <script src="${contextPath}/static/script/jquery-3.6.0.min.js"></script>
+    <jsp:include page="../common/resouces.jsp"/>
 
     <style>
         #form-body {
-            margin: auto;
+            /*margin: auto;*/
             max-width: 400px;
+            /*padding: 10px;*/
         }
 
         .form-wrapper {
@@ -36,21 +36,31 @@
 
 <body>
 
-<div id="form-body">
+<div id="form-body" class="container-sm">
+
+    <div style="height: 50px;">
+    </div>
 
     <form id="login-form" onsubmit="return false;">
 
-        <div class="form-wrapper">
-            <div class="form-row">
-                <input type="text" name="email" placeholder="email">
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="email" class="form-label">email</label>
+                <input type="text" class="form-control" id="email" name="email"/>
             </div>
-            <div class="form-row">
-                <input type="password" name="password" placeholder="password">
+            <div class="mb-3">
+                <label for="password" class="form-label">password</label>
+                <input type="password" class="form-control" id="password" name="password"/>
             </div>
-            <div class="form-row-button">
-                <button type="button" onclick="loadMainPage()" class="">
+
+            <div class="d-flex justify-content-evenly">
+                <button type="button" class="btn btn-primary" onclick="loadMainPage()">
                     login
                 </button>
+            </div>
+
+            <div class="mb-3 align-items-end">
+
             </div>
 
         </div>
@@ -72,7 +82,11 @@
                 window.location = "${contextPath}/";
             },
             error: function (result, status, statusCode) {
-                alert("loginFail");
+                Notify(
+                    'error',
+                    'fail login',
+                    'error'
+                );
             }
         });
     }

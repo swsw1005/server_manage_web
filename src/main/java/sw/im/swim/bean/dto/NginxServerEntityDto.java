@@ -1,8 +1,14 @@
 package sw.im.swim.bean.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.util.Assert;
+import sw.im.swim.bean.enums.ByteType;
 import sw.im.swim.config.GeneralConfig;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -18,7 +24,19 @@ public class NginxServerEntityDto implements Serializable {
     private FaviconEntityDto faviconEntity;
     private boolean seperateLog;
 
+    private int maxBodySize = 100;
+    private ByteType byteType = ByteType.MB;
+
     private boolean selected = false;
+
+    public String getBodySize() {
+        try {
+            Assert.isTrue(maxBodySize > 10, "body size too small");
+            return maxBodySize + byteType.getSuffix();
+        } catch (Exception e) {
+        }
+        return 100 + ByteType.MB.getSuffix();
+    }
 
     public String getCreated() {
         try {

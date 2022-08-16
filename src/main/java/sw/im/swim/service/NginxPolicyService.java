@@ -15,7 +15,6 @@ import sw.im.swim.repository.*;
 import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.nginx.NginxV2Worker;
-import sw.im.swim.worker.nginx.NginxWorker;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -182,22 +181,22 @@ public class NginxPolicyService {
              */
             NginxPolicyEntityDto policyEntityDto = modelMapper.map(nginxPolicyEntity, NginxPolicyEntityDto.class);
 
-            log.error("============================================");
+            log.info("============================================");
             msg = "NO NGINX_SERVERS";
 
             List<Long> linkedNginxServerList = getNginxServers(policySid);
 
-            log.warn("linkedNginxServerList => " + new Gson().toJson(linkedNginxServerList));
+            log.info("linkedNginxServerList => " + new Gson().toJson(linkedNginxServerList));
 
             List<NginxServerEntityDto> dtos = nginxServerService.getAll();
 
-            log.warn("List<NginxServerEntityDto> => " + dtos.size());
+            log.info("List<NginxServerEntityDto> => " + dtos.size());
 
             Set<Long> nginxServerSet = new HashSet<>(linkedNginxServerList);
 
-            log.warn("nginxServerSet => " + new Gson().toJson(nginxServerSet));
+            log.info("nginxServerSet => " + new Gson().toJson(nginxServerSet));
 
-            log.error("============================================");
+            log.info("============================================");
 
             /**
              * -----------------------
@@ -248,13 +247,8 @@ public class NginxPolicyService {
 
             final boolean isNginxCertModeExternal = GeneralConfig.ADMIN_SETTING.isNGINX_EXTERNAL_CERTBOT();
 
-            if (isNginxCertModeExternal) {
-                NginxV2Worker nginxWorker = new NginxV2Worker(policyEntityDto, nginxServerEntityList, adminLogService);
-                ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
-            } else {
-                NginxWorker nginxWorker = new NginxWorker(policyEntityDto, nginxServerEntityList, adminLogService, nginxPolicySubService);
-                ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
-            }
+            NginxV2Worker nginxWorker = new NginxV2Worker(policyEntityDto, nginxServerEntityList, adminLogService);
+            ThreadWorkerPoolContext.getInstance().NGINX_WORKER.execute(nginxWorker);
 
         } catch (Exception e) {
             if (log.isInfoEnabled()) {

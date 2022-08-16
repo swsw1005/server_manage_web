@@ -3,6 +3,7 @@ package sw.im.swim.bean.entity;
 
 import lombok.*;
 import sw.im.swim.bean.entity.base.EntityBase;
+import sw.im.swim.bean.enums.ByteType;
 
 import javax.persistence.*;
 
@@ -40,6 +41,15 @@ public class NginxServerEntity extends EntityBase {
     @Column(nullable = false, length = 60)
     @Builder.Default
     private boolean seperateLog = true;
+
+    @Column(name = "max_body_size")
+    @Builder.Default
+    private int maxBodySize = 100;
+
+    @Column(name = "byte_type")
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private ByteType byteType = ByteType.MB;
 
     public NginxServerEntity(long sid) {
         super();

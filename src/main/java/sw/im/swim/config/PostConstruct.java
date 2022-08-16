@@ -48,6 +48,8 @@ public class PostConstruct {
 
     private final NginxPolicyService nginxPolicyService;
 
+    private final ServerInfoService serverInfoService;
+
     @javax.annotation.PostConstruct
     public void INIT() {
 
@@ -86,6 +88,8 @@ public class PostConstruct {
             log.error(e.getMessage(), e);
             System.exit(0);
         }
+
+        serverInfoService.sync();
 
         nginxPolicyService.ADJUST_NGINX_POLICY();
 

@@ -2,6 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<div style="height: 50px; text-align: center; margin-top: 15px; margin-bottom: 25px;">
-    ----------
-</div>
+<footer>
+    <style>
+        .footer {
+            height: 50px;
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 35px;
+            border-top: 1px solid gray;
+            padding: 25px;
+        }
+    </style>
+    <div class="footer">
+        copyright swsw1005@gmail.com
+    </div>
+</footer>

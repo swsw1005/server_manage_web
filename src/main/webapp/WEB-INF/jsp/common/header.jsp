@@ -70,6 +70,10 @@
                     시스템정보
                 </a>
 
+                <a href="${contextPath}/logout" class="nav_row">
+                    Logout
+                </a>
+
             </div>
         </div>
 
