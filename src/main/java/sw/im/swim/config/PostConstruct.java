@@ -89,6 +89,9 @@ public class PostConstruct {
             System.exit(0);
         }
 
+        adminSetting = adminSettingService.getSetting();
+        adminSettingService.update(adminSetting);
+
         serverInfoService.sync();
 
         nginxPolicyService.ADJUST_NGINX_POLICY();

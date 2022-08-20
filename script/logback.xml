@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="30 seconds">
+<configuration scan="true" scanPeriod="10 seconds">
 
     <property name="LOG_HOME" value="/usr/local/server-manager/logs"/>
 
@@ -65,8 +65,24 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <!-- FILE Appender ................................... -->
+    <appender name="FILE_SCHEDULE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_SCHEDULE}</file>
+        <!-- 일자별로 로그파일 적용하기 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_SCHEDULE}.%d{yyyyMMdd}</fileNamePattern>
+            <maxHistory>10</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
 
     <logger name="sw.im.swim" level="debug" additivity="false">
+        <appender-ref ref="FILE_DEFAULT"/>
+    </logger>
+    <logger name="sw.im.swim.util.nginx" level="info" additivity="false">
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
 
@@ -96,6 +112,10 @@
     </logger>
     <logger name="sw.im.swim.service.Fail2banService" level="debug" additivity="false">
         <appender-ref ref="FILE_FAIL2BAN"/>
+    </logger>
+
+    <logger name="sw.im.swim.util.server" level="warn" additivity="false">
+        <appender-ref ref="FILE_SCHEDULE"/>
     </logger>
 
     <logger name="com.zaxxer.hikari" level="warn" additivity="true">

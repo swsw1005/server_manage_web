@@ -1,5 +1,7 @@
 package sw.im.swim.util.nginx;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.DomainEntityDto;
@@ -17,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NginxConfCreateUtil {
 
     public static final String CERT_FILE_PREFIX = "/root/pem";
@@ -31,7 +34,8 @@ public class NginxConfCreateUtil {
 
     private static final String[] HEAD(int workerProcessed, int workerConnections) {
 
-        String[] result = {"user www-data;",
+        String[] result = {
+                "user root;",
                 //
                 "worker_processes " + workerProcessed + ";",
                 //
@@ -54,7 +58,7 @@ public class NginxConfCreateUtil {
         return result;
     }
 
-    public static void CREATE_SITES_ENABLES(final String NGINX_SITES_DIR, final NginxPolicyEntityDto policyEntityDto, List<NginxServerEntityDto> nginxServerEntityList) {
+    public static void CREATE_SITES_ENABLES(final String NGINX_SITES_DIR,List<NginxServerEntityDto> nginxServerEntityList) {
 
         try {
 

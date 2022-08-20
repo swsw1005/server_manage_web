@@ -93,13 +93,13 @@ class NginxWorker implements Runnable {
 //            log.info("new File Write Complete");
 //
 //            try {
-//                NginxServiceControllUtil.NGINX_STOP();
+//                NginxServiceControlUtil.NGINX_STOP();
 //            } catch (Exception e) {
 //            }
 //
 //            // Thread.sleep(111);
 //
-//            boolean nginxStartSuccess = NginxServiceControllUtil.NGINX_START();
+//            boolean nginxStartSuccess = NginxServiceControlUtil.NGINX_START();
 //
 //            log.info("nginxStartSuccess | " + nginxStartSuccess);
 //
@@ -124,7 +124,7 @@ class NginxWorker implements Runnable {
 //            }
 //
 //            String ROOT_DOMAIN = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
-//            boolean certbotSuccess = NginxServiceControllUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
+//            boolean certbotSuccess = NginxServiceControlUtil.CERTBOT_INIT(ROOT_DOMAIN, domains);
 //            log.info("certbotSuccess | " + certbotSuccess);
 //            if (!certbotSuccess) {
 //                log.info("CERTBOT Fail");
@@ -163,12 +163,12 @@ class NginxWorker implements Runnable {
 //                    FileUtils.copyFile(new File(OLD_CONF_BACKUP_FILE), NGINX_CONF_ORIGIN);
 //
 //                    try {
-//                        NginxServiceControllUtil.NGINX_STOP();
+//                        NginxServiceControlUtil.NGINX_STOP();
 //                    } catch (Exception ex) {
 //                        log.error(e.getMessage());
 //                    }
 //
-//                    boolean nginxRestoreStatus = NginxServiceControllUtil.NGINX_START();
+//                    boolean nginxRestoreStatus = NginxServiceControlUtil.NGINX_START();
 //
 //                    log.error(" nginxRestoreStatus | " + nginxRestoreStatus);
 //

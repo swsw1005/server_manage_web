@@ -19,6 +19,8 @@ public class AdminSettingEntityDto implements Serializable {
     private int CERT_EXPIRE_NOTI = 10;
     private String CERT_NOTI_CRON = "";
     ////////////////////////////////////////
+    private String WORK_SPACE = "/usr/local/server-manager";
+    ////////////////////////////////////////
     private String SMTP_USER = "";
     private String SMTP_PASSWORD = "";
     private String SMTP_HOST = "smtp.gmail.com";
