@@ -9,6 +9,7 @@ import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,7 +44,17 @@ public class CertBotService {
     public static final void CREATE_CERTBOT_FILE(List<NginxServerEntityDto> list) {
 
         try {
-            FileUtils.forceMkdir(new File(CERTBOT_SCRIPT_ROOTDIR));
+            File certbotRootDir = new File(CERTBOT_SCRIPT_ROOTDIR);
+
+            if (!certbotRootDir.exists()) {
+                try {
+                    FileUtils.forceMkdir(certbotRootDir);
+                } catch (IOException e) {
+                    log.warn("mkdir exception  " + e.getMessage());
+                } catch (Exception e) {
+                    log.warn("mkdir exception  " + e.getMessage(), e);
+                }
+            }
 
             String email = GeneralConfig.ADMIN_SETTING.getADMIN_EMAIL();
 

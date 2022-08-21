@@ -35,7 +35,7 @@ public class NginxConfCreateUtil {
     private static final String[] HEAD(int workerProcessed, int workerConnections) {
 
         String[] result = {
-                "user root;",
+                "user " + GeneralConfig.ADMIN_SETTING.getNGINX_USER() + ";",
                 //
                 "worker_processes " + workerProcessed + ";",
                 //
@@ -82,9 +82,9 @@ public class NginxConfCreateUtil {
             File CERT_FILE_PRIKEY = new File(GeneralConfig.CERT_FILE_PRIKEY);
             File CERT_FILE_CHAIN = new File(GeneralConfig.CERT_FILE_CHAIN);
 
-            assertFileExitst(CERT_FILE_FULLCHAIN);
-            assertFileExitst(CERT_FILE_PRIKEY);
-            assertFileExitst(CERT_FILE_CHAIN);
+            // assertFileExitst(CERT_FILE_FULLCHAIN);
+            // assertFileExitst(CERT_FILE_PRIKEY);
+            // assertFileExitst(CERT_FILE_CHAIN);
 
             for (NginxServerEntityDto nginxServerEntityDto : nginxServerEntityList) {
 
