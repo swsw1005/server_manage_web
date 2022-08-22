@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jstree</title>
+  <script src="./jstree/jquery.js"></script>
+  <link rel="stylesheet" href="./jstree/jstree.css" />
+  <script src="./jstree/jstree.js"></script>
+  <!-- CDN - bootstrap 3.4.1 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    #wrapper {
+      border: 1px solid red;
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      flex-direction: row;
+    }
+
+    #dept_list_wrapper {
+      width: 250px;
+      max-width: 400px;
+      border: 1px solid green;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #dept_list {
+      background-color: #8b8b5e33;
+      min-height: 500px;
+    }
+
+    #dept_list_sub {
+      background-color: #5791a05b;
+    }
+
+    #emp_list_wrapper {
+      border: 1px solid blue;
+    }
+
+    .jstree-icon {
+      transform: scale(1.1);
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <div id="dept_list_wrapper">
+      <div id="dept_list">
+      </div>
+      <div id="dept_list_sub">
+        <input type="checkbox" id="includeSub" onchange="includeChkClick()" checked>
+        <label for="includeSub">하위포함</label>
+      </div>
+
+    </div>
+
+    <div id="emp_list_wrapper">
+
+      <div style="margin: 10px; padding: 5px; border: 1px solid red;">
+
+        <div>검색 form</div>
+
+        <form onsubmit="return false;" id="empSearchForm">
+
+          <select name="pageSize" id="pageSizeSelect" onchange=" callEmpList()">
+            <option value="5">5개씩 보기</option>
+            <option value="10">10개씩 보기</option>
+            <option value="15">15개씩 보기</option>
+            <option value="20">20개씩 보기</option>
+            <option value="30">30개씩 보기</option>
+          </select>
+
+          <select name="searchKey" id="searchKeySelect">
+            <option value="sid">직원번호</option>
+            <option value="name">이름</option>
+            <option value="groupName">그룹명</option>
+            <option value="email">이메일</option>
+            <option value="contact">전화번호</option>
+          </select>
+
+          <input type="text" name="searchValue" id="searchValueInput">
+
+          <br>
+          ============== 이 아래는 숨겨진 값들 ==============
+          <br>
+          <label>그룹sid</label>
+          <input type="text" name="groupSid" id="groupSidValue" value="0">
+          <br>
+          <label>하위그룹포함여부</label>
+          <input type="checkbox" name="includeSub" id="includeSubChk">
+
+        </form>
+
+      </div>
+
+      <div id="emp_list">
+        <table border="1">
+          <tr>
+            <th>id</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>전화번호</th>
+            <th>날짜</th>
+          </tr>
+          <tr>
+            <td>001</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+          </tr>
+          <tr>
+            <td>002</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+          </tr>
+          <tr>
+            <td>003</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+            <td>aaaaa</td>
+          </tr>
+        </table>
+
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+  <script>
+
+    $('#dept_list')
+      .on("loaded.jstree", function (e, data) {
+        includeChkClick();
+      })
+      .on("changed.jstree", function (e, data) {
+        console.log("클릭!", data.node.id, data.node.text);
+        selectGroup(data.node.id);
+      })
+      .jstree({
+        'core': {
+          'data': [
+            { "id": "1", "parent": "0", "text": "개발팀" },
+            { "id": "0", "parent": "#", "text": "전체목록" },
+            { "id": "3", "parent": "1", "text": "정보보안팀" },
+            { "id": "7", "parent": "0", "text": "마케팅팀" },
+            { "id": "5", "parent": "0", "text": "영업팀" },
+            { "id": "4", "parent": "1", "text": "네트워크" },
+            { "id": "6", "parent": "0", "text": "영업관리팀" },
+            { "id": "2", "parent": "1", "text": "웹팀" },
+            { "id": "8", "parent": "0", "text": "경영지원실", "type": "demo" },
+          ],
+          "themes": {
+            "icons": false,
+          },
+        },
+        "types": {
+          "default": {
+            "icon": "glyphicon glyphicon-chevron-right"
+          },
+          "demo": {
+            "icon": "glyphicon glyphicon-chevron-right"
+          }
+        },
+        "plugins": [
+          "types",
+        ]
+      });
+
+
+    function syncChkbox(src, dist) {
+
+      var isChecked = document.getElementById(src).checked;
+
+      if (isChecked) {
+        document.getElementById(dist).checked = true;
+      } else {
+        document.getElementById(dist).checked = false;
+      }
+      callEmpList()
+
+    }
+
+    function includeChkClick() {
+      syncChkbox('includeSub', 'includeSubChk');
+    }
+
+    function selectGroup(groupSid) {
+      document.getElementById("groupSidValue").value = groupSid;
+      callEmpList();
+    }
+
+
+    function callEmpList() {
+      callList("empSearchForm", "emp_list", "http://aaa.bbb.ccc");
+    }
+
+
+    let cnt = 0;
+
+    function callList(formId, locationId, url) {
+
+      console.log(cnt++, "---------------------------");
+      console.log("url", url);
+
+      var queryString = $("#" + formId).serialize();
+
+      console.log(queryString);
+      console.log("---------------------------");
+
+      // $.ajax({
+      //   type: 'post',
+      //   url: url,
+      //   data: queryString,
+      //   // dataType: 'json',
+      //   error: function (xhr, status, error) {
+      //     console.log(error);
+      //   },
+      //   success: function (json) {
+      //     console.log(json)
+      //   }
+      // });
+
+
+    }
+
+
+  </script>
+
+</body>
+
+</html>
