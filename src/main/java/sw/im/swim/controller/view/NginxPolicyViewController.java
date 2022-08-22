@@ -98,6 +98,7 @@ public class NginxPolicyViewController {
 
         CertDateUtil.GET_CERT_DATE();
 
+
         try {
             Date date1 = GeneralConfig.CERT_STARTED_AT.getTime();
             Date date2 = GeneralConfig.CERT_EXPIRED_AT.getTime();

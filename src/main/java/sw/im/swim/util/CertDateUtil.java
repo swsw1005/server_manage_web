@@ -7,8 +7,10 @@ import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
 import sw.im.swim.util.nginx.NginxConfStringContext;
 import sw.im.swim.util.process.ProcessExecUtil;
+import sw.im.swim.util.server.SSLCertCheckUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -18,7 +20,20 @@ public class CertDateUtil {
 
 
     public static final Calendar[] GET_CERT_DATE() {
-        return GET_CERT_DATE(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
+//        return GET_CERT_DATE(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
+        try {
+            SSLCertCheckUtils.CertInfo var1 = SSLCertCheckUtils.sslCheck(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
+
+            GeneralConfig.CERT_STARTED_AT = var1.getBefore();
+            GeneralConfig.CERT_EXPIRED_AT = var1.getAfter();
+
+            return new Calendar[]{var1.getBefore(), var1.getAfter()};
+        } catch (RuntimeException e) {
+            log.warn(e + " | " + e.getMessage());
+        } catch (Exception e) {
+            log.warn(e + " | " + e.getMessage());
+        }
+        return WINDOW_FAKE_CERT();
     }
 
     public static final Calendar[] GET_CERT_DATE(final String domain) {
@@ -120,5 +135,6 @@ public class CertDateUtil {
                 e.printStackTrace();
             }
         }
+
     }
 }
