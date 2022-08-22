@@ -167,6 +167,7 @@ public class NginxConfCreateUtil {
                         list.add("");
                     }
                 } else {
+                    list.add(TAB + "location / {");
                     addLocationBlock(HTTPS, ADDRESS, list);
                 }
 
@@ -223,7 +224,6 @@ public class NginxConfCreateUtil {
     }
 
     private static void addLocationBlock(String HTTPS, String ADDRESS, List<String> list) {
-        list.add(TAB + "location / {");
         list.add("");
         list.add(TAB + TAB + "proxy_redirect off;");
         list.add(TAB + TAB + "proxy_pass_header Server;");
@@ -234,6 +234,7 @@ public class NginxConfCreateUtil {
         list.add(TAB + "}");
         list.add("");
     }
+
 
     private static void assertFileExitst(File certFile) throws FileNotFoundException {
         try {
