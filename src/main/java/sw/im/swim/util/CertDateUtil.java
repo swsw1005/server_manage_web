@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.date.DateFormatUtil;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
+import sw.im.swim.util.nginx.NginxConfStringContext;
 import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
@@ -31,15 +32,10 @@ public class CertDateUtil {
             if (new File(var1).exists()) {
                 fileName = var1;
             } else {
-                fileName = NginxConfCreateUtil.CERT_FILE_PREFIX
-                        + "/"
-                        + domain
-                        + "/"
-                        + NginxConfCreateUtil.CERT_FILE_FULLCHAIN;
+                fileName = NginxConfStringContext.CERT_FILE_PREFIX + "/" + domain + "/" + NginxConfStringContext.CERT_FILE_FULLCHAIN;
             }
 
-            final String cmd = "openssl x509 -startdate -enddate -in "
-                    + fileName;
+            final String cmd = "openssl x509 -startdate -enddate -in " + fileName;
 
             log.warn("EXECUTE  >>  " + cmd);
 

@@ -20,6 +20,9 @@ public class AdminSettingEntityDto implements Serializable {
     private String CERT_NOTI_CRON = "";
     ////////////////////////////////////////
     private String NGINX_USER = "root";
+    private String NGINX_CONF_DIR = "/etc/nginx";
+    private boolean NGINX_NATIVE = true;
+    private boolean NGINX_80_PROXY = true;
     ////////////////////////////////////////
     private String WORK_SPACE = "/usr/local/server-manager";
     ////////////////////////////////////////

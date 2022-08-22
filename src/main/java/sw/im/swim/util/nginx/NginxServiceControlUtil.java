@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.process.ProcessExecUtil;
+import sw.im.swim.util.server.PortCheckUtil;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,12 +37,12 @@ public class NginxServiceControlUtil {
 
     public static final boolean checkNginxAlive() {
         try {
-
-            String[] var2;
-            var2 = NGINX_STATUS_ACTIVE_INDICATORS;
-
-            return NGINX_STATUS_JUDGE(var2);
-
+            return PortCheckUtil.available(80);
+            
+        } catch (RuntimeException e) {
+            if (log.isDebugEnabled()) {
+                log.error(e + " " + e.getMessage(), e);
+            }
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.error(e + " " + e.getMessage(), e);
@@ -76,10 +78,19 @@ public class NginxServiceControlUtil {
 
     public static final boolean NGINX_RESTART() {
         try {
-            log.warn("nginx restart !!!  => " + new Gson().toJson(NGINX_DOCKER_RESTART));
-            String nginxRestartResult = ProcessExecUtil.RUN_READ_COMMAND(NGINX_DOCKER_RESTART);
+            String[] commandArr;
+            if (GeneralConfig.ADMIN_SETTING.isNGINX_NATIVE()) {
+                commandArr = NGINX_SERVICE_RESTART;
+            } else {
+                commandArr = NGINX_DOCKER_RESTART;
+            }
+
+            log.warn("nginx restart !!!  => " + new Gson().toJson(commandArr));
+            String nginxRestartResult = ProcessExecUtil.RUN_READ_COMMAND(commandArr);
             log.warn("nginx restart result => " + nginxRestartResult);
             return true;
+        } catch (RuntimeException e) {
+            log.error(e + "   " + e.getMessage(), e);
         } catch (Exception e) {
             log.error(e + "   " + e.getMessage(), e);
         }

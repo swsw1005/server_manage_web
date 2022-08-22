@@ -6,9 +6,9 @@ import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
-import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
+import sw.im.swim.util.nginx.NginxConfStringContext;
 import sw.im.swim.util.nginx.NginxServiceControlUtil;
 
 import java.io.File;
@@ -29,39 +29,23 @@ public class NginxV2Worker implements Runnable {
     private final List<NginxServerEntityDto> nginxServerEntityList;
     private final AdminLogService adminLogService;
 
-    private static final String pathSeparator = "/";
-
-    private static final String currentJarLocation() {
-        return GeneralConfig.ADMIN_SETTING.getWORK_SPACE();
-    }
-
-    private static final String NGINX_CONF_DIR() {
-        return currentJarLocation() + pathSeparator + "nginx/nginx";
-    }
-
-    private static final String NGINX_SITES_DIR() {
-        return NGINX_CONF_DIR() + pathSeparator + "sites-enabled";
-    }
-
-    private static final String NGINX_CONF_FILE = "nginx.conf";
-
-    private static final String UPDATE_TITLE = "NGINX UPDATE";
-    private static final String RESTORE_TITLE = "NGINX RESTORE";
 
     @Override
     public void run() {
 
         log.info("===== START NGINX JOB !!!!!! =====");
 
-        try {
-            FileUtils.forceMkdir(new File(NGINX_CONF_DIR()));
-            FileUtils.forceMkdir(new File(NGINX_SITES_DIR()));
+        boolean error = true;
 
-            File oldNginxConf = new File(NGINX_CONF_DIR() + pathSeparator + NGINX_CONF_FILE);
+        try {
+            FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_CONF_DIR()));
+            FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
+
+            File oldNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
             FileUtils.deleteQuietly(oldNginxConf);
             log.error("oldNginxConf.delete() => " + oldNginxConf.getAbsolutePath());
 
-            File newNginxConf = new File(NGINX_CONF_DIR() + pathSeparator + NGINX_CONF_FILE);
+            File newNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
             FileUtils.touch(newNginxConf);
             log.error("! newNginxConf.touch() => " + newNginxConf.getAbsolutePath());
 
@@ -73,10 +57,10 @@ public class NginxV2Worker implements Runnable {
                     defaultNginxConfText, System.lineSeparator());
 
             // 기존 sites-enable 삭제
-            FileUtils.cleanDirectory(new File(NGINX_SITES_DIR()));
+            FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
 
             // 새로운 sites-enable 작성
-            NginxConfCreateUtil.CREATE_SITES_ENABLES(NGINX_SITES_DIR(), nginxServerEntityList);
+            NginxConfCreateUtil.CREATE_SITES_ENABLES(NginxConfStringContext.NGINX_EXTRA_SITES_DIR(), nginxServerEntityList);
 
             log.warn("nginx 재시작 !");
 
@@ -90,24 +74,29 @@ public class NginxV2Worker implements Runnable {
 
             adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "SUCCESS", "NGINX UPDATE END");
 
+            error = false;
+
         } catch (RuntimeException e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());
         } catch (Exception e) {
             log.error(e.getMessage() + " | " + e.getLocalizedMessage());
-
-            // 기존 sites-enable 삭제
-            try {
-                FileUtils.cleanDirectory(new File(NGINX_SITES_DIR()));
-
-                log.warn("nginx 재시작 !");
-                // 재시작
-                NginxServiceControlUtil.NGINX_RESTART();
-
-            } catch (Exception ex) {
-                log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
-            }
         } finally {
             log.info("\n" + "=======================================" + "\n" + "FINALIZE NGINX JOB !!!!!!" + "\n" + "=======================================");
+
+            if (error) {
+                // 기존 sites-enable 삭제
+                try {
+                    FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
+                    log.warn("nginx 재시작 !");
+                    // 재시작
+                    NginxServiceControlUtil.NGINX_RESTART();
+                } catch (RuntimeException e) {
+                    log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
+                } catch (Exception e) {
+                    log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
+                }
+            }
+
         }
 
     }

@@ -22,11 +22,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NginxConfCreateUtil {
 
-    public static final String CERT_FILE_PREFIX = "/root/pem";
-
-    public static final String CERT_FILE_FULLCHAIN = "fullchain.pem";
-    public static final String CERT_FILE_PRIKEY = "privkey.pem";
-    public static final String CERT_FILE_CHAIN = "chain.pem";
 
     private static final String
             // ------------------------------------
@@ -34,8 +29,17 @@ public class NginxConfCreateUtil {
 
     private static final String[] HEAD(int workerProcessed, int workerConnections) {
 
-        String[] result = {
-                "user " + GeneralConfig.ADMIN_SETTING.getNGINX_USER() + ";",
+        final String user;
+
+        final String generalConfigNginxUser = GeneralConfig.ADMIN_SETTING.getNGINX_USER();
+
+        if (generalConfigNginxUser == null || generalConfigNginxUser.isEmpty()) {
+            user = "";
+        } else {
+            user = "user " + generalConfigNginxUser + ";";
+        }
+
+        String[] result = {user,
                 //
                 "worker_processes " + workerProcessed + ";",
                 //
@@ -58,7 +62,7 @@ public class NginxConfCreateUtil {
         return result;
     }
 
-    public static void CREATE_SITES_ENABLES(final String NGINX_SITES_DIR,List<NginxServerEntityDto> nginxServerEntityList) {
+    public static void CREATE_SITES_ENABLES(final String NGINX_SITES_DIR, List<NginxServerEntityDto> nginxServerEntityList) {
 
         try {
 
@@ -68,15 +72,17 @@ public class NginxConfCreateUtil {
 
             final String LOCAL_IP_ADDR = CURRENT_IP.substring(0, CURRENT_IP.lastIndexOf("."));
 
+            final boolean IS_ROOT_DOMAIN_PROXY = GeneralConfig.ADMIN_SETTING.isNGINX_80_PROXY();
+
             if (ROOT_DOMAIN_NAME == null || ROOT_DOMAIN_NAME.length() < 5) {
                 throw new Exception("ROOT 도메인이 너무 짧습니다. 올바르게 설정해주세요 : " + ROOT_DOMAIN_NAME + "\t" + ROOT_DOMAIN_NAME.length());
             }
 
-            new File(CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME).mkdirs();
+            new File(NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME).mkdirs();
 
-            GeneralConfig.CERT_FILE_FULLCHAIN = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_FULLCHAIN;
-            GeneralConfig.CERT_FILE_PRIKEY = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_PRIKEY;
-            GeneralConfig.CERT_FILE_CHAIN = CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + CERT_FILE_CHAIN;
+            GeneralConfig.CERT_FILE_FULLCHAIN = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_FULLCHAIN;
+            GeneralConfig.CERT_FILE_PRIKEY = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_PRIKEY;
+            GeneralConfig.CERT_FILE_CHAIN = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_CHAIN;
 
             File CERT_FILE_FULLCHAIN = new File(GeneralConfig.CERT_FILE_FULLCHAIN);
             File CERT_FILE_PRIKEY = new File(GeneralConfig.CERT_FILE_PRIKEY);
@@ -151,23 +157,18 @@ public class NginxConfCreateUtil {
                     list.add(TAB + TAB + TAB + "add_header 'Access-Control-Allow-Origin' \"${http_origin}\";");
                     list.add(TAB + TAB + "}");
                     list.add("");
-                    list.add(TAB + TAB + "root /var/www/html;");
-                    list.add(TAB + TAB + "index index.html index.htm;");
-                    list.add(TAB + "}");
-                    list.add("");
-                } else {
-                    list.add(TAB + "location / {");
-                    list.add("");
-                    list.add(TAB + TAB + "proxy_redirect off;");
-                    list.add(TAB + TAB + "proxy_pass_header Server;");
-                    list.add(TAB + TAB + "proxy_set_header Host $http_host;");
-                    list.add(TAB + TAB + "proxy_set_header X-Real-IP $remote_addr;");
-                    list.add(TAB + TAB + "proxy_set_header X-Scheme $scheme;");
-                    list.add(TAB + TAB + "proxy_pass " + HTTPS + ADDRESS + ";");
-                    list.add(TAB + "}");
-                    list.add("");
-                }
 
+                    if (IS_ROOT_DOMAIN_PROXY) {
+                        addLocationBlock(HTTPS, ADDRESS, list);
+                    } else {
+                        list.add(TAB + TAB + "root /var/www/html;");
+                        list.add(TAB + TAB + "index index.html index.htm;");
+                        list.add(TAB + "}");
+                        list.add("");
+                    }
+                } else {
+                    addLocationBlock(HTTPS, ADDRESS, list);
+                }
 
                 list.add(TAB + "listen 443 ssl;");
                 list.add(TAB + "ssl_protocols TLSv1 TLSv1.1 TLSv1.2;");
@@ -212,11 +213,26 @@ public class NginxConfCreateUtil {
 
             }
 
+        } catch (RuntimeException e) {
+            log.error(e + "  " + e.getMessage(), e);
         } catch (Exception e) {
             log.error(e + "  " + e.getMessage(), e);
         }
 
 
+    }
+
+    private static void addLocationBlock(String HTTPS, String ADDRESS, List<String> list) {
+        list.add(TAB + "location / {");
+        list.add("");
+        list.add(TAB + TAB + "proxy_redirect off;");
+        list.add(TAB + TAB + "proxy_pass_header Server;");
+        list.add(TAB + TAB + "proxy_set_header Host $http_host;");
+        list.add(TAB + TAB + "proxy_set_header X-Real-IP $remote_addr;");
+        list.add(TAB + TAB + "proxy_set_header X-Scheme $scheme;");
+        list.add(TAB + TAB + "proxy_pass " + HTTPS + ADDRESS + ";");
+        list.add(TAB + "}");
+        list.add("");
     }
 
     private static void assertFileExitst(File certFile) throws FileNotFoundException {
@@ -270,12 +286,13 @@ public class NginxConfCreateUtil {
             resultList.add(TAB + "keepalive_timeout 20;");
             resultList.add(TAB + "types_hash_max_size 2048;");
             resultList.add(TAB + "server_tokens off;");
+            resultList.add(TAB + "client_max_body_size 50M; ");
             resultList.add("");
             resultList.add(TAB + "server_names_hash_bucket_size 128;");
             resultList.add(TAB + "# server_name_in_redirect off;");
             resultList.add("");
             resultList.add("");
-            resultList.add(TAB + "include /etc/nginx/mime.types;");
+            resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_MIME_TYPE() + ";");
             resultList.add(TAB + "default_type application/octet-stream;");
             resultList.add("");
             resultList.add(TAB + "##");
@@ -289,12 +306,12 @@ public class NginxConfCreateUtil {
             resultList.add(TAB + "# Logging Settings");
             resultList.add(TAB + "##");
             resultList.add("");
-            resultList.add(TAB + "# # 이 부분을 수정");
+            resultList.add(TAB + "# # nginx default log format ");
             resultList.add(TAB + "# log_format main '$remote_addr - $remote_user [$time_local] '");
             resultList.add(TAB + "# '\"$request\" $status $body_bytes_sent '");
             resultList.add(TAB + "# '\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
             resultList.add("");
-            resultList.add(TAB + "# swim_log");
+            resultList.add(TAB + "# log format");
             resultList.add(TAB + "log_format main '" + GeneralConfig.ADMIN_SETTING.getNGINX_LOG_FORMAT().trim() + "';");
             resultList.add("");
             resultList.add("");
@@ -317,9 +334,9 @@ public class NginxConfCreateUtil {
             resultList.add(TAB + "##");
             resultList.add(TAB + "# Virtual Host Configs");
             resultList.add(TAB + "##");
-            resultList.add(TAB + "include /etc/nginx/conf.d/*.conf;");
+            resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_CONF_DIR() + "/*.conf;");
             resultList.add(TAB + "### root 도메인도 이 파일에서 관리한다.");
-            resultList.add(TAB + "include /etc/nginx/sites-enabled/*;");
+            resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_SITES_DIR() + "/*;");
             resultList.add("");
             resultList.add("}");
             resultList.add("");
