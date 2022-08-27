@@ -8,6 +8,7 @@
     <property name="LOG_SPEEDTEST" value="${LOG_HOME}/speedtest_log"/>
     <property name="LOG_FAIL2BAN" value="${LOG_HOME}/fail2ban_log"/>
     <property name="LOG_SCHEDULE" value="${LOG_HOME}/schedule_log"/>
+    <property name="LOG_SETTINGS" value="${LOG_HOME}/settings_log"/>
 
     <property name="LOG_PATTERN"
               value="%d |-%-5level [%thread] %logger{5} - %method\\(%line\\) : %msg%n"/>
@@ -78,6 +79,21 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <!-- FILE Appender ................................... -->
+    <appender name="FILE_SETTINGS"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_SETTINGS}</file>
+        <!-- 일자별로 로그파일 적용하기 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_SETTINGS}.%d{yyyyMMdd}</fileNamePattern>
+            <maxHistory>2</maxHistory> <!-- 일자별 백업파일의 보관기간 -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ................................... -->
 
     <logger name="sw.im.swim" level="debug" additivity="false">
         <appender-ref ref="FILE_DEFAULT"/>
@@ -85,6 +101,8 @@
     <logger name="sw.im.swim.util.nginx" level="info" additivity="false">
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
+
+    <!-- ................................... -->
 
     <logger name="sw.im.swim.service.DatabaseServerService" level="debug" additivity="false">
         <appender-ref ref="FILE_DB"/>
@@ -96,6 +114,7 @@
         <appender-ref ref="FILE_DB"/>
     </logger>
 
+    <!-- ................................... -->
 
     <logger name="sw.im.swim.worker.speedtest" level="debug" additivity="false">
         <appender-ref ref="FILE_SPEED"/>
@@ -103,6 +122,8 @@
     <logger name="sw.im.swim.service.SpeedTestService" level="debug" additivity="false">
         <appender-ref ref="FILE_SPEED"/>
     </logger>
+
+    <!-- ................................... -->
 
     <logger name="sw.im.swim.controller.api.Fail2banLogController" level="debug" additivity="false">
         <appender-ref ref="FILE_FAIL2BAN"/>
@@ -114,9 +135,22 @@
         <appender-ref ref="FILE_FAIL2BAN"/>
     </logger>
 
+    <!-- ................................... -->
+
     <logger name="sw.im.swim.util.server" level="warn" additivity="false">
         <appender-ref ref="FILE_SCHEDULE"/>
     </logger>
+
+    <!-- ................................... -->
+
+    <logger name=" sw.im.swim.service.AdminSettingService" level="debug" additivity="false">
+        <appender-ref ref="FILE_SETTINGS"/>
+    </logger>
+    <logger name=" sw.im.swim.service.NginxSettingService" level="debug" additivity="false">
+        <appender-ref ref="FILE_SETTINGS"/>
+    </logger>
+
+    <!-- ................................... -->
 
     <logger name="com.zaxxer.hikari" level="warn" additivity="true">
         <appender-ref ref="FILE_DEFAULT"/>
@@ -128,7 +162,12 @@
         <appender-ref ref="FILE_DEFAULT"/>
     </logger>
 
+    <!-- ................................... -->
+
     <root level="INFO">
         <appender-ref ref="FILE_DEFAULT"/>
     </root>
+
+    <!-- ................................... -->
+
 </configuration>

@@ -27,8 +27,6 @@ public class FixedCronJob {
 
     private final NginxServerSubService nginxServerSubService;
 
-    private final NginxPolicyService nginxPolicyService;
-
     private final AdminLogService adminLogService;
 
     private final DatabaseServerService databaseServerService;
@@ -99,22 +97,6 @@ public class FixedCronJob {
         } catch (Exception e) {
         }
 
-        try {
-            GeneralConfig.SERVER_INFO = ServerInfoUtil.getServerInfo();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
-    }
-
-
-    @Scheduled(cron = "0 0 0/1 * * *")
-    public void ipinfo() {
-        try {
-            GeneralConfig.PUBLIC_IP_INFO = ServerInfoUtil.GET_PUBLIC_IP();
-        } catch (Exception e) {
-            log.error(e + "  " + e.getMessage(), e);
-        }
     }
 
     @Scheduled(cron = "0/10 * * * * *")
@@ -138,9 +120,15 @@ public class FixedCronJob {
 
             GeneralConfig.CURRENT_IP = IP;
 
-            if (currIp.equals(IP) == false) {
+            if (currIp.length() > 4 && currIp.equals(IP) == false) {
 
                 log.warn("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
+
+                try {
+                    GeneralConfig.PUBLIC_IP_INFO = ServerInfoUtil.GET_PUBLIC_IP();
+                } catch (Exception e) {
+                    log.error(e + "  " + e.getMessage(), e);
+                }
 
                 if (GeneralConfig.ADMIN_SETTING.isDNS_UPDATE()) {
                     final String ROOT_DOMAIN = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
@@ -165,51 +153,6 @@ public class FixedCronJob {
         ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
     }
 
-    //    @Scheduled(cron = "0/5 * * * * *")
-//    @Scheduled(cron = "0 0 9,21 * * ?")
-//    public void certExpireNoti() {
-//        try {
-//
-//            CertDateUtil.GET_CERT_DATE();
-//
-//            final int CERT_EXPIRE_NOTI = GeneralConfig.ADMIN_SETTING.getCERT_EXPIRE_NOTI();
-//
-//            Calendar now = Calendar.getInstance();
-//            Calendar expiredAt = GeneralConfig.CERT_EXPIRED_AT;
-//
-//            if (expiredAt == null) {
-//                throw new NullPointerException("nginx cert not set yet....");
-//            }
-//
-//            now.setTimeZone(GeneralConfig.TIME_ZONE);
-//            expiredAt.setTimeZone(GeneralConfig.TIME_ZONE);
-//
-//            long intervalMilleSeconds = expiredAt.getTimeInMillis() - now.getTimeInMillis();
-//
-//            if (intervalMilleSeconds < 0) {
-//                throw new Exception("maybe already expired .... " + Math.abs(intervalMilleSeconds));
-//            }
-//
-//            long intervalDay = TimeUnit.MICROSECONDS.toDays(intervalMilleSeconds);
-//            long intervalHour = TimeUnit.MICROSECONDS.toHours(intervalMilleSeconds);
-//
-//            if (intervalDay > CERT_EXPIRE_NOTI) {
-//                // 아직 만료시점이 되지 않았다.
-//            } else if (intervalDay < 1) {
-//                throw new CertException(" your cert mayby expire TODAY !!!!!!  left " + intervalHour + " hours !!!!");
-//            } else {
-//                throw new CertException(" your cert expire soon !! -> " + intervalDay + " days");
-//            }
-//
-//        } catch (CertException e) {
-//            NotiProducer notiProducer = new NotiProducer(e + " : " + e.getMessage(), AdminLogType.CERTBOT);
-//            ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
-//        } catch (Exception e) {
-//            NotiProducer notiProducer = new NotiProducer("CERT noti ERROR : " + e + " : " + e.getMessage(), AdminLogType.CERTBOT);
-//            ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
-//            log.error(e + "  " + e.getMessage(), e);
-//        }
-//    }
 
 
     @Scheduled(cron = "3 0/1 * * * *")
@@ -227,20 +170,5 @@ public class FixedCronJob {
         }
 
     }
-
-
-//    @Scheduled(cron = "0 0 0/1 * * *")
-//    public void serverSpeedTest() {
-//        try {
-//            speedTestService.speedTest();
-//        } catch (IllegalStateException e) {
-//            log.error(e.getMessage() + "_____");
-//        } catch (RuntimeException e) {
-//            log.error(e.getMessage() + "_____");
-//        } catch (Exception e) {
-//            log.error(e.getMessage() + "_____", e);
-//        }
-//
-//    }
 
 }

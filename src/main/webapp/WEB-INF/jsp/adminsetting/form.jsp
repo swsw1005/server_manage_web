@@ -33,6 +33,15 @@
     </div>
 
     <!-- ---------------------------------------------------------- -->
+
+    <div class="modal-form-half-row border-top">
+        <div>
+            SERVER_MANAGER_USER
+        </div>
+        <input type="text" name="SERVER_MANAGER_USER" value="${adminSetting.SERVER_MANAGER_USER}">
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
     <div class="modal-form-half-row">
         <div>
             인증서 만료 알림

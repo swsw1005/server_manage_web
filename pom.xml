@@ -20,6 +20,13 @@
         <maven-jar-plugin.java.version>11</maven-jar-plugin.java.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>swim java repo</id>
+            <url>https://github.com/swsw1005/java__repo/tree/master/releases</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- Compile -->
         <dependency>
@@ -159,6 +166,11 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>3.0.0-RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caffeine.lib</groupId>
+            <artifactId>caffeine-utils</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>

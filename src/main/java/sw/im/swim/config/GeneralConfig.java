@@ -3,6 +3,7 @@ package sw.im.swim.config;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
+import sw.im.swim.bean.dto.NginxSettings;
 import sw.im.swim.bean.dto.NotiEntityDto;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.util.server.ServerInfoUtil;

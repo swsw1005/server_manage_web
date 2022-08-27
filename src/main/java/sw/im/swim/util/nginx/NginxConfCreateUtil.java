@@ -29,17 +29,8 @@ public class NginxConfCreateUtil {
 
     private static final String[] HEAD(int workerProcessed, int workerConnections) {
 
-        final String user;
-
-        final String generalConfigNginxUser = GeneralConfig.ADMIN_SETTING.getNGINX_USER();
-
-        if (generalConfigNginxUser == null || generalConfigNginxUser.isEmpty()) {
-            user = "";
-        } else {
-            user = "user " + generalConfigNginxUser + ";";
-        }
-
-        String[] result = {user,
+        String[] result = {
+                "user www-data;",
                 //
                 "worker_processes " + workerProcessed + ";",
                 //
@@ -78,11 +69,15 @@ public class NginxConfCreateUtil {
                 throw new Exception("ROOT 도메인이 너무 짧습니다. 올바르게 설정해주세요 : " + ROOT_DOMAIN_NAME + "\t" + ROOT_DOMAIN_NAME.length());
             }
 
-            new File(NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME).mkdirs();
+            File pemDir = new File(NginxConfStringContext.CERT_FILE_PREFIX() + "/" + ROOT_DOMAIN_NAME);
 
-            GeneralConfig.CERT_FILE_FULLCHAIN = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_FULLCHAIN;
-            GeneralConfig.CERT_FILE_PRIKEY = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_PRIKEY;
-            GeneralConfig.CERT_FILE_CHAIN = NginxConfStringContext.CERT_FILE_PREFIX + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_CHAIN;
+            pemDir.mkdirs();
+
+            log.warn("pem dir :: " + pemDir);
+
+            GeneralConfig.CERT_FILE_FULLCHAIN = NginxConfStringContext.CERT_FILE_PREFIX() + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_FULLCHAIN;
+            GeneralConfig.CERT_FILE_PRIKEY = NginxConfStringContext.CERT_FILE_PREFIX() + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_PRIKEY;
+            GeneralConfig.CERT_FILE_CHAIN = NginxConfStringContext.CERT_FILE_PREFIX() + "/" + ROOT_DOMAIN_NAME + "/" + NginxConfStringContext.CERT_FILE_CHAIN;
 
             File CERT_FILE_FULLCHAIN = new File(GeneralConfig.CERT_FILE_FULLCHAIN);
             File CERT_FILE_PRIKEY = new File(GeneralConfig.CERT_FILE_PRIKEY);

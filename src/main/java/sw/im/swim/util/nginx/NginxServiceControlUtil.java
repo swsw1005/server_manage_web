@@ -12,8 +12,10 @@ import sw.im.swim.util.server.PortCheckUtil;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NginxServiceControlUtil {
     private static final String[] NGINX_SERVICE_START = new String[]{"sh", "-c", "systemctl start nginx"};
-    private static final String[] NGINX_SERVICE_RESTART = new String[]{"sh", "-c", "service nginx restart"};
+    private static final String[] NGINX_SERVICE_RESTART = new String[]{"sh", "-c", "curl -ik -X POST 127.0.0.1:8085/api/v1/nginx/restart"};
+
     private static final String[] NGINX_SERVICE_STOP = new String[]{"sh", "-c", "systemctl stop nginx"};
+
     private static final String[] NGINX_SERVICE_STATUS = new String[]{"sh", "-c", "systemctl status nginx"};
 
     private static final String[] NGINX_DOCKER_STATUS = new String[]{"sh", "-c", "docker ps | grep nginx-proxy"};
@@ -51,29 +53,6 @@ public class NginxServiceControlUtil {
         return false;
     }
 
-
-    private static boolean NGINX_STATUS_JUDGE(String[] var2) {
-        String nginxStatus = ProcessExecUtil.RUN_READ_COMMAND(NGINX_SERVICE_STATUS);
-
-        final int ARR_LENGTH = var2.length;
-
-        int[] indexArr = new int[ARR_LENGTH];
-
-        for (int i = 0; i < ARR_LENGTH; i++) {
-            indexArr[i] = nginxStatus.indexOf(var2[i]);
-        }
-
-        int pre_idx = -1;
-        for (int i = 0; i < ARR_LENGTH; i++) {
-            int idx = indexArr[i];
-            if (pre_idx < idx) {
-                pre_idx = idx;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
 
 
     public static final boolean NGINX_RESTART() {

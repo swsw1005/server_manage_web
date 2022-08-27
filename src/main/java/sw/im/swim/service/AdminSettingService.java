@@ -34,8 +34,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @RequiredArgsConstructor
 public class AdminSettingService {
 
-    private final ModelMapper modelMapper;
-
     private final AdminSettingEntityRepository adminSettingEntityRepository;
 
     public AdminSettingEntityDto getSetting() {
@@ -62,10 +60,10 @@ public class AdminSettingService {
 
                 final String newFieldValue = (map.get(fieldName) == null ? "" : map.get(fieldName));
 
-//                log.debug("" + "fieldName : " + fieldName
-//                        + " \t " + "typeName : " + typeName
-//                        + " \t " + "newFieldValue : " + newFieldValue
-//                );
+                log.debug("" + "fieldName : " + fieldName
+                        + " \t " + "typeName : " + typeName
+                        + " \t " + "newFieldValue : " + newFieldValue
+                );
 
                 Field updateField = dto.getClass().getDeclaredField(fieldName);
                 updateField.setAccessible(true);
@@ -175,11 +173,11 @@ public class AdminSettingService {
                     }
                 }
 
-//                log.debug("" + "fieldName : " + fieldName
-//                        + " \t " + "typeName : " + typeName
-//                        + " \t " + "isExist : " + isExist
-//                        + " \t " + "updateValue : " + updateValue
-//                );
+                log.debug("" + "fieldName : " + fieldName
+                        + " \t " + "typeName : " + typeName
+                        + " \t " + "isExist : " + isExist
+                        + " \t " + "updateValue : " + updateValue
+                );
 
                 AdminSettingEntity entity;
                 if (isExist) {
@@ -202,7 +200,6 @@ public class AdminSettingService {
         cronSetting("ADMIN_LOG_MAIL", newDto.getADMIN_LOG_MAIL_CRON(), AdminLogMailJob.class);
         cronSetting("INTERNET_TEST", newDto.getINTERNET_TEST_CRON(), InternetTestJob.class);
         cronSetting("CERT_CHECK", newDto.getCERT_NOTI_CRON(), CheckCertJob.class);
-
     }
 
     public void cronSetting(final String CRON_PREFIX, final String cron, Class<? extends Job> jobClass) {

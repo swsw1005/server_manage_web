@@ -58,7 +58,6 @@ public class PostConstruct {
         notiService.getAll();
 
         AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
-
         adminSettingService.update(adminSetting);
 
         final String ip = GeneralConfig.PUBLIC_IP_INFO.getIp();
@@ -88,9 +87,6 @@ public class PostConstruct {
             log.error(e.getMessage(), e);
             System.exit(0);
         }
-
-        adminSetting = adminSettingService.getSetting();
-        adminSettingService.update(adminSetting);
 
         serverInfoService.sync();
 

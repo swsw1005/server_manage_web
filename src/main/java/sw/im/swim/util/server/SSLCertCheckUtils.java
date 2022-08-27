@@ -1,18 +1,32 @@
 package sw.im.swim.util.server;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.InvalidParameterException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 import com.google.gson.Gson;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.net.ssl.*;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.sql.Time;
-import java.util.*;
 
 @Slf4j
 public class SSLCertCheckUtils {
@@ -86,9 +100,6 @@ public class SSLCertCheckUtils {
             byte[] var8 = serverCert.getSignature();
             String var9 = serverCert.getType();
 
-            System.out.println("beforeDate = " + beforeDate);
-            System.out.println("afterDate = " + afterDate);
-
             CertInfo certInfo = new CertInfo();
 
             certInfo.setBasicConstraints(var1);
@@ -101,8 +112,6 @@ public class SSLCertCheckUtils {
             certInfo.setType(var9);
 
             TimeZone tz = TimeZone.getDefault();
-
-            log.debug("tz = " + tz.getDisplayName());
 
             Calendar beforeCal = Calendar.getInstance(tz);
             Calendar afterCal = Calendar.getInstance(tz);
@@ -121,10 +130,10 @@ public class SSLCertCheckUtils {
             throw new CertificateException(e);
         } catch (IOException e) {
             log.error(e + "  " + e.getMessage(), e);
-            throw e;
+            throw new CertificateException(e);
         } catch (Exception e) {
             log.error(e + "  " + e.getMessage(), e);
-            throw e;
+            throw new CertificateException(e);
         }
 
     }

@@ -1,6 +1,5 @@
 package sw.im.swim.service;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -10,7 +9,6 @@ import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +17,22 @@ import java.util.Set;
 @Slf4j
 public class CertBotService {
 
-    public static final String CERTBOT_SCRIPT_ROOTDIR = "/root/certbot";
-    public static final String CERTBOT_SCRIPT_FILE = CERTBOT_SCRIPT_ROOTDIR + "/run.sh";
+    public static final String CERTBOT_SCRIPT_ROOTDIR() {
+
+        final String user = GeneralConfig.ADMIN_SETTING.getSERVER_MANAGER_USER().trim().toLowerCase();
+
+        if (user.equals("root")) {
+            return "/root/certbot";
+        } else {
+            return "/home/" + user + "/certbot";
+        }
+
+
+    }
+
+    public static final String CERTBOT_SCRIPT_FILE() {
+        return CERTBOT_SCRIPT_ROOTDIR() + "/run.sh";
+    }
 
 
     /**
@@ -43,8 +55,12 @@ public class CertBotService {
      */
     public static final void CREATE_CERTBOT_FILE(List<NginxServerEntityDto> list) {
 
+        final String certbotScriptDir = CERTBOT_SCRIPT_ROOTDIR();
+
+        final String certbotScriptFile = CERTBOT_SCRIPT_FILE();
+
         try {
-            File certbotRootDir = new File(CERTBOT_SCRIPT_ROOTDIR);
+            File certbotRootDir = new File(certbotScriptDir);
 
             if (!certbotRootDir.exists()) {
                 try {
@@ -76,25 +92,25 @@ public class CertBotService {
             List<String> dockerCertbotScript = new ArrayList<>();
 
             dockerCertbotScript.add("docker run -it --rm --name certbot  \\");
-            dockerCertbotScript.add("  -v '" + CERTBOT_SCRIPT_ROOTDIR + "/etc/letsencrypt/:/etc/letsencrypt/' \\");
-            dockerCertbotScript.add("  -v '" + CERTBOT_SCRIPT_ROOTDIR + "/var/lib/letsencrypt/:/var/lib/letsencrypt/' \\");
+            dockerCertbotScript.add("  -v '" + certbotScriptDir + "/etc/letsencrypt/:/etc/letsencrypt/' \\");
+            dockerCertbotScript.add("  -v '" + certbotScriptDir + "/var/lib/letsencrypt/:/var/lib/letsencrypt/' \\");
             dockerCertbotScript.add("  certbot/dns-google  \\");
             dockerCertbotScript.add("  certonly " + domains + " \\");
             dockerCertbotScript.add("  -m " + email + "  --agree-tos  --manual --preferred-challenges dns \\");
             dockerCertbotScript.add("  --server https://acme-v02.api.letsencrypt.org/directory");
 
-            FileUtils.deleteQuietly(new File(CERTBOT_SCRIPT_FILE));
-            FileUtils.writeLines(new File(CERTBOT_SCRIPT_FILE), "UTF-8", dockerCertbotScript, System.lineSeparator());
+            FileUtils.deleteQuietly(new File(certbotScriptFile));
+            FileUtils.writeLines(new File(certbotScriptFile), "UTF-8", dockerCertbotScript, System.lineSeparator());
 
-            log.info("file created =>  " + CERTBOT_SCRIPT_FILE + "  " + new File(CERTBOT_SCRIPT_FILE).exists());
+            log.info("file created =>  " + certbotScriptFile + "  " + new File(certbotScriptFile).exists());
 
-            String[] chmodArr = {
-                    "sh", "-c", "chmod 755 " + CERTBOT_SCRIPT_FILE
-            };
+            String[] chmodArr = {"sh", "-c", "chmod 755 " + certbotScriptFile};
             ProcessExecUtil.RUN_READ_COMMAND(chmodArr);
 
+        } catch (IOException e) {
+            log.error(e + "  " + e.getMessage());
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e + "  " + e.getMessage(), e);
         }
 
     }

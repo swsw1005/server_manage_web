@@ -5,7 +5,6 @@ After=postgres.service
 
 [Service]
 ExecStart=/bin/bash -c "exec java -jar /usr/local/server-manager/server-manager-1.0.0.war \
- -Dlogback.configurationFile=/usr/local/server-manager/logback.xml  \
   --spring.config.additional-location=file:///usr/local/server-manager/application.properties"
 Restart=always
 RestartSec=3

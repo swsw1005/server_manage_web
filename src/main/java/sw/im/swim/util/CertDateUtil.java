@@ -36,61 +36,8 @@ public class CertDateUtil {
         return WINDOW_FAKE_CERT();
     }
 
-    public static final Calendar[] GET_CERT_DATE(final String domain) {
-
-        try {
-
-            String fileName = "";
-
-            String var1 = GeneralConfig.CERT_FILE_FULLCHAIN;
-
-            if (new File(var1).exists()) {
-                fileName = var1;
-            } else {
-                fileName = NginxConfStringContext.CERT_FILE_PREFIX + "/" + domain + "/" + NginxConfStringContext.CERT_FILE_FULLCHAIN;
-            }
-
-            final String cmd = "openssl x509 -startdate -enddate -in " + fileName;
-
-            log.warn("EXECUTE  >>  " + cmd);
-
-            List<String> arr = ProcessExecUtil.RUN_READ_COMMAND_LIST(new String[]{"sh", "-c", cmd});
-
-            log.warn("cert result : " + new Gson().toJson(arr));
-
-            String startDateStr = arr.get(0).replace("notBefore=", "");
-            String endDateStr = arr.get(1).replace("notAfter=", "");
-
-            Calendar startDate = PARSE_CERT_DATE(startDateStr);
-            Calendar endDate = PARSE_CERT_DATE(endDateStr);
-
-            GeneralConfig.CERT_STARTED_AT = startDate;
-            GeneralConfig.CERT_EXPIRED_AT = endDate;
-
-            return new Calendar[]{startDate, endDate};
-
-        } catch (IndexOutOfBoundsException e) {
-            log.error(e + "  " + e.getMessage());
-        } catch (Exception e) {
-            log.error(e + "  " + e.getMessage(), e);
-        }
-        if (GeneralConfig.WINDOW) {
-            return WINDOW_FAKE_CERT();
-        }
-        return null;
-    }
-
-    public static final SimpleDateFormat CERT_DATE_FORMAT = new SimpleDateFormat("LLL dd HH:mm:ss yyyy z", Locale.ENGLISH);
-
     public static final TimeZone CERT_TIMEZONE = TimeZone.getTimeZone("GMT");
 
-    public static final Calendar PARSE_CERT_DATE(String dateStr) throws ParseException {
-        CERT_DATE_FORMAT.setTimeZone(CERT_TIMEZONE);
-        Date date = CERT_DATE_FORMAT.parse(dateStr);
-        Calendar cal = Calendar.getInstance(CERT_TIMEZONE);
-        cal.setTime(date);
-        return cal;
-    }
 
     public static final Calendar[] WINDOW_FAKE_CERT() {
 
@@ -117,24 +64,6 @@ public class CertDateUtil {
 
     public static void main(String[] args) {
 
-        System.out.println("CERT_DATE_FORMAT.format(new Date()) = " + CERT_DATE_FORMAT.format(new Date()));
-
-        String[] arr = {"Jul 31 05:20:46 2022 GMT", "Oct 29 05:20:45 2022 GMT"};
-
-        for (String input : arr) {
-
-            try {
-                Calendar parsed = CertDateUtil.PARSE_CERT_DATE(input);
-
-                String parsed_format = CERT_DATE_FORMAT.format(parsed.getTime());
-
-                System.out.println("input         = " + input);
-                System.out.println("parsed_format = " + parsed_format);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
     }
 }

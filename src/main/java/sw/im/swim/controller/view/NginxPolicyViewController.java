@@ -110,7 +110,7 @@ public class NginxPolicyViewController {
             mav.addObject("leftDay", leftDay);
         } catch (Exception e) {
         }
-        mav.addObject("certMessage", "use this script file to generate pem/key file via certbot !  ( " + CertBotService.CERTBOT_SCRIPT_FILE + " )");
+        mav.addObject("certMessage", "use this script file to generate pem/key file via certbot !  ( " + CertBotService.CERTBOT_SCRIPT_FILE() + " )");
 
         return mav;
     }

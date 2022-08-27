@@ -15,14 +15,20 @@ import java.io.Serializable;
 @Data
 public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
-    private String ROOT_DOMAIN = "";
-    private int CERT_EXPIRE_NOTI = 10;
-    private String CERT_NOTI_CRON = "";
-    ////////////////////////////////////////
-    private String NGINX_USER = "root";
     private String NGINX_CONF_DIR = "/etc/nginx";
     private boolean NGINX_NATIVE = true;
     private boolean NGINX_80_PROXY = true;
+    ////////////////////////////////////////
+    private boolean NGINX_EXTERNAL_CERTBOT = true;
+    ////////////////////////////////////////
+    private String NGINX_LOG_FORMAT = "";
+    ////////////////////////////////////////
+    private String ROOT_DOMAIN = "";
+    ////////////////////////////////////////
+    private int CERT_EXPIRE_NOTI = 10;
+    private String CERT_NOTI_CRON = "";
+    ////////////////////////////////////////
+    private String SERVER_MANAGER_USER = "root";
     ////////////////////////////////////////
     private String WORK_SPACE = "/usr/local/server-manager";
     ////////////////////////////////////////
@@ -41,15 +47,11 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
     private boolean DNS_UPDATE = false;
     ////////////////////////////////////////
-    private boolean NGINX_EXTERNAL_CERTBOT = true;
-    ////////////////////////////////////////
     private String DB_BACKUP_CRON = "";
     ////////////////////////////////////////
     private String INTERNET_TEST_CRON = "";
     ////////////////////////////////////////
     private String FAIL2BAN_TOKEN = "";
-    ////////////////////////////////////////
-    private String NGINX_LOG_FORMAT = "";
     ////////////////////////////////////////
     private boolean SERVER_HEALTH_CHECK = false;
     private boolean WEB_SERVER_HEALTH_CHECK = false;

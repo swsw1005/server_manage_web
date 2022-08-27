@@ -12,7 +12,10 @@ import sw.im.swim.config.GeneralConfig;
 @Slf4j
 public class NginxConfStringContext {
 
-    public static final String CERT_FILE_PREFIX = "/root/pem";
+    public static final String CERT_FILE_PREFIX() {
+        return "/root/pem";
+    }
+
     public static final String CERT_FILE_FULLCHAIN = "fullchain.pem";
     public static final String CERT_FILE_PRIKEY = "privkey.pem";
     public static final String CERT_FILE_CHAIN = "chain.pem";

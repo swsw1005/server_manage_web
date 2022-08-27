@@ -21,11 +21,7 @@ public class CheckCertJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
-        try {
-            nginxPolicyService.ADJUST_NGINX_POLICY();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        nginxPolicyService.ADJUST_NGINX_POLICY();
 
         try {
             final int leftDay = GeneralConfig.CERT_LEFT_DAY();
@@ -43,6 +39,8 @@ public class CheckCertJob implements Job {
                 NotiProducer notiProducer = new NotiProducer(msg, AdminLogType.CERTBOT);
                 ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(notiProducer);
             }
+        } catch (RuntimeException e) {
+            log.error(e + "  " + e.getMessage(), e);
         } catch (Exception e) {
             log.error(e + "  " + e.getMessage(), e);
         }
