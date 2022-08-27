@@ -1,24 +1,18 @@
 package sw.im.swim.config;
 
+import com.caffeine.lib.enc.AesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.util.DatabaseServerUtil;
 import sw.im.swim.service.*;
-import sw.im.swim.util.AesUtil;
-import sw.im.swim.util.CertDateUtil;
-import sw.im.swim.util.dns.GoogleDNSUtil;
-import sw.im.swim.util.nginx.NginxConfCreateUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -79,9 +73,9 @@ public class PostConstruct {
 
             String uuid = UUID.randomUUID().toString();
 
-            String encUUID = AesUtil.encrypt(uuid, GeneralConfig.ENC_KEY);
+            String encUUID = AesUtils.encrypt(uuid, GeneralConfig.ENC_KEY);
 
-            String decUUID = AesUtil.decrypt(encUUID, GeneralConfig.ENC_KEY);
+            String decUUID = AesUtils.decrypt(encUUID, GeneralConfig.ENC_KEY);
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

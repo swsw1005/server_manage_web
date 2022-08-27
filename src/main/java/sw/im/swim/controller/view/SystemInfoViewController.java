@@ -1,5 +1,6 @@
 package sw.im.swim.controller.view;
 
+import com.caffeine.lib.system.SystemInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.ServerInfoService;
-import sw.im.swim.util.server.ServerInfoUtil;
 import sw.im.swim.util.server.ServerSSHUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -42,7 +41,7 @@ public class SystemInfoViewController {
     public ModelAndView list(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("systeminfo/list");
 
-        ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
+        SystemInfo serverInfo = GeneralConfig.SERVER_INFO;
 
         mav.addObject("dto", GeneralConfig.CURRENT_SERVER_INFO);
         mav.addObject("serverInfo", serverInfo);

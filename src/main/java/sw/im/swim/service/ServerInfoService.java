@@ -1,5 +1,7 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.enc.AesUtils;
+import com.caffeine.lib.system.SystemInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,8 +16,6 @@ import sw.im.swim.repository.DatabaseServerEntityRepository;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
-import sw.im.swim.util.AesUtil;
-import sw.im.swim.util.server.ServerInfoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +38,11 @@ public class ServerInfoService {
 
     public void sync() {
         List<ServerInfoEntityDto> list = getAll();
-        ServerInfoUtil.ServerInfo serverInfo = GeneralConfig.SERVER_INFO;
+        SystemInfo systemInfo = GeneralConfig.SERVER_INFO;
         list.forEach(serverInfoEntityDto -> {
-            if (serverInfoEntityDto.getIp().equals(serverInfo.getIpAddress())) {
-                GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
-            }
+//            if (serverInfoEntityDto.getIp().equals(systemInfo.())) {
+//                GeneralConfig.CURRENT_SERVER_INFO = serverInfoEntityDto;
+//            }
         });
 
         notiService.getAll();
@@ -62,7 +62,7 @@ public class ServerInfoService {
     public ServerInfoEntityDto insertNew(String name, String id, String password, String ip, Integer sshPort) throws Exception {
 
         try {
-            final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
+            final String encPassword = AesUtils.encrypt(password, GeneralConfig.ENC_KEY);
 
             ServerInfoEntity entity = ServerInfoEntity.builder()
                     .name(name)
@@ -126,7 +126,7 @@ public class ServerInfoService {
             ServerInfoEntity entity = serverInfoEntityRepository.getById(sid);
             ServerInfoEntityDto dto = modelMapper.map(entity, ServerInfoEntityDto.class);
             try {
-                dto.setPassword(AesUtil.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
+                dto.setPassword(AesUtils.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
             } catch (Exception e) {
             }
             return dto;

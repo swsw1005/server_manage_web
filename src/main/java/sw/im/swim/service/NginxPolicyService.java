@@ -1,5 +1,6 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.cert.CertDateUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,15 +13,12 @@ import sw.im.swim.bean.entity.NginxPolicyServerEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.*;
-import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.nginx.NginxV2Worker;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -257,11 +255,12 @@ public class NginxPolicyService {
                 log.error(e + "  " + e.getMessage());
             }
         } finally {
-            CertDateUtil.GET_CERT_DATE();
+            GeneralConfig.setCertDate();
             CertBotService.CREATE_CERTBOT_FILE(nginxServerEntityList);
         }
         return msg;
     }
+
 
 
     public NginxPolicyEntityDto get() throws Exception {

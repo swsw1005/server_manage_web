@@ -1,5 +1,6 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.enc.AesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -13,7 +14,6 @@ import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
 import sw.im.swim.repository.ServerInfoEntityRepository;
 import sw.im.swim.repository.WebServerEntityRepository;
-import sw.im.swim.util.AesUtil;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class DatabaseServerService {
             for (int i = 0; i < list.size(); i++) {
                 DatabaseServerEntityDto dto = modelMapper.map(list.get(i), DatabaseServerEntityDto.class);
 
-                dto.setPassword(AesUtil.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
+                dto.setPassword(AesUtils.decrypt(dto.getPassword(), GeneralConfig.ENC_KEY));
 
                 result.add(dto);
             }
@@ -80,7 +80,7 @@ public class DatabaseServerService {
         try {
             ServerInfoEntity server = serverInfoEntityRepository.getById(serverSid);
 
-            final String encPassword = AesUtil.encrypt(dbPassword, GeneralConfig.ENC_KEY);
+            final String encPassword = AesUtils.encrypt(dbPassword, GeneralConfig.ENC_KEY);
 
             DatabaseServerEntity entity = DatabaseServerEntity.builder()
                     .serverInfoEntity(server)

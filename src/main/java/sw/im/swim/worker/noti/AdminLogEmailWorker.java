@@ -1,14 +1,16 @@
 package sw.im.swim.worker.noti;
 
+import com.caffeine.lib.mail.EmailSend;
+import com.caffeine.lib.mail.EmailSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailSendException;
 import sw.im.swim.bean.dto.AdminLogEntityDto;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.date.DateFormatUtil;
-import sw.im.swim.util.email.EmailUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 
 import java.util.Date;
@@ -50,27 +52,34 @@ public class AdminLogEmailWorker implements Runnable {
             String title = setting.getADMIN_LOG_MAIL_TITLE()
                     + "  "
                     + DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss_z.format(new Date());
-            EmailUtil.sendEmail(
-                    setting.getSMTP_USER(),
-                    setting.getSMTP_PASSWORD(),
-                    setting.getSMTP_HOST(),
-                    setting.getSMTP_PORT(),
-                    setting.isSMTP_STARTTLS_ENABLE(),
-                    setting.isSMTP_AUTH(),
-                    setting.isSMTP_SSL_ENABLE(),
-                    setting.getSMTP_SSL_TRUST(),
-                    setting.getADMIN_EMAIL(),
-                    title,
-                    content
-            );
+
+            EmailSender emailSender = new EmailSender();
+
+            emailSender.setTitle(title);
+            emailSender.setBody(content);
+            emailSender.setSMTP_HOST(setting.getSMTP_HOST());
+            emailSender.setSMTP_PORT(setting.getSMTP_PORT());
+
+            emailSender.setSMTP_USER(setting.getSMTP_USER());
+            emailSender.setSMTP_PASSWORD(setting.getSMTP_PASSWORD());
+
+            emailSender.setAuthEnable(setting.isSMTP_AUTH());
+            emailSender.setSslEnable(setting.isSMTP_SSL_ENABLE());
+            emailSender.setTlsEnable(setting.isSMTP_STARTTLS_ENABLE());
+
+            emailSender.getRecipientType_TO().add(setting.getADMIN_EMAIL());
+
+            emailSender.send();
+
             Set<Long> ids = list.stream().map(AdminLogEntityDto::getSid).collect(Collectors.toSet());
             adminLogService.deleteByIds(ids);
 
+        } catch (MailSendException e) {
+            log.error(e.getMessage(), e);
+            adminLogService.insertLog(AdminLogType.MAIL, "FAIL", e.getLocalizedMessage());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             adminLogService.insertLog(AdminLogType.MAIL, "FAIL", e.getLocalizedMessage());
-        } finally {
-
         }
 
         ThreadWorkerPoolContext.getInstance().ADMIN_LOG_MAIL_QUEUE.clear();

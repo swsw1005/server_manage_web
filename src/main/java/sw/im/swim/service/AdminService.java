@@ -1,5 +1,6 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.enc.AesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -10,7 +11,6 @@ import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.enums.Authority;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.AdminEntityRepository;
-import sw.im.swim.util.AesUtil;
 
 @Slf4j
 @Service
@@ -28,7 +28,7 @@ public class AdminService {
 
 //            log.debug(" password => " + password);
 
-            final String encPassword = AesUtil.encrypt(password, GeneralConfig.ENC_KEY);
+            final String encPassword = AesUtils.encrypt(password, GeneralConfig.ENC_KEY);
 
             log.debug(" encPassword       => " + encPassword);
             log.debug(" dto.getPassword() => " + dto.getPassword());

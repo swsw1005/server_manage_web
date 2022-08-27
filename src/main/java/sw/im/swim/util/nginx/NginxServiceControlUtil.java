@@ -1,11 +1,11 @@
 package sw.im.swim.util.nginx;
 
+import com.caffeine.lib.process.ProcessExecutor;
 import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.util.process.ProcessExecUtil;
 import sw.im.swim.util.server.PortCheckUtil;
 
 @Slf4j
@@ -65,7 +65,7 @@ public class NginxServiceControlUtil {
             }
 
             log.warn("nginx restart !!!  => " + new Gson().toJson(commandArr));
-            String nginxRestartResult = ProcessExecUtil.RUN_READ_COMMAND(commandArr);
+            String nginxRestartResult = ProcessExecutor.runSimpleCommand(commandArr);
             log.warn("nginx restart result => " + nginxRestartResult);
             return true;
         } catch (RuntimeException e) {

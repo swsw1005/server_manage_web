@@ -1,6 +1,6 @@
 package kr.swim.nginx.controller;
 
-import kr.swim.nginx.util.process.ProcessExecUtil;
+import com.caffeine.lib.process.ProcessExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +23,7 @@ public class NginxController {
         try {
             NginxJob nginxJob = NginxJob.valueOf(job.toLowerCase().trim());
             log.warn("nginx job execute :: " + nginxJob.name() + " >> " + nginxJob.cmd);
-            ProcessExecUtil.RUN_READ_COMMAND(nginxJob.cmd);
+            ProcessExecutor.runCommand(nginxJob.cmd);
         } catch (IllegalArgumentException e) {
             map.put("error", e.toString());
             map.put("error_message", e.getMessage());

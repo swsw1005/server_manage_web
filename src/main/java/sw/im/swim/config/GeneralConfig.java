@@ -1,15 +1,20 @@
 package sw.im.swim.config;
 
+import com.caffeine.lib.cert.CertDateUtil;
+import com.caffeine.lib.system.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.dto.NginxSettings;
 import sw.im.swim.bean.dto.NotiEntityDto;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
-import sw.im.swim.util.server.ServerInfoUtil;
+import sw.im.swim.util.server.PublicIpInfo;
+import sw.im.swim.util.server.PublicIpInfoUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -39,9 +44,9 @@ public class GeneralConfig {
 
     public static final Vector<CronVO> CRON_EXPRESSION_LIST = new Vector<>();
 
-    public static ServerInfoUtil.ServerInfo SERVER_INFO = ServerInfoUtil.getServerInfo();
+    public static SystemInfo SERVER_INFO = new SystemInfo();
 
-    public static ServerInfoUtil.PublicIpInfo PUBLIC_IP_INFO = ServerInfoUtil.GET_PUBLIC_IP();
+    public static PublicIpInfo PUBLIC_IP_INFO = PublicIpInfoUtil.GET_PUBLIC_IP();
 
     public static ServerInfoEntityDto CURRENT_SERVER_INFO;
 
@@ -52,6 +57,18 @@ public class GeneralConfig {
 
     public static Calendar CERT_STARTED_AT = null;
     public static Calendar CERT_EXPIRED_AT = null;
+
+    public static void setCertDate(){
+        try {
+            Calendar[] a = CertDateUtil.GET_CERT_DATE(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
+
+            GeneralConfig.CERT_STARTED_AT = a[0];
+            GeneralConfig.CERT_EXPIRED_AT = a[1];
+
+        } catch (Exception e) {
+            log.error(e + "  " + e.getMessage());
+        }
+    }
 
     public static int CERT_LEFT_DAY() {
         try {

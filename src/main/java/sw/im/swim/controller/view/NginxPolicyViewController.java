@@ -1,20 +1,11 @@
 package sw.im.swim.controller.view;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.config.GeneralConfig;
@@ -22,8 +13,12 @@ import sw.im.swim.service.CertBotService;
 import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.service.NginxServerService;
 import sw.im.swim.service.NginxServerSubService;
-import sw.im.swim.util.CertDateUtil;
 import sw.im.swim.util.date.DateFormatUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -95,9 +90,6 @@ public class NginxPolicyViewController {
         }
         mav.addObject("nginxServerList", nginxServerList);
         mav.addObject("nginxServerListSize", nginxServerList.size());
-
-        CertDateUtil.GET_CERT_DATE();
-
 
         try {
             Date date1 = GeneralConfig.CERT_STARTED_AT.getTime();

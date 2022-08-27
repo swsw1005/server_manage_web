@@ -1,5 +1,6 @@
 package sw.im.swim.worker.database;
 
+import com.caffeine.lib.process.ProcessExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -11,7 +12,6 @@ import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.exception.FileTooSmallException;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.date.DateFormatUtil;
-import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
 import java.util.Calendar;
@@ -55,7 +55,7 @@ public class DbBackupWorker implements Callable<String> {
 
             final String[] arr = {"sh", "-c", DUMP_COMMAND};
 
-            final String processResult = ProcessExecUtil.RUN_READ_COMMAND(arr);
+            final String processResult = ProcessExecutor.runSimpleCommand(arr);
 
             log.debug("processResult => " + processResult);
 

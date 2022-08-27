@@ -1,11 +1,11 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.process.ProcessExecutor;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,7 +105,7 @@ public class CertBotService {
             log.info("file created =>  " + certbotScriptFile + "  " + new File(certbotScriptFile).exists());
 
             String[] chmodArr = {"sh", "-c", "chmod 755 " + certbotScriptFile};
-            ProcessExecUtil.RUN_READ_COMMAND(chmodArr);
+            ProcessExecutor.runCommand(chmodArr);
 
         } catch (IOException e) {
             log.error(e + "  " + e.getMessage());

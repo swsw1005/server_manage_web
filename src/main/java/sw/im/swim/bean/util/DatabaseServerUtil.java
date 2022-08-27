@@ -1,10 +1,10 @@
 package sw.im.swim.bean.util;
 
+import com.caffeine.lib.process.ProcessExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.io.File;
 import java.util.HashSet;
@@ -46,7 +46,7 @@ public class DatabaseServerUtil {
         }
         try {
             pgpass.createNewFile();
-            ProcessExecUtil.RUN_READ_COMMAND(PG_PASS_COMMAND);
+            ProcessExecutor.runCommand(PG_PASS_COMMAND);
         } catch (Exception e) {
         }
         return pgpass;

@@ -1,5 +1,6 @@
 package sw.im.swim.service;
 
+import com.caffeine.lib.process.ProcessExecutor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.entity.SpeedTestResultEntity;
 import sw.im.swim.repository.SpeedTestResultEntityRepository;
 import sw.im.swim.service.querydsl.SpeedTestQueryDsl;
-import sw.im.swim.util.process.ProcessExecUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class SpeedTestService {
 
     public void speedTest() throws Exception {
         try {
-            String speedResult = ProcessExecUtil.RUN_READ_COMMAND(arr);
+            String speedResult = ProcessExecutor.runSimpleCommand(arr);
 
             log.info("speedResult   " + speedResult);
 
