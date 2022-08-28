@@ -1,7 +1,7 @@
 package sw.im.swim.config;
 
-import com.caffeine.lib.cert.CertDateUtil;
-import com.caffeine.lib.system.SystemInfo;
+import kr.swim.util.cert.CertDateUtil;
+import kr.swim.util.system.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;

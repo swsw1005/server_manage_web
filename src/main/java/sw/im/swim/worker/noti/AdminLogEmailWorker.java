@@ -1,7 +1,7 @@
 package sw.im.swim.worker.noti;
 
-import com.caffeine.lib.mail.EmailSend;
-import com.caffeine.lib.mail.EmailSender;
+import kr.swim.util.mail.EmailSend;
+import kr.swim.util.mail.EmailSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailSendException;
@@ -57,17 +57,17 @@ public class AdminLogEmailWorker implements Runnable {
 
             emailSender.setTitle(title);
             emailSender.setBody(content);
-            emailSender.setSMTP_HOST(setting.getSMTP_HOST());
-            emailSender.setSMTP_PORT(setting.getSMTP_PORT());
+            emailSender.setSmtpHost(setting.getSMTP_HOST());
+            emailSender.setSmtpPort(setting.getSMTP_PORT());
 
-            emailSender.setSMTP_USER(setting.getSMTP_USER());
-            emailSender.setSMTP_PASSWORD(setting.getSMTP_PASSWORD());
+            emailSender.setSmtpUser(setting.getSMTP_USER());
+            emailSender.setSmtpPassword(setting.getSMTP_PASSWORD());
 
             emailSender.setAuthEnable(setting.isSMTP_AUTH());
             emailSender.setSslEnable(setting.isSMTP_SSL_ENABLE());
             emailSender.setTlsEnable(setting.isSMTP_STARTTLS_ENABLE());
 
-            emailSender.getRecipientType_TO().add(setting.getADMIN_EMAIL());
+            emailSender.getRecipientTypeCC().add(setting.getADMIN_EMAIL());
 
             emailSender.send();
 

@@ -1,6 +1,6 @@
 package sw.im.swim.service;
 
-import com.caffeine.lib.cert.CertDateUtil;
+import kr.swim.util.cert.CertDateUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

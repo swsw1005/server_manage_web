@@ -1,6 +1,6 @@
 package sw.im.swim.bean.util;
 
-import com.caffeine.lib.process.ProcessExecutor;
+import kr.swim.util.process.ProcessExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.enums.DbType;

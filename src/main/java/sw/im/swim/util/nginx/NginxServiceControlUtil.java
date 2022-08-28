@@ -1,6 +1,6 @@
 package sw.im.swim.util.nginx;
 
-import com.caffeine.lib.process.ProcessExecutor;
+import kr.swim.util.process.ProcessExecutor;
 import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

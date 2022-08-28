@@ -1,6 +1,6 @@
 package sw.im.swim.controller.view;
 
-import com.caffeine.lib.system.SystemInfo;
+import kr.swim.util.system.SystemInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
