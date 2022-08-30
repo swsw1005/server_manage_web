@@ -147,6 +147,17 @@ public class FixedCronJob {
         ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
         ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(new AdminLogEmailWorker(adminLogService));
         ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
+
+        /**
+         * TODO  auto insert new admin
+         *
+         * 1. check certain file
+         * 2. if file exist, read and delete file
+         * 3. read id, password, name
+         * 4. insert as new admin
+         * 5. if exisy, update
+         *
+         */
     }
 
 

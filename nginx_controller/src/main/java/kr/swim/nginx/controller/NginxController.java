@@ -3,6 +3,7 @@ package kr.swim.nginx.controller;
 import kr.swim.util.process.ProcessExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +15,8 @@ import java.util.Map;
 @RestController
 public class NginxController {
 
-    @PostMapping("/nginx/{job}")
-    public Map<String, Object> nginxJob(@PathVariable(name = "job") String job, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/nginx/exec/{job}")
+    public Map<String, Object> nginxExec(@PathVariable(name = "job") String job, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         map.put("ping", "pong");
 
@@ -24,6 +25,59 @@ public class NginxController {
             NginxJob nginxJob = NginxJob.valueOf(job.toLowerCase().trim());
             log.warn("nginx job execute :: " + nginxJob.name() + " >> " + nginxJob.cmd);
             ProcessExecutor.runCommand(nginxJob.cmd);
+        } catch (IllegalArgumentException e) {
+            map.put("error", e.toString());
+            map.put("error_message", e.getMessage());
+            response.setStatus(409);
+        } catch (NullPointerException e) {
+            map.put("error", e.toString());
+            map.put("error_message", e.getMessage());
+            response.setStatus(409);
+        } catch (Exception e) {
+            map.put("error", e.toString());
+            map.put("error_message", e.getMessage());
+            response.setStatus(409);
+        }
+        return map;
+    }
+
+
+    @PostMapping("/nginx/config")
+    public Map<String, Object> nginxConfig(
+            /**
+             *
+             */
+            @RequestParam(name = "configDir", required = false, defaultValue = "/etc/nginx") String configDir,
+            /**
+             *
+             */
+            @RequestParam(name = "configZipFile", required = false, defaultValue = "") MultipartFile configZipFile,
+            /**
+             *
+             */
+            HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("ping", "pong");
+
+        log.warn(request.getMethod() + "  " + request.getRequestURI());
+        try {
+
+            /**
+             *TODO configDir save
+             *
+             *
+              */
+
+            /**
+             * TODO  config interceptor
+             */
+
+            /**
+             * TODO config authKeyGenerator
+             */
+
+
+
         } catch (IllegalArgumentException e) {
             map.put("error", e.toString());
             map.put("error_message", e.getMessage());
