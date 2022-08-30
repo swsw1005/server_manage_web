@@ -31,6 +31,10 @@ public class DatabaseBackupProducer implements Runnable {
         } catch (Exception e) {
         }
 
+        if (databaseServerList == null || databaseServerList.isEmpty()) {
+            return;
+        }
+
         int job = -1;
         try {
             job = ThreadWorkerPoolContext.getInstance().DB_SERVER_QUEUE.poll();

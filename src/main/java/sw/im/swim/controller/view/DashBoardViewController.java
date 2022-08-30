@@ -24,7 +24,7 @@ public class DashBoardViewController {
 
     @RequestMapping(value = {"/main"}, method = RequestMethod.GET)
     public ModelAndView main() {
-        GeneralConfig.SERVER_INFO = new SystemInfo();
+//        GeneralConfig.SERVER_INFO = new SystemInfo();
 
         ModelAndView mav = new ModelAndView("dashboard/main");
         mav.addObject("ip", GeneralConfig.CURRENT_IP);

@@ -105,12 +105,6 @@ public class FixedCronJob {
     public void dynamicDomainCheck() {
 
         try {
-            GeneralConfig.SERVER_INFO = new SystemInfo();
-        } catch (Exception e) {
-            log.error(e + "  " + e.getMessage(), e);
-        }
-
-        try {
             GoogleDNSUtil DNSUtil = GoogleDNSUtil.getInstance();
 
             String IP = PublicIpInfo.getPublicIp();
@@ -156,21 +150,9 @@ public class FixedCronJob {
     }
 
 
-
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
         serverInfoService.sync();
-    }
-
-    @Scheduled(cron = "7 0/1 * * * *")
-    public void serverHealthCheck() {
-        try {
-// TODO 서버 ssh 체크 개발
-
-        } catch (Exception e) {
-            log.error(e.getMessage() + "_____", e);
-        }
-
     }
 
 }

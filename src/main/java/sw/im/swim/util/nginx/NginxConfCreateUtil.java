@@ -59,9 +59,9 @@ public class NginxConfCreateUtil {
 
             final String ROOT_DOMAIN_NAME = GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN();
 
-            final String CURRENT_IP = GeneralConfig.CURRENT_SERVER_INFO.getIp();
+            final String CURRENT_IP = (GeneralConfig.CURRENT_SERVER_INFO == null ? "127.0.0.1" : GeneralConfig.CURRENT_SERVER_INFO.getIp());
 
-            final String LOCAL_IP_ADDR = CURRENT_IP.substring(0, CURRENT_IP.lastIndexOf("."));
+            final String LOCAL_IP_ADDR = (CURRENT_IP.substring(0, CURRENT_IP.lastIndexOf(".")));
 
             final boolean IS_ROOT_DOMAIN_PROXY = GeneralConfig.ADMIN_SETTING.isNGINX_80_PROXY();
 

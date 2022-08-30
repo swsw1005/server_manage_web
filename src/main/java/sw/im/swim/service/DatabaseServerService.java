@@ -1,6 +1,7 @@
 package sw.im.swim.service;
 
 import kr.swim.util.enc.AesUtils;
+import kr.swim.util.enc.EncodingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

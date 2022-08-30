@@ -2,6 +2,7 @@ package sw.im.swim.worker.noti;
 
 import kr.swim.util.mail.EmailSend;
 import kr.swim.util.mail.EmailSender;
+import kr.swim.util.mail.EmailSenderFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailSendException;
@@ -53,7 +54,7 @@ public class AdminLogEmailWorker implements Runnable {
                     + "  "
                     + DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss_z.format(new Date());
 
-            EmailSender emailSender = new EmailSender();
+            EmailSender emailSender = EmailSenderFactory.DefaultSSLSmtp();
 
             emailSender.setTitle(title);
             emailSender.setBody(content);

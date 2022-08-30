@@ -44,7 +44,7 @@ public class GeneralConfig {
 
     public static final Vector<CronVO> CRON_EXPRESSION_LIST = new Vector<>();
 
-    public static SystemInfo SERVER_INFO = new SystemInfo();
+    public static SystemInfo SERVER_INFO = null;
 
     public static PublicIpInfo PUBLIC_IP_INFO = PublicIpInfoUtil.GET_PUBLIC_IP();
 
@@ -60,7 +60,7 @@ public class GeneralConfig {
 
     public static void setCertDate(){
         try {
-            Calendar[] a = CertDateUtil.GET_CERT_DATE(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
+            Calendar[] a = CertDateUtil.getCertDates(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
 
             GeneralConfig.CERT_STARTED_AT = a[0];
             GeneralConfig.CERT_EXPIRED_AT = a[1];

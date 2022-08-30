@@ -63,6 +63,11 @@ public class NotiProducer implements Runnable {
         try {
             ThreadWorkerPoolContext WORKER = ThreadWorkerPoolContext.getInstance();
             HashMap<Long, NotiEntityDto> map = new HashMap<>(GeneralConfig.NOTI_DTO_MAP);
+
+            if (map == null || map.isEmpty()) {
+                return;
+            }
+
             map.forEach((k, v) -> {
                 if (notiMap.get(v.getNotiType())) {
                     WORKER.NOTI_WORKER.execute(new NotiWorker(v, msg));
