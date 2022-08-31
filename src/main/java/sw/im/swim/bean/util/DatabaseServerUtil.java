@@ -15,21 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DatabaseServerUtil {
 
     public static final String PG_PASS_FILE() {
-
-        final String user = GeneralConfig.ADMIN_SETTING.getSERVER_MANAGER_USER().trim().toLowerCase();
-
-        if (user.equals("root")) {
-            return "/root/.pgpass";
-        } else {
-            return "/home/" + user + "/.pgpass";
-        }
+        return GeneralConfig.USER_HOME_DIR(".pgpass");
     }
 
     public static final String DB_DUMP_FILE_TMP = "/usr/local/DB_DUMP_FILE_TMP/";
     public static final String RCLONE_DIR = "/usr/local/tempFiles/";
     public static final Set<String> PG_PASS_SET = ConcurrentHashMap.newKeySet();
 
-    public static final String[] PG_PASS_COMMAND = { "sh", "-c", "chmod 600 " + PG_PASS_FILE() };
+    public static final String[] PG_PASS_COMMAND = {"sh", "-c", "chmod 600 " + PG_PASS_FILE()};
 
     public static final File PG_PASS_DELETE() {
         File pgpass = new File(DatabaseServerUtil.PG_PASS_FILE());
@@ -76,8 +69,7 @@ public class DatabaseServerUtil {
         return set;
     }
 
-    public static final String JDBC_URL(final String ip, final String port, final String dbName, final DbType dbType)
-            throws Exception {
+    public static final String JDBC_URL(final String ip, final String port, final String dbName, final DbType dbType) throws Exception {
         try {
             String pattern = dbType.JDBC_URL;
 
@@ -91,8 +83,7 @@ public class DatabaseServerUtil {
         }
     }
 
-    public static final String DUMP_COMMAND(final String ip, final String port, final String id, final String password,
-            final String dbName, final String fileName, final DbType dbType) throws Exception {
+    public static final String DUMP_COMMAND(final String ip, final String port, final String id, final String password, final String dbName, final String fileName, final DbType dbType) throws Exception {
         try {
             String pattern = dbType.DUMP_COMMAND;
 
@@ -116,8 +107,7 @@ public class DatabaseServerUtil {
         }
     }
 
-    public static final String DB_LIST_COMMAND(final String ip, final String port, final String id,
-            final String password, final DbType dbType) throws Exception {
+    public static final String DB_LIST_COMMAND(final String ip, final String port, final String id, final String password, final DbType dbType) throws Exception {
         try {
             String pattern = dbType.DB_LIST_COMMAND;
 

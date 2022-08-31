@@ -1,6 +1,8 @@
 package kr.swim.nginx.controller;
 
+import kr.swim.nginx.util.NginxConfWriteUtil;
 import kr.swim.util.process.ProcessExecutor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,41 +45,13 @@ public class NginxController {
 
 
     @PostMapping("/nginx/config")
-    public Map<String, Object> nginxConfig(
-            /**
-             *
-             */
-            @RequestParam(name = "configDir", required = false, defaultValue = "/etc/nginx") String configDir,
-            /**
-             *
-             */
-            @RequestParam(name = "configZipFile", required = false, defaultValue = "") MultipartFile configZipFile,
-            /**
-             *
-             */
-            HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> nginxConfig(MultipartFile[] configFiles, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         map.put("ping", "pong");
 
         log.warn(request.getMethod() + "  " + request.getRequestURI());
         try {
-
-            /**
-             *TODO configDir save
-             *
-             *
-              */
-
-            /**
-             * TODO  config interceptor
-             */
-
-            /**
-             * TODO config authKeyGenerator
-             */
-
-
-
+            NginxConfWriteUtil.nginxJob(configFiles);
         } catch (IllegalArgumentException e) {
             map.put("error", e.toString());
             map.put("error_message", e.getMessage());
@@ -121,6 +95,7 @@ public class NginxController {
          */
         ;
 
+        @Getter
         private String[] cmd;
 
         NginxJob(String[] cmd) {

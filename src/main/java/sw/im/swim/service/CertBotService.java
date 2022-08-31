@@ -21,13 +21,7 @@ public class CertBotService {
 
         final String user = GeneralConfig.ADMIN_SETTING.getSERVER_MANAGER_USER().trim().toLowerCase();
 
-        if (user.equals("root")) {
-            return "/root/certbot";
-        } else {
-            return "/home/" + user + "/certbot";
-        }
-
-
+        return GeneralConfig.USER_HOME_DIR("certbot");
     }
 
     public static final String CERTBOT_SCRIPT_FILE() {

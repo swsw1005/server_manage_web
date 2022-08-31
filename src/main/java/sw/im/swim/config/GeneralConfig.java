@@ -38,6 +38,34 @@ public class GeneralConfig {
 
     public static AdminSettingEntityDto ADMIN_SETTING;
 
+    public static final String USER_HOME_DIR(final String suffix) {
+
+        String var1 = USER_HOME_DIR();
+
+        if (var1 == null) {
+            return null;
+        }
+
+        return var1 + "/" + suffix.trim();
+    }
+
+    public static final String USER_HOME_DIR() {
+        try {
+            final String user = GeneralConfig.ADMIN_SETTING.getSERVER_MANAGER_USER().trim().toLowerCase();
+
+            if (user.equals("root")) {
+                return "/root";
+            } else {
+                return "/home/" + user;
+            }
+        } catch (NullPointerException e) {
+            log.warn("null pointer exception...");
+        } catch (Exception e) {
+            log.warn("unknown exception...", e);
+        }
+        return null;
+    }
+
     public static final ConcurrentHashMap<String, Boolean> NOTI_SETTING_MAP = new ConcurrentHashMap<>();
 
     public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
@@ -58,7 +86,7 @@ public class GeneralConfig {
     public static Calendar CERT_STARTED_AT = null;
     public static Calendar CERT_EXPIRED_AT = null;
 
-    public static void setCertDate(){
+    public static void setCertDate() {
         try {
             Calendar[] a = CertDateUtil.getCertDates(GeneralConfig.ADMIN_SETTING.getROOT_DOMAIN());
 
@@ -96,8 +124,5 @@ public class GeneralConfig {
         return 9999;
     }
 
-    public static final String NGINX_LOG_FORMAT_DEFAULT = "[$time_iso8601] " +
-            "| $remote_addr | $remote_user  $scheme://$host$request_uri" +
-            " \"$request\" $status $body_bytes_sent -" +
-            " \"$http_referer\" \"$http_user_agent\" \"$request_time\"";
+    public static final String NGINX_LOG_FORMAT_DEFAULT = "[$time_iso8601] " + "| $remote_addr | $remote_user  $scheme://$host$request_uri" + " \"$request\" $status $body_bytes_sent -" + " \"$http_referer\" \"$http_user_agent\" \"$request_time\"";
 }
