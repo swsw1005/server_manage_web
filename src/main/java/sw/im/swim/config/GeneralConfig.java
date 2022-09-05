@@ -1,14 +1,13 @@
 package sw.im.swim.config;
 
 import kr.swim.util.cert.CertDateUtil;
+import kr.swim.util.system.NetworkIpInfo;
 import kr.swim.util.system.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
 import sw.im.swim.bean.dto.NotiEntityDto;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
-import sw.im.swim.util.server.PublicIpInfo;
-import sw.im.swim.util.server.PublicIpInfoUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,7 +73,7 @@ public class GeneralConfig {
 
     public static SystemInfo SERVER_INFO = null;
 
-    public static PublicIpInfo PUBLIC_IP_INFO = PublicIpInfoUtil.GET_PUBLIC_IP();
+    public static NetworkIpInfo PUBLIC_IP_INFO = NetworkIpInfo.getInstance();
 
     public static ServerInfoEntityDto CURRENT_SERVER_INFO;
 

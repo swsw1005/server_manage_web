@@ -71,8 +71,29 @@ public class HomeController {
             AdminEntityDto admin = adminService.login(email, password);
             admin.getName();
             request.getSession().setAttribute("admin", admin);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
+        return map;
+    }
+
+    @ResponseBody
+    @PostMapping("/join")
+    public Map<String, Object> joinAjax(
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "password") String password,
+            @RequestParam(value = "name") String name,
+            HttpServletRequest request, HttpServletResponse response
+    ) {
+
+        Map<String, Object> map = new HashMap<>();
+        try {
+            AdminEntityDto admin = adminService.join(email, name, password);
+
+            log.debug("joined new admin :: "+ admin.toString());
 
         } catch (Exception e) {
+            log.warn(e + " | " + e.getMessage(), e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         return map;

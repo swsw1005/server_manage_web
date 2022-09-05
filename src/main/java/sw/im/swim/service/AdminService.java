@@ -30,11 +30,11 @@ public class AdminService {
 
             final String encPassword = AesUtils.encrypt(password, GeneralConfig.ENC_KEY);
 
+            log.debug("GeneralConfig.ENC_KEY == \t" + GeneralConfig.ENC_KEY + "\t" + GeneralConfig.ENC_KEY.length());
             log.debug(" encPassword       => " + encPassword);
             log.debug(" dto.getPassword() => " + dto.getPassword());
 
-            if (encPassword.equals(dto.getPassword()) == false
-                    || password == null) {
+            if (encPassword.equals(dto.getPassword()) == false || password == null) {
                 throw new Exception("wrong password");
             }
 
@@ -64,4 +64,20 @@ public class AdminService {
     }
 
 
+    public AdminEntityDto join(final String email, final String name, final String password) throws Exception {
+        try {
+
+            log.debug("new admin join  " + " | email : " + email + " | name : " + name + " | password : " + password);
+
+            AdminEntity entity = AdminEntity.builder().email(email.trim()).name(name.trim()).password(AesUtils.encrypt(password, GeneralConfig.ENC_KEY)).build();
+
+            AdminEntity entity2 = adminEntityRepository.save(entity);
+
+            return modelMapper.map(entity2, AdminEntityDto.class);
+        } catch (Exception e) {
+            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
+        }
+
+
+    }
 }

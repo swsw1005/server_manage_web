@@ -25,48 +25,6 @@ public class GoogleDNSUtil {
 
     public static final String CHECK_IP_ADDRESS = "https://domains.google.com/checkip";
 
-    public String GET_IP() {
-
-        CloseableHttpResponse response = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();) {
-
-            HttpGet http = new HttpGet(CHECK_IP_ADDRESS);
-
-            response = httpClient.execute(http);
-
-            ResponseHandler<String> handler = new BasicResponseHandler();
-            String body = handler.handleResponse(response).trim();
-
-            String[] bodyArr = body.split("\\.");
-            int[] intArr = new int[4];
-
-            for (int i = 0; i < 4; i++) {
-                intArr[i] = Integer.parseInt(bodyArr[i]);
-            }
-
-            String ip = "";
-
-            for (int i = 0; i < intArr.length; i++) {
-
-                if (i > 0) {
-                    ip += ".";
-                }
-                ip += intArr[i];
-            }
-            return ip;
-
-        } catch (Exception e) {
-        } finally {
-            try {
-                response.close();
-            } catch (Exception e) {
-            }
-        }
-        log.error("GET IP FAIL !!!!! RETURN NULL");
-        return null;
-    }
-
-
     public void updateIp(final String hostname) throws Exception {
         CloseableHttpResponse response = null;
         try (CloseableHttpClient httpClient = HttpClients.createDefault();) {

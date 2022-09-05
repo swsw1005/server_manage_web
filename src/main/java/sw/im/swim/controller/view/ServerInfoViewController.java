@@ -5,18 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
-import sw.im.swim.bean.dto.WebServerEntityDto;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.ServerInfoService;
-import sw.im.swim.service.WebServerService;
-import sw.im.swim.util.SSHUtils;
-import sw.im.swim.util.server.ServerSSHUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,7 +62,7 @@ public class ServerInfoViewController {
         dto.getIp();
 
         try {
-            Set<String> set = ServerSSHUtils.banIPs(dto);
+            Set<String> set = null;
             mav.addObject("ips", set);
         } catch (Exception e) {
             mav.addObject("ips", null);

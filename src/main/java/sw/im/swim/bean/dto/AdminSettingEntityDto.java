@@ -28,7 +28,7 @@ public class AdminSettingEntityDto implements Serializable {
     private int CERT_EXPIRE_NOTI = 10;
     private String CERT_NOTI_CRON = "";
     ////////////////////////////////////////
-    private String SERVER_MANAGER_USER = "root";
+    private final String SERVER_MANAGER_USER = "root";
     ////////////////////////////////////////
     private String WORK_SPACE = "/usr/local/server-manager";
     ////////////////////////////////////////

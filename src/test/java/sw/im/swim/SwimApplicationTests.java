@@ -1,5 +1,6 @@
 package sw.im.swim;
 
+import kr.swim.util.enc.EncodingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SwimApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void contextLoads() throws EncodingException {
+
 	}
 
 }

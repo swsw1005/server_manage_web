@@ -10,10 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.ServerInfoService;
-import sw.im.swim.util.server.ServerSSHUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/systeminfo")
@@ -62,12 +60,7 @@ public class SystemInfoViewController {
         ServerInfoEntityDto dto = serverInfoService.getBySid(sid);
         dto.getIp();
 
-        try {
-            Set<String> set = ServerSSHUtils.banIPs(dto);
-            mav.addObject("ips", set);
-        } catch (Exception e) {
-            mav.addObject("ips", null);
-        }
+        mav.addObject("ips", null);
 
         mav.addObject("token", GeneralConfig.ADMIN_SETTING.getFAIL2BAN_TOKEN());
         mav.addObject("dto", dto);

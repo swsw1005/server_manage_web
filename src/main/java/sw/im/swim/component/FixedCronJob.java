@@ -1,7 +1,7 @@
 package sw.im.swim.component;
 
+import kr.swim.util.system.NetworkIpInfo;
 import kr.swim.util.system.PublicIpInfo;
-import kr.swim.util.system.SystemInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,7 +11,6 @@ import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.*;
 import sw.im.swim.util.dns.GoogleDNSUtil;
-import sw.im.swim.util.server.PublicIpInfoUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.noti.AdminLogEmailWorker;
@@ -121,7 +120,7 @@ public class FixedCronJob {
                 log.warn("!! IP CHANGE !! :: " + currIp + "  =>  " + IP);
 
                 try {
-                    GeneralConfig.PUBLIC_IP_INFO = PublicIpInfoUtil.GET_PUBLIC_IP();
+                    GeneralConfig.PUBLIC_IP_INFO = NetworkIpInfo.getInstance();
                 } catch (Exception e) {
                     log.error(e + "  " + e.getMessage(), e);
                 }

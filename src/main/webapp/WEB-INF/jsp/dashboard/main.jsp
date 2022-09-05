@@ -69,105 +69,143 @@
         </div>
 
 
+        <div class="modal-form-1-row border-top">
+            <h5>
+                인증서 유효기간 :: ${leftDay} 일 남음
+                <i class="fas fa-question-circle" title="${certMessage}"></i>
+            </h5>
+        </div>
+        <div class="modal-form-1-row">
+            ${startDate} ~ ${endDate}
+        </div>
+
 
         <div class="modal-form-half-row border-top">
             <div>
-                IP 주소
+                uptime
             </div>
             <div>
-                ${serverInfo.ipAddress}
-            </div>
-        </div>
-        <div class="modal-form-half-row">
-            <div>
-                게이트웨이
-            </div>
-            <div>
-                ${serverInfo.gateway}
+                ${serverInfo.uptime}
             </div>
         </div>
         <div class="modal-form-half-row">
             <div>
-                서브넷마스크
+                users
             </div>
             <div>
-                ${serverInfo.subnetMask}
+                ${serverInfo.users}
             </div>
         </div>
         <div class="modal-form-half-row">
             <div>
-                MAC 주소
+                load average
             </div>
             <div>
-                ${serverInfo.mac}
+                ${serverInfo.loadAverage}
             </div>
         </div>
 
 
-        <div class="modal-form-23-row border-top">
+        <div class="modal-form-half-row border-top">
+            <h3>
+                Cpu
+            </h3>
+        </div>
+        <c:forEach var="dto" items="${serverInfo.cpuInfos}" varStatus="idx">
+            <h5 class="modal-form-1-row">
+                [${idx.index}] ${dto.cpuName}
+            </h5>
+            <div class="modal-form-1111-row">
+                <div>
+                        ${dto.core} c ${dto.thread} th
+                </div>
+                <div>
+                        ${dto.cpuMhz}
+                </div>
+                <div>
+                        ${dto.cpuCache}
+                </div>
+            </div>
+        </c:forEach>
+
+
+        <div class="modal-form-half-row border-top">
+            <h3>
+                Network
+            </h3>
+        </div>
+        <c:forEach var="dto" items="${serverInfo.networkInterfaceInfos}" varStatus="idx">
+            <div class="modal-form-11-row">
+                <h5>
+                    [${dto.idx}] ${dto.name}
+                </h5>
+                <div>
+                        ${dto.displayName}
+                </div>
+            </div>
+
+            <c:forEach var="dto2" items="${dto.interfaceAddressInfos}">
+                <div class="modal-form-11-row">
+                    <div>
+                            ${dto2.address} / ${dto2.maskLength}
+                    </div>
+                    <div>
+                            ${dto2.broadcast}
+                    </div>
+                </div>
+            </c:forEach>
+
+
+        </c:forEach>
+
+
+        <div class="modal-form-half-row border-top">
+            <h3>
+                File System
+            </h3>
+        </div>
+        <div class="modal-form-1111-row">
             <div>
-                System OS
+                fileSystem
             </div>
             <div>
-                ${serverInfo.os}
+                used
+            </div>
+            <div>
+                avail
+            </div>
+            <div>
+                percent
             </div>
         </div>
         <div class="modal-form-1-row">
-            ${serverInfo.kernel}
+            <div>
+                mounted
+            </div>
+
         </div>
+        <c:forEach var="dto" items="${serverInfo.fileSystemInfos}" varStatus="idx">
+            <div class="modal-form-1111-row">
+                <h5>
+                    [${idx.index}] ${dto.fileSystem}
+                </h5>
+                <div>
+                        ${dto.used}
+                </div>
+                <div>
+                        ${dto.avail}
+                </div>
+                <div>
+                        ${dto.percent}
+                </div>
 
-        <div class="modal-form-half-row border-top">
-            메모리
-        </div>
-        <div class="modal-form-2323-row">
-            <div class="flex-center">
-                avail
             </div>
-            <div class="flex-right">
-                ${serverInfo.availableMemStr}
-            </div>
-            <div class="flex-center">
-                free
-            </div>
-            <div class="flex-right">
-                ${serverInfo.freeMemStr}
-            </div>
-        </div>
-
-        <div class="modal-form-2323-row">
-            <div class="flex-center">
-                swap
-            </div>
-            <div class="flex-right">
-                ${serverInfo.swapMemStr}
-            </div>
-            <div class="flex-center">
-                total
-            </div>
-            <div class="flex-right">
-                ${serverInfo.totalMemStr}
-            </div>
-        </div>
-
-
-        <div class="modal-form-half-row border-top">
-            CPU
-        </div>
-
-        <c:forEach var="dto" items="${serverInfo.cpuList}" varStatus="idx">
-
             <div class="modal-form-1-row">
-                [${idx.index}] ${dto.name}
-            </div>
-            <div class="modal-form-11-row">
-                <div class="flex-center">
-                        ${dto.core} c ${dto.thread} th
+                <div title="${dto.mounted}" style="overflow-x: hidden;">
+                        ${dto.mounted}
                 </div>
-                <div class="flex-right">
-                        ${dto.clock}
-                </div>
-            </div>
 
+            </div>
         </c:forEach>
 
 

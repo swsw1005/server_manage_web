@@ -1,6 +1,8 @@
 package sw.im.swim.bean.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import sw.im.swim.bean.enums.Authority;
 import sw.im.swim.config.GeneralConfig;
 
@@ -8,7 +10,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 
-@Data
+@Getter
+@Setter
 public class AdminEntityDto implements Serializable {
     private Long sid;
     private Calendar createdAt;
@@ -54,5 +57,18 @@ public class AdminEntityDto implements Serializable {
         return false;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("AdminEntityDto{");
+        sb.append("sid=").append(sid);
+        sb.append(", createdAt=").append(getCreated());
+        sb.append(", updatedAt=").append(getUpdated());
+        sb.append(", deletedAt=").append(getDeletedAt());
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", authority=").append(authority);
+        sb.append('}');
+        return sb.toString();
+    }
 }

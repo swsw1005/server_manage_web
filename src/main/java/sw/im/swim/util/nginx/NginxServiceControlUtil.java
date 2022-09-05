@@ -1,18 +1,18 @@
 package sw.im.swim.util.nginx;
 
-import kr.swim.util.process.ProcessExecutor;
 import com.google.gson.Gson;
+import kr.swim.util.http.PortCheckUtil;
+import kr.swim.util.process.ProcessExecutor;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.util.server.PortCheckUtil;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NginxServiceControlUtil {
     private static final String[] NGINX_SERVICE_START = new String[]{"sh", "-c", "systemctl start nginx"};
-    private static final String[] NGINX_SERVICE_RESTART = new String[]{"sh", "-c", "curl -ik -X POST 127.0.0.1:8085/api/v1/nginx/restart"};
+    private static final String[] NGINX_SERVICE_RESTART = new String[]{"sh", "-c", "service nginx reload"};
 
     private static final String[] NGINX_SERVICE_STOP = new String[]{"sh", "-c", "systemctl stop nginx"};
 

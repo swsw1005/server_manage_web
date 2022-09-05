@@ -13,7 +13,7 @@ import sw.im.swim.config.GeneralConfig;
 public class NginxConfStringContext {
 
     public static final String CERT_FILE_PREFIX() {
-        return "/root/pem";
+        return GeneralConfig.USER_HOME_DIR("pem");
     }
 
     public static final String CERT_FILE_FULLCHAIN = "fullchain.pem";
