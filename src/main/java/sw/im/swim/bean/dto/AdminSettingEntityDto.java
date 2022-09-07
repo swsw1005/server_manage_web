@@ -99,4 +99,34 @@ public class AdminSettingEntityDto implements Serializable {
     ////////////////////////////////////////
 
 
+    public String toStringSmtpSettings() {
+        final StringBuffer sb = new StringBuffer("AdminSettingEntityDto SMTP settings {");
+        sb.append("SMTP_USER='").append(SMTP_USER).append('\'');
+        sb.append(", SMTP_PASSWORD='").append(SMTP_PASSWORD).append('\'');
+        sb.append(", SMTP_HOST='").append(SMTP_HOST).append('\'');
+        sb.append(", SMTP_PORT=").append(SMTP_PORT);
+        sb.append(", SMTP_AUTH=").append(SMTP_AUTH);
+        sb.append(", SMTP_SSL_ENABLE=").append(SMTP_SSL_ENABLE);
+        sb.append(", SMTP_STARTTLS_ENABLE=").append(SMTP_STARTTLS_ENABLE);
+        sb.append(", SMTP_SSL_TRUST='").append(SMTP_SSL_TRUST).append('\'');
+        sb.append(", ADMIN_EMAIL='").append(ADMIN_EMAIL).append('\'');
+        sb.append(", ADMIN_LOG_MAIL_TITLE='").append(ADMIN_LOG_MAIL_TITLE).append('\'');
+        sb.append(", ADMIN_LOG_MAIL_CRON='").append(ADMIN_LOG_MAIL_CRON).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public String toStringNginxSettings() {
+        final StringBuffer sb = new StringBuffer("AdminSettingEntityDto nginx settings {");
+        sb.append("NGINX_CONF_DIR='").append(NGINX_CONF_DIR).append('\'');
+        sb.append(", NGINX_NATIVE=").append(NGINX_NATIVE);
+        sb.append(", NGINX_80_PROXY=").append(NGINX_80_PROXY);
+        sb.append(", NGINX_EXTERNAL_CERTBOT=").append(NGINX_EXTERNAL_CERTBOT);
+        sb.append(", NGINX_LOG_FORMAT='").append(NGINX_LOG_FORMAT).append('\'');
+        sb.append(", ROOT_DOMAIN='").append(ROOT_DOMAIN).append('\'');
+        sb.append(", CERT_EXPIRE_NOTI=").append(CERT_EXPIRE_NOTI);
+        sb.append(", CERT_NOTI_CRON='").append(CERT_NOTI_CRON).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

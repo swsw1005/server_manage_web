@@ -56,6 +56,8 @@ public class AdminLogEmailWorker implements Runnable {
 
             EmailSender emailSender = EmailSenderFactory.DefaultSSLSmtp();
 
+            log.warn(setting.toStringSmtpSettings());
+
             emailSender.setTitle(title);
             emailSender.setBody(content);
             emailSender.setSmtpHost(setting.getSMTP_HOST());
@@ -68,7 +70,7 @@ public class AdminLogEmailWorker implements Runnable {
             emailSender.setSslEnable(setting.isSMTP_SSL_ENABLE());
             emailSender.setTlsEnable(setting.isSMTP_STARTTLS_ENABLE());
 
-            emailSender.getRecipientTypeCC().add(setting.getADMIN_EMAIL());
+            emailSender.getRecipientTypeTO().add(setting.getADMIN_EMAIL());
 
             emailSender.send();
 

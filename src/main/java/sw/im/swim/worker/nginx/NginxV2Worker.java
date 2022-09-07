@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
+import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.nginx.NginxConfCreateUtil;
 import sw.im.swim.util.nginx.NginxConfStringContext;
@@ -34,6 +35,7 @@ public class NginxV2Worker implements Runnable {
     public void run() {
 
         log.info("===== START NGINX JOB !!!!!! =====");
+        log.warn(GeneralConfig.ADMIN_SETTING.toStringNginxSettings());
 
         boolean error = true;
 
