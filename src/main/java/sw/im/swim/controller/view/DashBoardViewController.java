@@ -1,5 +1,6 @@
 package sw.im.swim.controller.view;
 
+import kr.swim.util.system.FileSystemInfo;
 import kr.swim.util.system.SystemInfo;
 import kr.swim.util.system.SystemInfoExtractor;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.util.date.DateFormatUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,10 +48,29 @@ public class DashBoardViewController {
         } catch (Exception e) {
         }
 
+        List<FileSystemInfo> fileList_ = GeneralConfig.SERVER_INFO.getFileSystemInfos();
+        List<FileSystemInfo> fileList = new ArrayList<>();
+        for (FileSystemInfo fileSystemInfo : fileList_) {
+
+            final String used = fileSystemInfo.getUsed().trim();
+
+            final String avail = fileSystemInfo.getAvail().trim();
+
+            final boolean usedSmall = used.endsWith("M") || used.endsWith("0");
+
+            final boolean availSmall = avail.endsWith("M") || avail.endsWith("0");
+
+            if (usedSmall && availSmall) {
+            } else {
+                fileList.add(fileSystemInfo);
+            }
+        }
+
         mav.addObject("ip", GeneralConfig.CURRENT_IP);
-        mav.addObject("serverInfo",   GeneralConfig.SERVER_INFO);
+        mav.addObject("serverInfo", GeneralConfig.SERVER_INFO);
+        mav.addObject("fileList", fileList);
         mav.addObject("publicIpInfo", GeneralConfig.PUBLIC_IP_INFO);
-        mav.addObject("dto", GeneralConfig.CURRENT_SERVER_INFO);
+//        mav.addObject("dto", GeneralConfig.CURRENT_SERVER_INFO);
 
         return mav;
     }

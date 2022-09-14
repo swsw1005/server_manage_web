@@ -66,10 +66,6 @@
                     관리자 로그
                 </a>
 
-                <a href="${contextPath}/systeminfo/home" class="nav_row">
-                    시스템정보
-                </a>
-
                 <a href="${contextPath}/logout" class="nav_row">
                     Logout
                 </a>

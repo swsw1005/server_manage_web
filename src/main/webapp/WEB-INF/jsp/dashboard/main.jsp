@@ -15,7 +15,7 @@
 
 </style>
 
-<div class="list_row">
+<div id="listLocation" class="list_row static">
 
     <div style="width: 100%; padding: 5px 0px;">
 
@@ -164,9 +164,13 @@
                 File System
             </h3>
         </div>
-        <div class="modal-form-1111-row">
+        <div class="modal-form-1-row">
             <div>
                 fileSystem
+            </div>
+        </div>
+        <div class="modal-form-1111-row">
+            <div>
             </div>
             <div>
                 used
@@ -182,13 +186,19 @@
             <div>
                 mounted
             </div>
-
         </div>
-        <c:forEach var="dto" items="${serverInfo.fileSystemInfos}" varStatus="idx">
-            <div class="modal-form-1111-row">
+
+
+        <c:forEach var="dto" items="${fileList}" varStatus="idx">
+
+            <div class="modal-form-1-row">
                 <h5>
                     [${idx.index}] ${dto.fileSystem}
                 </h5>
+            </div>
+            <div class="modal-form-1111-row">
+                <div>
+                </div>
                 <div>
                         ${dto.used}
                 </div>
@@ -198,13 +208,11 @@
                 <div>
                         ${dto.percent}
                 </div>
-
             </div>
             <div class="modal-form-1-row">
                 <div title="${dto.mounted}" style="overflow-x: hidden;">
                         ${dto.mounted}
                 </div>
-
             </div>
         </c:forEach>
 

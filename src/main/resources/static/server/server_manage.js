@@ -110,11 +110,20 @@ function closeInputModal(formId) {
 
 function callList() {
     setTimeout(() => {
-        const listLocNull = document.getElementById("listLocation") == null;
-        const listLocUnde = document.getElementById("listLocation") == undefined;
-        console.log("listLocNull", listLocNull, "listLocUnde", listLocUnde)
+
+        let listLocation = document.getElementById("listLocation");
+
+        const listLocNull = listLocation == null;
+        const listLocUnde = listLocation == undefined;
+        console.log("listLocNull", listLocNull, "listLocUnde", listLocUnde);
         if (listLocNull || listLocUnde) {
         } else {
+
+            if (listLocation.classList.contains("static")) {
+                console.log("listLocation.classList.contains(\"static\") => ", (listLocation.classList.contains("static")));
+                return;
+            }
+
             $.ajax({
                 type: "get",
                 url: "./list",
@@ -123,14 +132,15 @@ function callList() {
                 data: {}
                 ,
                 success: function (result, status, statusCode) {
-                    const listLocNull = document.getElementById("listLocation") == null;
-                    const listLocUnde = document.getElementById("listLocation") == undefined;
+                    listLocation = document.getElementById("listLocation");
+                    const listLocNull = listLocation == null;
+                    const listLocUnde = listLocation == undefined;
                     if (listLocNull || listLocUnde) {
                         setTimeout(() => {
                             callList();
                         }, 1000);
                     } else {
-                        document.getElementById("listLocation").innerHTML = result;
+                        listLocation.innerHTML = result;
                     }
                 },
                 error: function (result, status, statusCode) {
@@ -142,7 +152,7 @@ function callList() {
                 }
             });
         }
-    }, 222);
+    }, 111);
 }
 
 function submitFormAjax(formId, modalId, URL, method, successCallBack, errorCallBack) {
@@ -383,13 +393,12 @@ function adminSettingAjax(URL) {
         url: URL,
         // contentType: false,
         // processData: false,
-        data: {
-        }
+        data: {}
         ,
         success: function (result, status, statusCode) {
             Notify(
                 'success',
-              result,
+                result,
                 'success'
             );
         },
