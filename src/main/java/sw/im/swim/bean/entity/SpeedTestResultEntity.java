@@ -47,39 +47,19 @@ public class SpeedTestResultEntity {
     @Column(name = "client_longitude")
     private Double client_longitude;
 
-    @Column(name = "client_ip",nullable = false, length = 200)
+    @Column(name = "client_ip", nullable = false, length = 200)
     private String client_ip;
 
-    @Column(name = "client_isp",nullable = false, length = 200)
+    @Column(name = "client_isp", nullable = false, length = 200)
     private String client_isp;
 
-    @Column(name = "client_country",nullable = false, length = 200)
+    @Column(name = "client_country", nullable = false, length = 200)
     private String client_country;
 
-
-    @Column(name = "server_latitude", nullable = false, length = 200)
-    private Double server_latitude;
-
-    @Column(name = "server_longitude", nullable = false, length = 200)
-    private Double server_longitude;
-
-    @Column(name = "server_name", nullable = false, length = 200)
-    private String server_name;
-
-    @Column(name = "server_country", nullable = false, length = 200)
-    private String server_country;
-
-    @Column(name = "server_sponsor", nullable = false, length = 200)
-    private String server_sponsor;
-
-    @Column(name = "server_host", nullable = false, length = 200)
-    private String server_host;
-
-    @Column(name = "server_url", nullable = false, length = 200)
-    private String server_url;
-
-    @Column(name = "server_latency", nullable = false, length = 200)
-    private Double server_latency;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "speed_test_server_sid")
+    @Setter
+    private SpeedTestServerEntity speedTestServerEntity;
 
 
 }

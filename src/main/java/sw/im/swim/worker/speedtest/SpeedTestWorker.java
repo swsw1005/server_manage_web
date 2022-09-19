@@ -11,6 +11,10 @@ public class SpeedTestWorker implements Runnable {
 
     private final SpeedTestService speedTestService;
 
+    private final Long speedTestServerSid;
+
+    private final int speedTestServerId;
+
     @Override
     public void run() {
         log.debug("SpeedTestWorker try...");
@@ -27,7 +31,7 @@ public class SpeedTestWorker implements Runnable {
         log.info("SpeedTestWorker start !! -----------");
 
         try {
-            speedTestService.speedTest();
+            speedTestService.speedTest(speedTestServerSid, speedTestServerId);
         } catch (IllegalStateException e) {
             log.error(e.getMessage() + "__");
         } catch (RuntimeException e) {

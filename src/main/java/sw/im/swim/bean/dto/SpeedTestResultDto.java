@@ -32,16 +32,6 @@ public class SpeedTestResultDto {
     private String client_isp;
     private String client_country;
 
-    private Double server_latitude;
-    private Double server_longitude;
-    private String server_name;
-    private String server_country;
-    private String server_sponsor;
-    private String server_host;
-    private String server_url;
-    private Double server_latency;
-
-
     public String getCreated() {
         try {
             createdAt.setTimeZone(GeneralConfig.TIME_ZONE);

@@ -1,5 +1,6 @@
 package sw.im.swim.component;
 
+import kr.swim.util.process.ProcessExecutor;
 import kr.swim.util.system.NetworkIpInfo;
 import kr.swim.util.system.PublicIpInfo;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import sw.im.swim.util.dns.GoogleDNSUtil;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.database.DatabaseBackupProducer;
 import sw.im.swim.worker.noti.AdminLogEmailWorker;
+import sw.im.swim.worker.speedtest.SpeedTestProducer;
 import sw.im.swim.worker.speedtest.SpeedTestWorker;
 
 import java.io.File;
@@ -145,7 +147,7 @@ public class FixedCronJob {
     public void databaseServerBackup() {
         ThreadWorkerPoolContext.getInstance().DB_SERVER_WORKER.execute(new DatabaseBackupProducer(adminLogService, databaseServerService));
         ThreadWorkerPoolContext.getInstance().NOTI_WORKER.execute(new AdminLogEmailWorker(adminLogService));
-        ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestWorker(speedTestService));
+        ThreadWorkerPoolContext.getInstance().DEFAULT_WORKER.execute(new SpeedTestProducer(speedTestService));
 
         /**
          * TODO  auto insert new admin
@@ -163,6 +165,25 @@ public class FixedCronJob {
     @Scheduled(cron = "3 0/1 * * * *")
     public void notiDtoSync() {
         serverInfoService.sync();
+    }
+
+
+    @Scheduled(cron = "5 5 1 * * *")
+    public void speedtestCliListUpdate() {
+        try {
+
+            final String[] arr = {"sh", "-c", "speedtest-cli --list"};
+
+            List<String> list = ProcessExecutor.runCommand(arr);
+
+            for (String line : list) {
+                speedTestService.saveServer(line);
+            }
+
+        } catch (Exception e) {
+            log.error(e + " | " + e.getMessage());
+        }
+
     }
 
 }

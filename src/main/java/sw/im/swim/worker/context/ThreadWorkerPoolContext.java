@@ -22,6 +22,8 @@ public class ThreadWorkerPoolContext {
     public ExecutorService DB_DUMP_WORKER;
     public ExecutorService DEFAULT_WORKER;
 
+    public ExecutorService SPEED_TEST_WORKER;
+
     private ThreadWorkerPoolContext() {
 
         DB_SERVER_QUEUE = new LinkedBlockingQueue<>();
@@ -38,6 +40,8 @@ public class ThreadWorkerPoolContext {
                 new ThreadFactoryBuilder().setNameFormat("DB_DUMP_WORKER-%d")
                         .build(),
                 new ThreadFactoryBuilder().setNameFormat("DEFAULT_WORKER-%d")
+                        .build(),
+                new ThreadFactoryBuilder().setNameFormat("SPEED_TEST_WORKER-%d")
                         .build()
         };
 
@@ -46,6 +50,7 @@ public class ThreadWorkerPoolContext {
         DB_SERVER_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[2]);
         DB_DUMP_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[3]);
         DEFAULT_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[4]);
+        SPEED_TEST_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[5]);
 
         log.debug("WORKER POOL init complete !");
 
