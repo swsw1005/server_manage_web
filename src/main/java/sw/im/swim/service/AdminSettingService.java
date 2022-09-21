@@ -2,9 +2,8 @@ package sw.im.swim.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
@@ -25,14 +24,14 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AdminSettingService {
+public class AdminSettingService implements InitializingBean {
+
+    private final Scheduler defaultScheduler;
 
     private final AdminSettingEntityRepository adminSettingEntityRepository;
 
@@ -209,13 +208,12 @@ public class AdminSettingService {
                 log.warn("no cron ,bye");
                 return;
             }
-            Scheduler defaultScheduler = StdSchedulerFactory.getDefaultScheduler();
             CronScheduleBuilder cronSchedule = null;
             cronSchedule = cronSchedule(cron);
 
-            JobDetail jobDetail = newJob(jobClass).withIdentity("jobName", CRON_PREFIX + "_JOB").build();
+            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity("jobName", CRON_PREFIX + "_JOB").build();
 
-            Trigger trigger = newTrigger().withIdentity("triggerName", CRON_PREFIX + "_TRIGGER").withSchedule(cronSchedule).build();
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity("triggerName", CRON_PREFIX + "_TRIGGER").withSchedule(cronSchedule).build();
 
             if (defaultScheduler.checkExists(jobDetail.getKey())) {
                 defaultScheduler.deleteJob(jobDetail.getKey());
@@ -233,4 +231,8 @@ public class AdminSettingService {
     }
 
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+    }
 }

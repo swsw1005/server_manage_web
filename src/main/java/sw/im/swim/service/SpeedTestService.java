@@ -167,6 +167,8 @@ public class SpeedTestService {
             double server_latency = serverJsonObject.get("latency").getAsDouble();
             int server_id = serverJsonObject.get("id").getAsInt();
 
+            SpeedTestServerEntity insertSpeedTestServerEntity = null;
+
             if (speedTestServerEntity.getServerId() == server_id) {
 
                 speedTestServerEntity.setUrl(server_url);
@@ -175,7 +177,7 @@ public class SpeedTestService {
                 speedTestServerEntity.setLongitude(server_lon);
                 speedTestServerEntity.setSponsor(server_sponsor);
 
-                speedTestServerEntityRepository.save(speedTestServerEntity);
+                insertSpeedTestServerEntity = speedTestServerEntityRepository.save(speedTestServerEntity);
             }
 
             String client_ip = clientJsonObject.get("ip").getAsString();
@@ -194,6 +196,8 @@ public class SpeedTestService {
                     .client_longitude(client_lon)
                     .client_isp(client_isp)
                     .build();
+
+            speedTestResultEntity.setSpeedTestServerEntity(insertSpeedTestServerEntity);
 
             speedTestResultEntityRepository.save(speedTestResultEntity);
 
@@ -216,20 +220,25 @@ public class SpeedTestService {
             Pageable pageable = PageRequest.of(pageNum, pageSize);
 
 //            List<SpeedTestResultEntity> list = speedTestQueryDsl.getListByLimitAndSearch(dto, pageable);
-            Sort sort = Sort.by("created_at");
+            Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
             List<SpeedTestResultEntity> list = speedTestResultEntityRepository.findAll(sort);
 
             for (int i = 0; i < list.size(); i++) {
 
                 SpeedTestResultEntity speedTestResult = list.get(i);
 
+               SpeedTestServerEntity speedTestServerEntity= speedTestResult.getSpeedTestServerEntity();
+
                 SpeedTestResultDto var1 = modelMapper.map(speedTestResult, SpeedTestResultDto.class);
+                SpeedTestServerEntityDto var2 = modelMapper.map(speedTestServerEntity, SpeedTestServerEntityDto.class);
+
+                var1.setSpeedTestServerEntityDto(var2);
 
                 resultList.add(var1);
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e + " | " + e.getMessage(), e);
         }
         return resultList;
     }

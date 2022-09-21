@@ -32,6 +32,8 @@ public class SpeedTestResultDto {
     private String client_isp;
     private String client_country;
 
+    private SpeedTestServerEntityDto speedTestServerEntityDto;
+
     public String getCreated() {
         try {
             createdAt.setTimeZone(GeneralConfig.TIME_ZONE);

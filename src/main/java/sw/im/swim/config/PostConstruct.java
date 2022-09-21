@@ -1,6 +1,7 @@
 package sw.im.swim.config;
 
 import kr.swim.util.enc.AesUtils;
+import kr.swim.util.process.ProcessExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import sw.im.swim.service.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -85,6 +87,16 @@ public class PostConstruct {
         serverInfoService.sync();
 
         nginxPolicyService.ADJUST_NGINX_POLICY();
+
+        try {
+            final String[] arr = {"sh", "-c", "speedtest-cli --list"};
+            List<String> list = ProcessExecutor.runCommand(arr);
+            for (String line : list) {
+                speedTestService.saveServer(line);
+            }
+        } catch (Exception e) {
+            log.error(e + " | " + e.getMessage());
+        }
 
         log.info("Application START (2/2)!!!!");
 

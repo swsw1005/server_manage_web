@@ -5,6 +5,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.NginxPolicyService;
@@ -12,15 +13,17 @@ import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
 
 @Slf4j
-public class CheckCertJob implements Job {
+public class CheckCertJob extends QuartzJobBean {
 
-    @Autowired
     private NginxPolicyService nginxPolicyService;
 
+    @Autowired
+    public void setNginxPolicyService(NginxPolicyService nginxPolicyService) {
+        this.nginxPolicyService = nginxPolicyService;
+    }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         nginxPolicyService.ADJUST_NGINX_POLICY();
 
         try {

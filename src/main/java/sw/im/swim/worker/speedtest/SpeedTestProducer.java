@@ -24,9 +24,22 @@ public class SpeedTestProducer implements Runnable {
     @Override
     public void run() {
 
+        int job = -1;
+        try {
+            job = ThreadWorkerPoolContext.getInstance().INTERNET_TEST_QUEUE.poll();
+        } catch (Exception e) {
+        }
+        if (job == -1) {
+            return;
+        }
+
+        log.warn("speedtestProducer START !");
+
         try {
 
             List<SpeedTestServerEntityDto> list = speedTestService.getServerList();
+
+            log.warn("speedtestProducer list.size ! " + list.size());
 
             for (SpeedTestServerEntityDto speedTestServerEntityDto : list) {
                 Long sid = speedTestServerEntityDto.getSid();

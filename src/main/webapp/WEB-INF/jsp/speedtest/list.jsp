@@ -11,29 +11,55 @@
     <div class="list_row">
         <div class="list_row_item list_row_content">
 
-            <div class="list_row_short">
-                    ${dto.sid}
-            </div>
-            <div class="list_row_name">
-                    ${dto.server_host}
-            </div>
-            <div class="list_row_name">
-                    ${dto.server_name}
-            </div>
-            <div class="list_row_name">
-                    ${dto.server_country}
-            </div>
-            <div class="list_row_name">
-                    ${dto.server_latitude} / ${dto.server_longitude}
+            <div class="list_row_date" data-sid="${dto.sid}">
+                    ${dto.created}
             </div>
 
-            <div class="list_row_name">
-                    down / up / ping : ${dto.downloadSpeed} / ${dto.uploadSpeed} / ${dto.ping}
+            <div class="list_row_ip">
+                    ${dto.downloadSpeed} / ${dto.uploadSpeed}
             </div>
 
-            <div class="list_row_date">
-                c: ${dto.created}
+            <div class="list_row_content w-100">
+                <div class="list_row_item">
+                        ${dto.client_ip}
+                    <br/>
+                    (${dto.client_country})
+                </div>
+
+                <div class="list_row_item">
+                    =&gt;
+                </div>
+                <div class="list_row_item">
+                        ${dto.speedTestServerEntityDto.city}
+                    <br/>
+                    (${dto.speedTestServerEntityDto.country})
+                </div>
             </div>
+
+
+            <div class="list_row_content w-100">
+                    ${dto.speedTestServerEntityDto.name}
+                <br/>
+                    ${dto.speedTestServerEntityDto.host}
+            </div>
+
+                <%--            <div class="list_row_name">--%>
+                <%--                    ${dto.name}--%>
+                <%--            </div>--%>
+                <%--            <div class="list_row_name">--%>
+                <%--                    ${dto.client_country}--%>
+                <%--            </div>--%>
+                <%--            <div class="list_row_name">--%>
+                <%--                    ${dto.server_latitude} / ${dto.server_longitude}--%>
+                <%--            </div>--%>
+
+                <%--            <div class="list_row_name">--%>
+                <%--                    down / up / ping : ${dto.downloadSpeed} / ${dto.uploadSpeed} / ${dto.ping}--%>
+                <%--            </div>--%>
+
+                <%--            <div class="list_row_date">--%>
+                <%--                c: ${dto.created}--%>
+                <%--            </div>--%>
 
         </div>
     </div>

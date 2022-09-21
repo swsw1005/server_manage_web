@@ -17,16 +17,7 @@ public class SpeedTestWorker implements Runnable {
 
     @Override
     public void run() {
-        log.debug("SpeedTestWorker try...");
-
-        int job = -1;
-        try {
-            job = ThreadWorkerPoolContext.getInstance().INTERNET_TEST_QUEUE.poll();
-        } catch (Exception e) {
-        }
-        if (job == -1) {
-            return;
-        }
+        log.warn("SpeedTestWorker START !");
 
         log.info("SpeedTestWorker start !! -----------");
 
