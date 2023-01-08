@@ -35,6 +35,8 @@ public class DbServerWorker implements Runnable {
         final String password = databaseServerEntityDto.getPassword();
         final DbType dbType = databaseServerEntityDto.getDbType();
 
+        log.info("START :: ip : {} / port : {} / dbType : {} / id : {} / password : ...{}", ip, port, dbType.name(), id, password.length());
+
         try {
 
             final String timestamp = DateFormatUtil.DATE_FORMAT_yyyyMMdd_HHmmss_z.format(Calendar.getInstance(GeneralConfig.TIME_ZONE).getTime());
@@ -48,7 +50,7 @@ public class DbServerWorker implements Runnable {
 
             final String[] arr = {"sh", "-c", DB_LIST_COMMAND};
 
-            log.info(DB_LIST_COMMAND);
+            log.info("DB_LIST_COMMAND => [{}]", DB_LIST_COMMAND);
 
             List<String> cliResult = ProcessExecutor.runCommand(arr, 10);
 
@@ -76,7 +78,7 @@ public class DbServerWorker implements Runnable {
             } // for i end
 
             Gson gson = new Gson();
-            log.warn("includeDatabases  " + gson.toJson(includeDatabases) + "\t" + "excludeDatabases  " + gson.toJson(excludeDatabases));
+            log.info("includeDatabases  " + gson.toJson(includeDatabases) + "\t" + "excludeDatabases  " + gson.toJson(excludeDatabases));
 
             if (excludeDatabases.size() < (excludes.size() - 2)) {
                 throw new Exception("DB_LIST FAIL | " + ip + ":" + port + " | " + dbType.name());
@@ -84,6 +86,7 @@ public class DbServerWorker implements Runnable {
 
             for (String DB_NAME : includeDatabases) {
                 DbBackupWorker worker = new DbBackupWorker(adminLogService, databaseServerEntityDto, DB_NAME);
+                log.info("EXEC backup :: ip : {} / port : {} / dbType : {} / id : {} => database [{}]", ip, port, dbType.name(), id, DB_NAME);
                 ThreadWorkerPoolContext.getInstance().DB_DUMP_WORKER.submit(worker);
             }
 

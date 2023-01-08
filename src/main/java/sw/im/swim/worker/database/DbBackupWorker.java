@@ -40,6 +40,8 @@ public class DbBackupWorker implements Callable<String> {
 
         try {
 
+            log.info("START :: ip : {} / port : {} / dbType : {} / id : {} / password : ...{}", ip, port, dbType.name(), id, password.length());
+
             final String ROOT_DB_NAME = DatabaseServerUtil.ROOT_DB_NAME(dbType);
             final String JDBC_DRIVER_NAME = DatabaseServerUtil.JDBC_DRIVER_NAME(dbType);
             final String CHECK_QUERY = DatabaseServerUtil.CHECK_QUERY(dbType);
