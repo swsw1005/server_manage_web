@@ -1,6 +1,5 @@
 package sw.im.swim.worker.database;
 
-import kr.swim.util.process.ProcessExecutor;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,7 @@ import sw.im.swim.bean.util.DatabaseServerUtil;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.service.AdminLogService;
 import sw.im.swim.util.date.DateFormatUtil;
+import sw.im.swim.worker.ProcessExecutor;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 
 import java.util.Calendar;
@@ -50,7 +50,7 @@ public class DbServerWorker implements Runnable {
 
             log.info(DB_LIST_COMMAND);
 
-            List<String> cliResult = ProcessExecutor.runCommand(arr);
+            List<String> cliResult = ProcessExecutor.runCommand(arr, 10);
 
             HashSet<String> includeDatabases = new HashSet<>();
             HashSet<String> excludeDatabases = new HashSet<>();
