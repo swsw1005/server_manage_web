@@ -28,6 +28,9 @@ public class DbBackupWorker implements Callable<String> {
     @Override
     public String call() throws Exception {
 
+        final long start_time = System.currentTimeMillis();
+        long end_time = System.currentTimeMillis();
+
         final String ip = databaseServerEntityDto.getServerInfoEntity().getIp();
         final String port = String.valueOf(databaseServerEntityDto.getPort());
         final String id = databaseServerEntityDto.getId();
@@ -77,12 +80,14 @@ public class DbBackupWorker implements Callable<String> {
 
             FileUtils.moveFileToDirectory(DUMP_FILE, new File(DatabaseServerUtil.RCLONE_DIR), true);
 
-            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name());
+            end_time = System.currentTimeMillis();
+            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "SUCCESS", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + "  " + "[" + (end_time - start_time) + "] ms");
 
         } catch (FileTooSmallException e) {
-            
+
         } catch (Exception e) {
-            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage());
+            end_time = System.currentTimeMillis();
+            adminLogService.insertLog(AdminLogType.DB_SUCCESS, "ERROR", ip + ":" + port + " " + DB_NAME + " " + dbType.name() + " | " + e.getMessage() + "  " + "[" + (end_time - start_time) + "] ms");
             log.error(e.getMessage(), e);
         } finally {
             try {
