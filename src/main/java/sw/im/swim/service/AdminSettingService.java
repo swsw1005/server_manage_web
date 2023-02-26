@@ -7,7 +7,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.entity.AdminSettingEntity;
+import sw.im.swim.bean.entity.admin.AdminSettingEntity;
 import sw.im.swim.component.AdminLogMailJob;
 import sw.im.swim.component.CheckCertJob;
 import sw.im.swim.component.DatabaseBackupJob;

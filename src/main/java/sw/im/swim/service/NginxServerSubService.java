@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
-import sw.im.swim.bean.entity.FaviconEntity;
+import sw.im.swim.bean.entity.cache.FaviconEntity;
 import sw.im.swim.repository.DomainEntityRepository;
 import sw.im.swim.repository.FaviconEntityRepository;
 

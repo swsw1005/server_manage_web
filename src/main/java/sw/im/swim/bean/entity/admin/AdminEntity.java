@@ -1,20 +1,28 @@
-package sw.im.swim.bean.entity;
+package sw.im.swim.bean.entity.admin;
 
 import lombok.*;
-import sw.im.swim.bean.dto.AdminEntityDto;
-import sw.im.swim.bean.entity.base.EntityBase;
-import sw.im.swim.bean.entity.base.EntityInterface;
 import sw.im.swim.bean.enums.Authority;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.UUID;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity(name = "admin_info")
-@Table(name = "admin_info")
-public class AdminEntity extends EntityBase {
+@Table(name = "tb_admin_info")
+public class AdminEntity  {
+
+    @Id
+    @Column(name = "id", insertable = true, updatable = false)
+    @Builder.Default
+    protected String id = UUID.randomUUID().toString().replace("-", "");
+
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Builder.Default
+    protected Calendar createdAt = Calendar.getInstance();
 
     @Column(nullable = false, length = 60)
     private String name;

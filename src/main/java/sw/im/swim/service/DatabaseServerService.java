@@ -1,13 +1,12 @@
 package sw.im.swim.service;
 
 import kr.swim.util.enc.AesUtils;
-import kr.swim.util.enc.EncodingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
-import sw.im.swim.bean.entity.DatabaseServerEntity;
+import sw.im.swim.bean.entity.database.DatabaseServerEntity;
 import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.bean.enums.DbType;

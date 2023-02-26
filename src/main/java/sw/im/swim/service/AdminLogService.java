@@ -5,17 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sw.im.swim.bean.dto.AdminEntityDto;
 import sw.im.swim.bean.dto.AdminLogEntityDto;
 import sw.im.swim.bean.entity.AdminEntity;
-import sw.im.swim.bean.entity.AdminLogEntity;
+import sw.im.swim.bean.entity.admin.AdminLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
-import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.AdminLogRepository;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

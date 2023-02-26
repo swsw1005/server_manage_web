@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.ServerInfoEntityDto;
-import sw.im.swim.bean.entity.DatabaseServerEntity;
+import sw.im.swim.bean.entity.database.DatabaseServerEntity;
 import sw.im.swim.bean.entity.ServerInfoEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.config.GeneralConfig;

@@ -1,4 +1,4 @@
-package sw.im.swim.bean.entity;
+package sw.im.swim.bean.entity.fail2ban;
 
 
 import lombok.*;
@@ -7,6 +7,7 @@ import sw.im.swim.bean.enums.JobType;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * <PRE>
@@ -17,14 +18,13 @@ import java.util.Calendar;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity(name = "fail2ban_log")
-@Table(name = "fail2ban_log")
+@Table(name = "tb_fail2ban_log")
 public class Fail2banLogEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sid", insertable = false, updatable = false)
-    protected Long sid;
+    @Column(name = "id", insertable = true, updatable = false)
+    @Builder.Default
+    protected String id = UUID.randomUUID().toString().replace("-", "");
 
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @Temporal(TemporalType.TIMESTAMP)

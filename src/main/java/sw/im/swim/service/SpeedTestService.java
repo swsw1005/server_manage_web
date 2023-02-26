@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.dto.SpeedTestServerEntityDto;
 import sw.im.swim.bean.entity.SpeedTestResultEntity;
-import sw.im.swim.bean.entity.SpeedTestServerEntity;
+import sw.im.swim.bean.entity.speedtest.SpeedTestServerEntity;
 import sw.im.swim.bean.util.SpeedtestServerLIstParser;
 import sw.im.swim.repository.SpeedTestResultEntityRepository;
 import sw.im.swim.repository.SpeedTestServerEntityRepository;

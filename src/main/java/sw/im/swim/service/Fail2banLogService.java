@@ -1,13 +1,12 @@
 package sw.im.swim.service;
 
 import com.google.gson.Gson;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.Fail2banLogEntityDto;
-import sw.im.swim.bean.entity.Fail2banLogEntity;
+import sw.im.swim.bean.entity.fail2ban.Fail2banLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.exception.TokenException;

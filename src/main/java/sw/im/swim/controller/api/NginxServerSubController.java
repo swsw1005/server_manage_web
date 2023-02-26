@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sw.im.swim.bean.dto.DomainEntityDto;
 import sw.im.swim.bean.dto.FaviconEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
-import sw.im.swim.bean.entity.FaviconEntity;
 import sw.im.swim.service.NginxServerSubService;
 
 import javax.servlet.http.HttpServletRequest;

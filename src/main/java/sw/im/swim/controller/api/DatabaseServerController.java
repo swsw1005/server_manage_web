@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
-import sw.im.swim.bean.entity.DatabaseServerEntity;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.service.DatabaseServerService;
 

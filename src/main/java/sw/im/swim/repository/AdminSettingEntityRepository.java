@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import sw.im.swim.bean.entity.AdminSettingEntity;
+import sw.im.swim.bean.entity.admin.AdminSettingEntity;
 
 @Repository
 public interface AdminSettingEntityRepository extends JpaRepository<AdminSettingEntity, Long> {

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.NotiEntityDto;
-import sw.im.swim.bean.entity.NotiEntity;
+import sw.im.swim.bean.entity.admin.NotiEntity;
 import sw.im.swim.bean.enums.NotiType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.NotiEntityRepository;

@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.entity.DomainEntity;
-import sw.im.swim.bean.entity.FaviconEntity;
+import sw.im.swim.bean.entity.cache.FaviconEntity;
 import sw.im.swim.bean.entity.NginxServerEntity;
 import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.repository.NginxPolicyServerEntityRepository;
