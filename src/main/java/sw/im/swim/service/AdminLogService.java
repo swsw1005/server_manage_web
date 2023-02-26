@@ -6,10 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminLogEntityDto;
-import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.entity.admin.AdminLogEntity;
 import sw.im.swim.bean.enums.AdminLogType;
-import sw.im.swim.repository.AdminLogRepository;
+import sw.im.swim.repository.*;
+import sw.im.swim.repository.AdminEntityRepository;
+import sw.im.swim.repository.AdminSettingEntityRepository;
+import sw.im.swim.repository.DatabaseServerEntityRepository;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
 
@@ -26,6 +28,13 @@ public class AdminLogService {
     private final ModelMapper modelMapper;
 
     private final AdminLogRepository adminLogRepository;
+    private final AdminRepository adminRepository;
+    private final AdminSettingRepository adminSettingRepository;
+    private final DatabaseServerRepository databaseServerRepository;
+    private final Fail2banLogRepository fail2banLogRepository;
+    private final FaviconRepository faviconRepository;
+    private final NginxLocationRepository nginxLocationRepository;
+    private final NginxServerRepository nginxServerRepository;
 
     public void insertLog(
             AdminLogType title,

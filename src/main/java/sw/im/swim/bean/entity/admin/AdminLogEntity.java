@@ -19,24 +19,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.AdminLogType;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_admin_log")
-public class AdminLogEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class AdminLogEntity extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 100)
     @Enumerated(EnumType.STRING)

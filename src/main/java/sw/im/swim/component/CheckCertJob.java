@@ -1,30 +1,27 @@
 package sw.im.swim.component;
 
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.service.NginxPolicyService;
 import sw.im.swim.worker.context.ThreadWorkerPoolContext;
 import sw.im.swim.worker.noti.NotiProducer;
 
 @Slf4j
 public class CheckCertJob extends QuartzJobBean {
 
-    private NginxPolicyService nginxPolicyService;
-
-    @Autowired
-    public void setNginxPolicyService(NginxPolicyService nginxPolicyService) {
-        this.nginxPolicyService = nginxPolicyService;
-    }
+//    private NginxPolicyService nginxPolicyService;
+//
+//    @Autowired
+//    public void setNginxPolicyService(NginxPolicyService nginxPolicyService) {
+//        this.nginxPolicyService = nginxPolicyService;
+//    }
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        nginxPolicyService.ADJUST_NGINX_POLICY();
+//        nginxPolicyService.ADJUST_NGINX_POLICY();
 
         try {
             final int leftDay = GeneralConfig.CERT_LEFT_DAY();

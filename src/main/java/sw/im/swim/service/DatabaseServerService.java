@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sw.im.swim.bean.dto.DatabaseServerEntityDto;
 import sw.im.swim.bean.entity.database.DatabaseServerEntity;
-import sw.im.swim.bean.entity.ServerInfoEntity;
-import sw.im.swim.bean.entity.WebServerEntity;
 import sw.im.swim.bean.enums.DbType;
 import sw.im.swim.config.GeneralConfig;
 import sw.im.swim.repository.DatabaseServerEntityRepository;
@@ -38,15 +36,6 @@ public class DatabaseServerService {
         try {
             List<DatabaseServerEntity> list = databaseServerEntityRepository.getAll();
 
-            try {
-                List<ServerInfoEntity> serverList = serverInfoEntityRepository.findAll();
-                ServerInfoEntity entity = serverList.get(0);
-
-                List<WebServerEntity> webServerEntityList = webServerEntityRepository.getByServerInfo(entity.getSid());
-                List<DatabaseServerEntity> databaseServerEntityList = databaseServerEntityRepository.getByServerInfo(entity.getSid());
-            } catch (Exception e) {
-            }
-
             List<DatabaseServerEntityDto> result = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 DatabaseServerEntityDto dto = modelMapper.map(list.get(i), DatabaseServerEntityDto.class);
@@ -66,8 +55,7 @@ public class DatabaseServerService {
     public boolean delete(final long sid) {
         try {
             DatabaseServerEntity entity = databaseServerEntityRepository.getById(sid);
-            entity.delete();
-            databaseServerEntityRepository.save(entity);
+            databaseServerEntityRepository.delete(entity);
             return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -78,12 +66,10 @@ public class DatabaseServerService {
     public DatabaseServerEntityDto insertNew(String name, Integer port, String dbId, String dbPassword, DbType dbType, Long serverSid) throws Exception {
 
         try {
-            ServerInfoEntity server = serverInfoEntityRepository.getById(serverSid);
 
             final String encPassword = AesUtils.encrypt(dbPassword, GeneralConfig.ENC_KEY);
 
             DatabaseServerEntity entity = DatabaseServerEntity.builder()
-                    .serverInfoEntity(server)
                     .name(name)
                     .dbId(dbId)
                     .dbPassword(encPassword)

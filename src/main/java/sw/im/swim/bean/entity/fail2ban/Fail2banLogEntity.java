@@ -2,6 +2,7 @@ package sw.im.swim.bean.entity.fail2ban;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.JailType;
 import sw.im.swim.bean.enums.JobType;
 
@@ -18,18 +19,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_fail2ban_log")
-public class Fail2banLogEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class Fail2banLogEntity extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)

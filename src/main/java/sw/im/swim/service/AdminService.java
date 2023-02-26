@@ -7,10 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.AdminEntityDto;
-import sw.im.swim.bean.entity.AdminEntity;
 import sw.im.swim.bean.enums.Authority;
 import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.repository.AdminEntityRepository;
 
 @Slf4j
 @Service
@@ -19,8 +17,6 @@ import sw.im.swim.repository.AdminEntityRepository;
 public class AdminService {
 
     private final ModelMapper modelMapper;
-
-    private final AdminEntityRepository adminEntityRepository;
 
     public AdminEntityDto login(final String email, final String password) throws Exception {
         try {
@@ -55,29 +51,31 @@ public class AdminService {
     }
 
     public AdminEntityDto findByEmail(final String email) throws Exception {
-        try {
-            AdminEntity entity = adminEntityRepository.findByEmailEquals(email);
-            return modelMapper.map(entity, AdminEntityDto.class);
-        } catch (Exception e) {
-            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
-        }
+//        try {
+//            AdminEntity entity = adminEntityRepository.findByEmailEquals(email);
+//            return modelMapper.map(entity, AdminEntityDto.class);
+//        } catch (Exception e) {
+//            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
+//        }
+        return null;
     }
 
 
     public AdminEntityDto join(final String email, final String name, final String password) throws Exception {
-        try {
+//        try {
+//
+//            log.debug("new admin join  " + " | email : " + email + " | name : " + name + " | password : " + password);
+//
+//            AdminEntity entity = AdminEntity.builder().email(email.trim()).name(name.trim()).password(AesUtils.encrypt(password, GeneralConfig.ENC_KEY)).build();
+//
+//            AdminEntity entity2 = adminEntityRepository.save(entity);
+//
+//            return modelMapper.map(entity2, AdminEntityDto.class);
+//        } catch (Exception e) {
+//            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
+//        }
 
-            log.debug("new admin join  " + " | email : " + email + " | name : " + name + " | password : " + password);
-
-            AdminEntity entity = AdminEntity.builder().email(email.trim()).name(name.trim()).password(AesUtils.encrypt(password, GeneralConfig.ENC_KEY)).build();
-
-            AdminEntity entity2 = adminEntityRepository.save(entity);
-
-            return modelMapper.map(entity2, AdminEntityDto.class);
-        } catch (Exception e) {
-            throw new Exception("wrong email : " + email + " : " + e + " : " + e.getMessage());
-        }
-
+        return null;
 
     }
 }

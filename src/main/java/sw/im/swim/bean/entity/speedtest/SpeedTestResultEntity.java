@@ -2,6 +2,7 @@ package sw.im.swim.bean.entity.speedtest;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.NotiType;
 
 import javax.persistence.*;
@@ -19,18 +20,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_speed_test_result")
-public class SpeedTestResultEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class SpeedTestResultEntity extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 100)
     private Double download;

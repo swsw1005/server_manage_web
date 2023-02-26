@@ -2,6 +2,7 @@ package sw.im.swim.bean.entity.speedtest;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -18,18 +19,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_speed_test_server")
-public class SpeedTestServerEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class SpeedTestServerEntity extends AbstractEntityWithStringPK {
 
     @Column(name = "server_id", nullable = false, unique = true)
     private int serverId;

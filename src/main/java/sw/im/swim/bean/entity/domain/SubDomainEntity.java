@@ -2,6 +2,7 @@ package sw.im.swim.bean.entity.domain;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -11,18 +12,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_sub_domain_info")
-public class SubDomainEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class SubDomainEntity  extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 60, unique = true)
     private String subDomain;

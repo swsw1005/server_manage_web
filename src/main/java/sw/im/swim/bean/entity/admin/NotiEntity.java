@@ -2,11 +2,10 @@ package sw.im.swim.bean.entity.admin;
 
 
 import lombok.*;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.NotiType;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.UUID;
 
 /**
  * <PRE>
@@ -19,18 +18,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_noti_info")
-public class NotiEntity {
-
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
+public class NotiEntity extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)

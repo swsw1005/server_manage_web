@@ -1,35 +1,26 @@
-package sw.im.swim.bean.entity.domain;
+package sw.im.swim.bean.entity.imple;
 
-
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.UUID;
 
 @Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Table(name = "tb_domain_info")
-public class DomainEntity {
+@MappedSuperclass
+public class AbstractEntityWithStringPK {
 
+    @Comment("[PK] uuid string pk")
     @Id
     @Column(name = "id", insertable = true, updatable = false)
     @Builder.Default
     protected String id = UUID.randomUUID().toString().replace("-", "");
 
+    @Comment("해당 row insert 시간")
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @Temporal(TemporalType.TIMESTAMP)
     @Builder.Default
     protected Calendar createdAt = Calendar.getInstance();
-
-    @Column(nullable = false, length = 60, unique = true)
-    private String domain;
-
-    @Column(name = "individual_cert_flag",
-            nullable = true)
-    @Builder.Default
-    private Boolean individualCert = false;
-
 }

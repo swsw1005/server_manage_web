@@ -1,9 +1,9 @@
 package sw.im.swim.service;
 
 import com.google.gson.Gson;
-import kr.swim.util.process.ProcessExecutor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import kr.swim.util.process.ProcessExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sw.im.swim.bean.dto.SpeedTestResultDto;
 import sw.im.swim.bean.dto.SpeedTestServerEntityDto;
-import sw.im.swim.bean.entity.SpeedTestResultEntity;
+import sw.im.swim.bean.entity.speedtest.SpeedTestResultEntity;
 import sw.im.swim.bean.entity.speedtest.SpeedTestServerEntity;
 import sw.im.swim.bean.util.SpeedtestServerLIstParser;
 import sw.im.swim.repository.SpeedTestResultEntityRepository;
@@ -199,7 +199,7 @@ public class SpeedTestService {
 
             speedTestResultEntity.setSpeedTestServerEntity(insertSpeedTestServerEntity);
 
-            speedTestResultEntityRepository.save(speedTestResultEntity);
+//            speedTestResultEntityRepository.save(speedTestResultEntity);
 
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage() + "____");
@@ -221,21 +221,21 @@ public class SpeedTestService {
 
 //            List<SpeedTestResultEntity> list = speedTestQueryDsl.getListByLimitAndSearch(dto, pageable);
             Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-            List<SpeedTestResultEntity> list = speedTestResultEntityRepository.findAll(sort);
-
-            for (int i = 0; i < list.size(); i++) {
-
-                SpeedTestResultEntity speedTestResult = list.get(i);
-
-               SpeedTestServerEntity speedTestServerEntity= speedTestResult.getSpeedTestServerEntity();
-
-                SpeedTestResultDto var1 = modelMapper.map(speedTestResult, SpeedTestResultDto.class);
-                SpeedTestServerEntityDto var2 = modelMapper.map(speedTestServerEntity, SpeedTestServerEntityDto.class);
-
-                var1.setSpeedTestServerEntityDto(var2);
-
-                resultList.add(var1);
-            }
+//            List<SpeedTestResultEntity> list = speedTestResultEntityRepository.findAll(sort);
+//
+//            for (int i = 0; i < list.size(); i++) {
+//
+//                SpeedTestResultEntity speedTestResult = list.get(i);
+//
+//               SpeedTestServerEntity speedTestServerEntity= speedTestResult.getSpeedTestServerEntity();
+//
+//                SpeedTestResultDto var1 = modelMapper.map(speedTestResult, SpeedTestResultDto.class);
+//                SpeedTestServerEntityDto var2 = modelMapper.map(speedTestServerEntity, SpeedTestServerEntityDto.class);
+//
+//                var1.setSpeedTestServerEntityDto(var2);
+//
+//                resultList.add(var1);
+//            }
 
         } catch (Exception e) {
             log.error(e + " | " + e.getMessage(), e);

@@ -2,6 +2,8 @@ package sw.im.swim.bean.entity.nginx;
 
 
 import lombok.*;
+import org.hibernate.annotations.Comment;
+import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.ByteType;
 
 import javax.persistence.*;
@@ -12,21 +14,23 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Entity
 @Table(name = "tb_nginx_server_info")
-public class NginxServerEntity {
+public class NginxServerEntity extends AbstractEntityWithStringPK {
 
-    @Id
-    @Column(name = "id", insertable = true, updatable = false)
-    @Builder.Default
-    protected String id = UUID.randomUUID().toString().replace("-", "");
-
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Builder.Default
-    protected Calendar createdAt = Calendar.getInstance();
-
+    @Comment("해당 도메인 설명")
     @Column(nullable = true, length = 60)
     private String description;
+
+    @Comment("해당 도메인 활성화 여부")
+    @Column(nullable = false, length = 60)
+    @Builder.Default
+    private boolean activate = true;
+
+    @Comment("favicon 파일 경로")
+    @Column(nullable = true, name = "favicon_path", length = 60)
+    @Builder.Default
+    private String faviconPath = null;
 
     @Column(nullable = false, length = 60)
     @Builder.Default
