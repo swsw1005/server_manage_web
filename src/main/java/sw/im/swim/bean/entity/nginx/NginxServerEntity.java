@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.ByteType;
+import sw.im.swim.bean.enums.nginx.SameSite;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -25,6 +26,11 @@ public class NginxServerEntity extends AbstractEntityWithStringPK {
     @Comment("root 도메인")
     @Column(nullable = false, length = 100, name = "root_domain")
     private String RootDomain;
+
+    @Comment("접속 포트")
+    @Column(name = "port")
+    @Builder.Default
+    private int port = 443;
 
     @Comment("해당 도메인 설명")
     @Column(nullable = true, length = 60)
@@ -52,5 +58,10 @@ public class NginxServerEntity extends AbstractEntityWithStringPK {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private ByteType byteType = ByteType.MB;
+
+    @Column(name = "samesite_option")
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private SameSite sameSite = SameSite.lax;
 
 }
