@@ -6,8 +6,6 @@ import kr.swim.util.system.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.dto.NotiEntityDto;
-import sw.im.swim.bean.dto.ServerInfoEntityDto;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,7 +65,7 @@ public class GeneralConfig {
 
     public static final ConcurrentHashMap<String, Boolean> NOTI_SETTING_MAP = new ConcurrentHashMap<>();
 
-    public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
+//    public static final ConcurrentHashMap<Long, NotiEntityDto> NOTI_DTO_MAP = new ConcurrentHashMap<>();
 
     public static final Vector<CronVO> CRON_EXPRESSION_LIST = new Vector<>();
 
@@ -75,7 +73,7 @@ public class GeneralConfig {
 
     public static NetworkIpInfo PUBLIC_IP_INFO = NetworkIpInfo.getInstance();
 
-    public static ServerInfoEntityDto CURRENT_SERVER_INFO;
+//    public static ServerInfoEntityDto CURRENT_SERVER_INFO;
 
     public static String CERT_FILE_FULLCHAIN = "fullchain.pem";
     public static String CERT_FILE_PRIKEY = "privkey.pem";

@@ -7,24 +7,14 @@ import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.ByteType;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.UUID;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_nginx_server_info")
-public class NginxServerEntity extends AbstractEntityWithStringPK {
-
-    @Comment("sub domain")
-    @Column(nullable = true, length = 100, name = "sub_domain")
-    private String subDomain;
-
-    @Comment("root 도메인")
-    @Column(nullable = false, length = 100, name = "root_domain")
-    private String RootDomain;
+@Table(name = "tb_nginx_default_setting")
+public class NginxDefaultSettingEntity extends AbstractEntityWithStringPK {
 
     @Comment("해당 도메인 설명")
     @Column(nullable = true, length = 60)

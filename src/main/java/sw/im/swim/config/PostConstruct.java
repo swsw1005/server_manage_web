@@ -1,20 +1,17 @@
 package sw.im.swim.config;
 
 import kr.swim.util.enc.AesUtils;
-import kr.swim.util.process.ProcessExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sw.im.swim.bean.CronVO;
 import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.enums.AdminLogType;
 import sw.im.swim.bean.util.DatabaseServerUtil;
-import sw.im.swim.service.*;
+import sw.im.swim.service.AdminSettingService;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -34,31 +31,22 @@ public class PostConstruct {
     @Value(value = "${AES_KEY}")
     private String AES_KEY = "";
 
-    private final AdminLogService adminLogService;
 
     private final AdminSettingService adminSettingService;
 
-    private final NotiService notiService;
-
-    private final SpeedTestService speedTestService;
-
-    private final NginxPolicyService nginxPolicyService;
-
-    private final ServerInfoService serverInfoService;
 
     @javax.annotation.PostConstruct
     public void INIT() {
 
         setCronExpression();
 
-        notiService.getAll();
 
         AdminSettingEntityDto adminSetting = adminSettingService.getSetting();
         adminSettingService.update(adminSetting);
 
         final String ip = GeneralConfig.PUBLIC_IP_INFO.getIp();
 
-        adminLogService.insertLog(AdminLogType.STARTUP, "IP", ip);
+//        adminLogService.insertLog(AdminLogType.STARTUP, "IP", ip);
 
         GeneralConfig.GOOGLE_DNS_USER_NAME = GOOGLE_DNS_USER_NAME;
         GeneralConfig.GOOGLE_DNS_PASSWORD = GOOGLE_DNS_PASSWORD;
@@ -84,26 +72,7 @@ public class PostConstruct {
             System.exit(0);
         }
 
-        serverInfoService.sync();
-
-        nginxPolicyService.ADJUST_NGINX_POLICY();
-
-        try {
-            final String[] arr = {"sh", "-c", "speedtest-cli --list"};
-            List<String> list = ProcessExecutor.runCommand(arr);
-            for (String line : list) {
-                speedTestService.saveServer(line);
-            }
-        } catch (Exception e) {
-            log.error(e + " | " + e.getMessage());
-        }
-
         log.info("Application START (2/2)!!!!");
-
-//        List<String> speedTestHostList = speedTestService.getHostList();
-//        List<String> speedTestNameList = speedTestService.getNameList();
-//        List<String> speedTestCountryList = speedTestService.getCountryList();
-//        List<SpeedTestResultDto> list = speedTestService.getList(null, 0, 100);
 
     }
 

@@ -17,10 +17,10 @@ import javax.persistence.*;
 @Table(name = "tb_nginx_location")
 public class NginxLocationEntity extends AbstractEntityWithStringPK {
 
-    @Comment("location 간의 우선순위.")
-    @Column(nullable = false)
+    @Comment("location 간의 우선순위. 숫자가 작을수록 우선순위")
+    @Column(nullable = false, name = "priority_weight")
     @Builder.Default
-    protected int order = 9999;
+    protected int priority = 9999;
 
     @Comment("location 경로. 맨앞에")
     @Column(nullable = false, length = 100)
@@ -28,7 +28,7 @@ public class NginxLocationEntity extends AbstractEntityWithStringPK {
     protected String location = "/";
 
     @Comment("location 내부 로드밸런싱 정책")
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 60)
     @Builder.Default
     @Enumerated(EnumType.STRING)
     protected LBType lbType = LBType.NONE;

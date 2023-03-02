@@ -12,30 +12,21 @@ import java.util.concurrent.ThreadFactory;
 @Slf4j
 public class ThreadWorkerPoolContext {
 
-    public final Queue<Integer> DB_SERVER_QUEUE;
-    public final Queue<Integer> ADMIN_LOG_MAIL_QUEUE;
-    public final Queue<Integer> INTERNET_TEST_QUEUE;
-
     public ExecutorService NOTI_WORKER;
     public ExecutorService NGINX_WORKER;
-    public ExecutorService DB_SERVER_WORKER;
+    public ExecutorService DB_CONNECT_WORKER;
     public ExecutorService DB_DUMP_WORKER;
     public ExecutorService DEFAULT_WORKER;
-
     public ExecutorService SPEED_TEST_WORKER;
 
     private ThreadWorkerPoolContext() {
-
-        DB_SERVER_QUEUE = new LinkedBlockingQueue<>();
-        ADMIN_LOG_MAIL_QUEUE = new LinkedBlockingQueue<>();
-        INTERNET_TEST_QUEUE = new LinkedBlockingQueue<>();
 
         final ThreadFactory[] namedThreadFactorys = {
                 new ThreadFactoryBuilder().setNameFormat("NOTI_WORKER-%d")
                         .build(),
                 new ThreadFactoryBuilder().setNameFormat("NGINX_WORKER-%d")
                         .build(),
-                new ThreadFactoryBuilder().setNameFormat("DB_SERVER_WORKER-%d")
+                new ThreadFactoryBuilder().setNameFormat("DB_CONNECT_WORKER-%d")
                         .build(),
                 new ThreadFactoryBuilder().setNameFormat("DB_DUMP_WORKER-%d")
                         .build(),
@@ -47,7 +38,7 @@ public class ThreadWorkerPoolContext {
 
         NOTI_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[0]);
         NGINX_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[1]);
-        DB_SERVER_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[2]);
+        DB_CONNECT_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[2]);
         DB_DUMP_WORKER = Executors.newFixedThreadPool(4, namedThreadFactorys[3]);
         DEFAULT_WORKER = Executors.newFixedThreadPool(2, namedThreadFactorys[4]);
         SPEED_TEST_WORKER = Executors.newFixedThreadPool(1, namedThreadFactorys[5]);

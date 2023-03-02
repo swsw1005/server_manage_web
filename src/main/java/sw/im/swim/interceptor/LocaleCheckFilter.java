@@ -1,12 +1,9 @@
 package sw.im.swim.interceptor;
 
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import sw.im.swim.bean.dto.AdminEntityDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,20 +33,20 @@ public class LocaleCheckFilter implements HandlerInterceptor {
             contextPath = "/";
         }
 
-        boolean sessionAdmin = false;
-        try {
-            AdminEntityDto adminEntityDto = (AdminEntityDto) session.getAttribute("admin");
-            if (adminEntityDto.getSid() > 0) {
-                sessionAdmin = true;
-            }
-        } catch (Exception e) {
-        }
-
-        if (!sessionAdmin) {
-            response.sendRedirect(contextPath);
-            log.debug("need login  =>  " + contextPath);
-            return false;
-        }
+//        boolean sessionAdmin = false;
+//        try {
+//            AdminEntityDto adminEntityDto = (AdminEntityDto) session.getAttribute("admin");
+//            if (adminEntityDto.getSid() > 0) {
+//                sessionAdmin = true;
+//            }
+//        } catch (Exception e) {
+//        }
+//
+//        if (!sessionAdmin) {
+//            response.sendRedirect(contextPath);
+//            log.debug("need login  =>  " + contextPath);
+//            return false;
+//        }
 
         log.debug("you are admin");
         return true;

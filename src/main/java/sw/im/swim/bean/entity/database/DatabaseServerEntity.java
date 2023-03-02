@@ -25,10 +25,10 @@ public class DatabaseServerEntity extends AbstractEntityWithStringPK {
     @Column(nullable = false, length = 60)
     private String name;
 
-    @Column(nullable = false, length = 60, name = "id")
+    @Column(nullable = false, length = 60, name = "db_id")
     private String dbId;
 
-    @Column(nullable = false, length = 200, name = "password")
+    @Column(nullable = false, length = 200, name = "db_password")
     private String dbPassword;
 
     @Column(nullable = false, length = 30)

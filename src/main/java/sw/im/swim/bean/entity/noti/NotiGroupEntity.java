@@ -1,4 +1,4 @@
-package sw.im.swim.bean.entity.admin;
+package sw.im.swim.bean.entity.noti;
 
 
 import lombok.*;
@@ -6,6 +6,9 @@ import sw.im.swim.bean.entity.imple.AbstractEntityWithStringPK;
 import sw.im.swim.bean.enums.NotiType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.*;
 
 /**
  * <PRE>
@@ -19,8 +22,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_noti_info")
-public class NotiEntity extends AbstractEntityWithStringPK {
+@Table(name = "tb_noti_group")
+public class NotiGroupEntity extends AbstractEntityWithStringPK {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
@@ -39,5 +42,8 @@ public class NotiEntity extends AbstractEntityWithStringPK {
     @Column(nullable = false, length = 100)
     @Builder.Default
     private Boolean active = true;
+
+    @OneToMany(mappedBy = "notiGroup")
+    private List<NotiGroupNodeJoinEntity> groupNodeJoinEntities = new ArrayList<>();
 
 }
