@@ -133,6 +133,9 @@ public class NginxConfCreateUtil {
 				list.add(TAB + "proxy_set_header Host $http_host;");
 				list.add(TAB + "proxy_set_header Upgrade $http_upgrade;");
 				list.add(TAB + "proxy_set_header Connection $connection_upgrade;");
+				list.add(TAB + "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;");
+				list.add(TAB + "proxy_set_header X-Real-IP $remote_addr;");
+				list.add(TAB + "proxy_set_header X-Forwarded-Proto $scheme;");
 				list.add("");
 				list.add(TAB + "add_header      X-Frame-Options SAMEORIGIN;");
 				list.add(TAB + "add_header      X-Content-Type-Options nosniff;");
