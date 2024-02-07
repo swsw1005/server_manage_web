@@ -2,7 +2,9 @@ package sw.im.swim.worker.nginx;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FileUtils;
+
 import sw.im.swim.bean.dto.NginxPolicyEntityDto;
 import sw.im.swim.bean.dto.NginxServerEntityDto;
 import sw.im.swim.bean.enums.AdminLogType;
@@ -26,82 +28,81 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NginxV2Worker implements Runnable {
 
-    private final NginxPolicyEntityDto policyEntityDto;
-    private final List<NginxServerEntityDto> nginxServerEntityList;
-    private final AdminLogService adminLogService;
+	private final NginxPolicyEntityDto policyEntityDto;
+	private final List<NginxServerEntityDto> nginxServerEntityList;
+	private final AdminLogService adminLogService;
 
+	@Override
+	public void run() {
 
-    @Override
-    public void run() {
+		log.info("===== START NGINX JOB !!!!!! =====");
+		log.warn(GeneralConfig.ADMIN_SETTING.toStringNginxSettings());
 
-        log.info("===== START NGINX JOB !!!!!! =====");
-        log.warn(GeneralConfig.ADMIN_SETTING.toStringNginxSettings());
+		boolean error = true;
 
-        boolean error = true;
+		try {
+			FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_CONF_DIR()));
+			FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
 
-        try {
-            FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_CONF_DIR()));
-            FileUtils.forceMkdir(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
+			File oldNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
+			FileUtils.deleteQuietly(oldNginxConf);
+			log.error("oldNginxConf.delete() => " + oldNginxConf.getAbsolutePath());
 
-            File oldNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
-            FileUtils.deleteQuietly(oldNginxConf);
-            log.error("oldNginxConf.delete() => " + oldNginxConf.getAbsolutePath());
+			File newNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
+			FileUtils.touch(newNginxConf);
+			log.error("! newNginxConf.touch() => " + newNginxConf.getAbsolutePath());
 
-            File newNginxConf = new File(NginxConfStringContext.NGINX_CONF_FILE_PATH);
-            FileUtils.touch(newNginxConf);
-            log.error("! newNginxConf.touch() => " + newNginxConf.getAbsolutePath());
+			// 기본 nginx conf 설정
+			List<String> defaultNginxConfText = NginxConfCreateUtil.DEFAULT_NGINX_CONF(policyEntityDto);
+			FileUtils.writeLines(newNginxConf, StandardCharsets.UTF_8.name(),
+				///////////////////////////////////////////////////////////
+				defaultNginxConfText, System.lineSeparator());
 
+			// 기존 sites-enable 삭제
+			FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
 
-            // 기본 nginx conf 설정
-            List<String> defaultNginxConfText = NginxConfCreateUtil.DEFAULT_NGINX_CONF(policyEntityDto);
-            FileUtils.writeLines(newNginxConf, StandardCharsets.UTF_8.name(),
-                    ///////////////////////////////////////////////////////////
-                    defaultNginxConfText, System.lineSeparator());
+			// 새로운 sites-enable 작성
+			NginxConfCreateUtil.CREATE_SITES_ENABLES(NginxConfStringContext.NGINX_EXTRA_SITES_DIR(),
+				nginxServerEntityList);
 
-            // 기존 sites-enable 삭제
-            FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
+			log.warn("nginx 재시작 !");
 
-            // 새로운 sites-enable 작성
-            NginxConfCreateUtil.CREATE_SITES_ENABLES(NginxConfStringContext.NGINX_EXTRA_SITES_DIR(), nginxServerEntityList);
+			// 재시작
+			NginxServiceControlUtil.NGINX_RESTART();
 
-            log.warn("nginx 재시작 !");
+			// nginx 상태 확인
+			final boolean isNginxAlive = NginxServiceControlUtil.checkNginxAlive();
 
-            // 재시작
-            NginxServiceControlUtil.NGINX_RESTART();
+			log.warn("nginx 재시작 후 상태 :: " + isNginxAlive);
 
-            // nginx 상태 확인
-            final boolean isNginxAlive = NginxServiceControlUtil.checkNginxAlive();
+			adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "SUCCESS", "NGINX UPDATE END");
 
-            log.warn("nginx 재시작 후 상태 :: " + isNginxAlive);
+			error = false;
 
-            adminLogService.insertLog(AdminLogType.NGINX_UPDATE, "SUCCESS", "NGINX UPDATE END");
+		} catch (RuntimeException e) {
+			log.error(e.getMessage() + " | " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage() + " | " + e.getLocalizedMessage());
+		} finally {
+			log.info("\n" + "=======================================" + "\n" + "FINALIZE NGINX JOB !!!!!!" + "\n"
+				+ "=======================================");
 
-            error = false;
+			if (error) {
+				// 기존 sites-enable 삭제
+				try {
+					FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
+					log.warn("nginx 재시작 !");
+					// 재시작
+					NginxServiceControlUtil.NGINX_RESTART();
+				} catch (RuntimeException e) {
+					log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
+				} catch (Exception e) {
+					log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
+				}
+			}
 
-        } catch (RuntimeException e) {
-            log.error(e.getMessage() + " | " + e.getLocalizedMessage());
-        } catch (Exception e) {
-            log.error(e.getMessage() + " | " + e.getLocalizedMessage());
-        } finally {
-            log.info("\n" + "=======================================" + "\n" + "FINALIZE NGINX JOB !!!!!!" + "\n" + "=======================================");
+		}
 
-            if (error) {
-                // 기존 sites-enable 삭제
-                try {
-                    FileUtils.cleanDirectory(new File(NginxConfStringContext.NGINX_EXTRA_SITES_DIR()));
-                    log.warn("nginx 재시작 !");
-                    // 재시작
-                    NginxServiceControlUtil.NGINX_RESTART();
-                } catch (RuntimeException e) {
-                    log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
-                } catch (Exception e) {
-                    log.error("nginx 복구중 에러 :: " + e + "  " + e.getMessage(), e);
-                }
-            }
-
-        }
-
-    }
-
+	}
 
 }
