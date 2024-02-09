@@ -244,10 +244,6 @@ public class NginxConfCreateUtil {
 	private static void addLocationBlock(String HTTPS, String ADDRESS, List<String> list) {
 		list.add("");
 		list.add(TAB + TAB + "proxy_redirect off;");
-		list.add(TAB + TAB + "proxy_pass_header Server;");
-		list.add(TAB + TAB + "proxy_set_header Host $http_host;");
-		list.add(TAB + TAB + "proxy_set_header X-Real-IP $remote_addr;");
-		list.add(TAB + TAB + "proxy_set_header X-Scheme $scheme;");
 		list.add(TAB + TAB + "proxy_pass " + HTTPS + ADDRESS + ";");
 		list.add(TAB + "}");
 		list.add("");
