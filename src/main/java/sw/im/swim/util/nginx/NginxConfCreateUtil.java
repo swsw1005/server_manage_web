@@ -24,6 +24,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NginxConfCreateUtil {
 
+	private static final String LINE_END = "; ";
+
 	private static final String
 		// ------------------------------------
 		TAB = "    ";
@@ -32,19 +34,19 @@ public class NginxConfCreateUtil {
 
 		String[] result = {"user www-data;",
 			//
-			"worker_processes " + workerProcessed + ";",
+			"worker_processes " + workerProcessed + LINE_END,
 			//
-			"pid /run/nginx.pid;",
+			"pid /run/nginx.pid" + LINE_END,
 			//
-			"include /etc/nginx/modules-enabled/*.conf;",
+			"include /etc/nginx/modules-enabled/*.conf" + LINE_END,
 			//
 			"",
 			//
 			"events {",
 			// ------------------------------------
-			TAB + "worker_connections " + workerConnections + ";",
+			TAB + "worker_connections " + workerConnections + LINE_END,
 			//
-			TAB + "# multi_accept on;",
+			TAB + "# multi_accept on" + LINE_END,
 			//
 			"}",
 			//
@@ -124,31 +126,31 @@ public class NginxConfCreateUtil {
 
 				if (IS_ROOT_DOMAIN) {
 				} else {
-					list.add(TAB + "server_name " + DOMAIN + ";");
+					list.add(TAB + "server_name " + DOMAIN + LINE_END);
 				}
 				list.add("");
-				list.add(TAB + "client_max_body_size " + bodySize + ";");
+				list.add(TAB + "client_max_body_size " + bodySize + LINE_END);
 				list.add("");
 
-				list.add(TAB + "proxy_pass_header Server;");
-				list.add(TAB + "proxy_http_version 1.1;");
-				list.add(TAB + "proxy_set_header Host $http_host;");
-				list.add(TAB + "proxy_set_header Upgrade $http_upgrade;");
-				list.add(TAB + "proxy_set_header Connection \"Upgrade\"");
-				list.add(TAB + "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;");
-				list.add(TAB + "proxy_set_header X-Real-IP $remote_addr;");
-				list.add(TAB + "proxy_set_header X-Forwarded-Proto $scheme;");
-				list.add(TAB + "proxy_set_header X-Scheme $scheme;");
+				list.add(TAB + "proxy_pass_header Server" + LINE_END);
+				list.add(TAB + "proxy_http_version 1.1" + LINE_END);
+				list.add(TAB + "proxy_set_header Host $http_host" + LINE_END);
+				list.add(TAB + "proxy_set_header Upgrade $http_upgrade" + LINE_END);
+				list.add(TAB + "proxy_set_header Connection \"Upgrade\"" + LINE_END);
+				list.add(TAB + "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for" + LINE_END);
+				list.add(TAB + "proxy_set_header X-Real-IP $remote_addr" + LINE_END);
+				list.add(TAB + "proxy_set_header X-Forwarded-Proto $scheme" + LINE_END);
+				list.add(TAB + "proxy_set_header X-Scheme $scheme" + LINE_END);
 				list.add("");
-				list.add(TAB + "add_header      X-Frame-Options SAMEORIGIN;");
-				list.add(TAB + "add_header      X-Content-Type-Options nosniff;");
-				list.add(TAB + "add_header      Cache-Control \"no-cache, no-store, must-revalidate\";");
-				list.add(TAB + "proxy_cookie_path / \"/; SameSite=lax; HTTPOnly; Secure\";");
+				list.add(TAB + "add_header      X-Frame-Options SAMEORIGIN" + LINE_END);
+				list.add(TAB + "add_header      X-Content-Type-Options nosniff" + LINE_END);
+				list.add(TAB + "add_header      Cache-Control \"no-cache, no-store, must-revalidate\"" + LINE_END);
+				list.add(TAB + "proxy_cookie_path / \"/; SameSite=lax; HTTPOnly; Secure\"" + LINE_END);
 				list.add("");
 				list.add(TAB + "location /favicon.ico {");
-				list.add(TAB + TAB + "access_log off;");
-				list.add(TAB + TAB + "log_not_found off;");
-				list.add(TAB + TAB + "alias " + FAVICON + ";");
+				list.add(TAB + TAB + "access_log off" + LINE_END);
+				list.add(TAB + TAB + "log_not_found off" + LINE_END);
+				list.add(TAB + TAB + "alias " + FAVICON + LINE_END);
 				list.add(TAB + "}");
 				list.add("");
 
@@ -158,20 +160,22 @@ public class NginxConfCreateUtil {
 					list.add(TAB + TAB + "## sub domain에서 호출시 cors 처리");
 					list.add(
 						TAB + TAB + "if ($http_origin ~* (https?://[^/]*\\." + ROOT_DOMAIN_NAME + "(:[0-9]+)?)$) {");
-					list.add(TAB + TAB + TAB + "add_header 'Access-Control-Allow-Origin' \"${http_origin}\";");
+					list.add(
+						TAB + TAB + TAB + "add_header 'Access-Control-Allow-Origin' \"${http_origin}\"" + LINE_END);
 					list.add(TAB + TAB + "}");
 					list.add("");
 					list.add(TAB + TAB + "## 내부 IP로 작업시 cors 처리");
 					list.add(TAB + TAB + "if ($http_origin ~* (https?://" + LOCAL_IP_ADDR + "(.[0-9]+)(:[0-9]+)?)$) {");
-					list.add(TAB + TAB + TAB + "add_header 'Access-Control-Allow-Origin' \"${http_origin}\";");
+					list.add(
+						TAB + TAB + TAB + "add_header 'Access-Control-Allow-Origin' \"${http_origin}\"" + LINE_END);
 					list.add(TAB + TAB + "}");
 					list.add("");
 
 					if (IS_ROOT_DOMAIN_PROXY) {
 						addLocationBlock(HTTPS, ADDRESS, list);
 					} else {
-						list.add(TAB + TAB + "root /var/www/html;");
-						list.add(TAB + TAB + "index index.html index.htm;");
+						list.add(TAB + TAB + "root /var/www/html" + LINE_END);
+						list.add(TAB + TAB + "index index.html index.htm" + LINE_END);
 						list.add(TAB + "}");
 						list.add("");
 					}
@@ -180,35 +184,30 @@ public class NginxConfCreateUtil {
 					addLocationBlock(HTTPS, ADDRESS, list);
 				}
 
-				list.add(TAB + "listen 443 ssl;");
+				list.add(TAB + "listen 443 ssl" + LINE_END);
 
-				list.add(TAB + "ssl_protocols TLSv1.2 TLSv1.3;");
+				list.add(TAB + "ssl_protocols TLSv1.2 TLSv1.3" + LINE_END);
 				// list.add(TAB + "ssl_prefer_server_ciphers off;");
-				list.add(TAB + "ssl_prefer_server_ciphers on;");
-				list.add(TAB
-					+ "ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256"
-					+ ":ECDHE-RSA-AES128-GCM-SHA256"
-					+ ":ECDHE-ECDSA-AES256-GCM-SHA384"
-					+ ":ECDHE-RSA-AES256-GCM-SHA384"
-					+ ":ECDHE-ECDSA-CHACHA20-POLY1305"
-					+ ":ECDHE-RSA-CHACHA20-POLY1305"
-					+ ":DHE-RSA-AES128-GCM-SHA256"
-					+ ":DHE-RSA-AES256-GCM-SHA384;");
+				list.add(TAB + "ssl_prefer_server_ciphers on" + LINE_END);
+				list.add(TAB + "ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256" + ":ECDHE-RSA-AES128-GCM-SHA256"
+					+ ":ECDHE-ECDSA-AES256-GCM-SHA384" + ":ECDHE-RSA-AES256-GCM-SHA384"
+					+ ":ECDHE-ECDSA-CHACHA20-POLY1305" + ":ECDHE-RSA-CHACHA20-POLY1305" + ":DHE-RSA-AES128-GCM-SHA256"
+					+ ":DHE-RSA-AES256-GCM-SHA384" + LINE_END);
 
-				list.add(TAB + "ssl_certificate          " + GeneralConfig.CERT_FILE_FULLCHAIN + ";");
-				list.add(TAB + "ssl_certificate_key      " + GeneralConfig.CERT_FILE_PRIKEY + ";");
-				list.add(TAB + "ssl_trusted_certificate  " + GeneralConfig.CERT_FILE_CHAIN + ";");
+				list.add(TAB + "ssl_certificate          " + GeneralConfig.CERT_FILE_FULLCHAIN + LINE_END);
+				list.add(TAB + "ssl_certificate_key      " + GeneralConfig.CERT_FILE_PRIKEY + LINE_END);
+				list.add(TAB + "ssl_trusted_certificate  " + GeneralConfig.CERT_FILE_CHAIN + LINE_END);
 
 				list.add("");
 				list.add("}");
 
 				list.add("server {");
 				list.add(TAB + "if ($host = " + DOMAIN + ") {");
-				list.add(TAB + TAB + "return 301 https://$host$request_uri;");
+				list.add(TAB + TAB + "return 301 https://$host$request_uri" + LINE_END);
 				list.add(TAB + "}");
-				list.add(TAB + "server_name " + DOMAIN + ";");
-				list.add(TAB + TAB + "listen 80;");
-				list.add(TAB + TAB + "return 404;");
+				list.add(TAB + "server_name " + DOMAIN + LINE_END);
+				list.add(TAB + TAB + "listen 80" + LINE_END);
+				list.add(TAB + TAB + "return 404" + LINE_END);
 				list.add("}");
 				list.add("");
 				list.add("##########################################################");
@@ -244,7 +243,7 @@ public class NginxConfCreateUtil {
 	private static void addLocationBlock(String HTTPS, String ADDRESS, List<String> list) {
 		list.add("");
 		list.add(TAB + TAB + "proxy_redirect off;");
-		list.add(TAB + TAB + "proxy_pass " + HTTPS + ADDRESS + ";");
+		list.add(TAB + TAB + "proxy_pass " + HTTPS + ADDRESS + LINE_END);
 		list.add(TAB + "}");
 		list.add("");
 	}
@@ -296,31 +295,31 @@ public class NginxConfCreateUtil {
 			resultList.add(TAB + "##");
 			resultList.add("");
 			resultList.add(TAB + "map $http_upgrade $connection_upgrade {");
-			resultList.add(TAB + "default upgrade;");
-			resultList.add(TAB + "'' close;");
+			resultList.add(TAB + "default upgrade" + LINE_END);
+			resultList.add(TAB + "'' close" + LINE_END);
 			resultList.add(TAB + "}");
 			resultList.add("");
-			resultList.add(TAB + "sendfile on;");
-			resultList.add(TAB + "tcp_nopush on;");
-			resultList.add(TAB + "tcp_nodelay on;");
-			resultList.add(TAB + "keepalive_timeout 20;");
-			resultList.add(TAB + "types_hash_max_size 2048;");
-			resultList.add(TAB + "server_tokens off;");
-			resultList.add(TAB + "client_max_body_size 50M; ");
+			resultList.add(TAB + "sendfile on" + LINE_END);
+			resultList.add(TAB + "tcp_nopush on" + LINE_END);
+			resultList.add(TAB + "tcp_nodelay on" + LINE_END);
+			resultList.add(TAB + "keepalive_timeout 20" + LINE_END);
+			resultList.add(TAB + "types_hash_max_size 2048" + LINE_END);
+			resultList.add(TAB + "server_tokens off" + LINE_END);
+			resultList.add(TAB + "client_max_body_size 50M " + LINE_END);
 			resultList.add("");
-			resultList.add(TAB + "server_names_hash_bucket_size 128;");
-			resultList.add(TAB + "# server_name_in_redirect off;");
+			resultList.add(TAB + "server_names_hash_bucket_size 128" + LINE_END);
+			resultList.add(TAB + "# server_name_in_redirect off" + LINE_END);
 			resultList.add("");
 			resultList.add("");
-			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_MIME_TYPE() + ";");
+			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_MIME_TYPE() + LINE_END);
 			resultList.add(TAB + "default_type application/octet-stream;");
 			resultList.add("");
 			resultList.add(TAB + "##");
 			resultList.add(TAB + "# SSL Settings");
 			resultList.add(TAB + "##");
 			resultList.add("");
-			resultList.add(TAB + "ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE");
-			resultList.add(TAB + "ssl_prefer_server_ciphers on;");
+			resultList.add(TAB + "ssl_protocols TLSv1.2 TLSv1.3;");
+			resultList.add(TAB + "ssl_prefer_server_ciphers on" + LINE_END);
 			resultList.add("");
 			resultList.add(TAB + "##");
 			resultList.add(TAB + "# Logging Settings");
@@ -329,14 +328,15 @@ public class NginxConfCreateUtil {
 			resultList.add(TAB + "# # nginx default log format ");
 			resultList.add(TAB + "# log_format main '$remote_addr - $remote_user [$time_local] '");
 			resultList.add(TAB + "# '\"$request\" $status $body_bytes_sent '");
-			resultList.add(TAB + "# '\"$http_referer\" \"$http_user_agent\" \"$request_time\"';");
+			resultList.add(TAB + "# '\"$http_referer\" \"$http_user_agent\" \"$request_time\"'" + LINE_END);
 			resultList.add("");
 			resultList.add(TAB + "# log format");
-			resultList.add(TAB + "log_format main '" + GeneralConfig.ADMIN_SETTING.getNGINX_LOG_FORMAT().trim() + "';");
+			resultList.add(
+				TAB + "log_format main '" + GeneralConfig.ADMIN_SETTING.getNGINX_LOG_FORMAT().trim() + "'" + LINE_END);
 			resultList.add("");
 			resultList.add("");
-			resultList.add(TAB + "access_log /var/log/nginx/access.log main;");
-			resultList.add(TAB + "error_log /var/log/nginx/error.log;");
+			resultList.add(TAB + "access_log /var/log/nginx/access.log main" + LINE_END);
+			resultList.add(TAB + "error_log /var/log/nginx/error.log" + LINE_END);
 			resultList.add("");
 			resultList.add(TAB + "##");
 			resultList.add(TAB + "# Gzip Settings");
@@ -344,20 +344,21 @@ public class NginxConfCreateUtil {
 			resultList.add("");
 			resultList.add(TAB + "gzip on;");
 			resultList.add("");
-			resultList.add(TAB + "# gzip_vary on;");
-			resultList.add(TAB + "# gzip_proxied any;");
-			resultList.add(TAB + "# gzip_comp_level 6;");
-			resultList.add(TAB + "# gzip_buffers 16 8k;");
-			resultList.add(TAB + "# gzip_http_version 1.1;");
+			resultList.add(TAB + "# gzip_vary on" + LINE_END);
+			resultList.add(TAB + "# gzip_proxied any" + LINE_END);
+			resultList.add(TAB + "# gzip_comp_level 6" + LINE_END);
+			resultList.add(TAB + "# gzip_buffers 16 8k" + LINE_END);
+			resultList.add(TAB + "# gzip_http_version 1.1" + LINE_END);
 			resultList.add(TAB
-				+ "# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;");
+				+ "# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript"
+				+ LINE_END);
 			resultList.add("");
 			resultList.add(TAB + "##");
 			resultList.add(TAB + "# Virtual Host Configs");
 			resultList.add(TAB + "##");
-			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_CONF_DIR() + "/*.conf;");
+			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_CONF_DIR() + "/*.conf" + LINE_END);
 			resultList.add(TAB + "### root 도메인도 이 파일에서 관리한다.");
-			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_SITES_DIR() + "/*;");
+			resultList.add(TAB + "include " + NginxConfStringContext.NGINX_EXTRA_SITES_DIR() + "/*" + LINE_END);
 			resultList.add("");
 			resultList.add("}");
 			resultList.add("");
