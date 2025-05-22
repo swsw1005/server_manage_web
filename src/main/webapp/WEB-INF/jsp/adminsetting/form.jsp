@@ -42,9 +42,9 @@
     </div>
 
     <!-- ---------------------------------------------------------- -->
-    <div class="modal-form-half-row">
+    <div class="modal-form-half-row border-top">
         <div>
-            인증서 만료 알림
+            인증서 만료 알림(CERT_NOTI_CRON)
         </div>
         <select name="CERT_NOTI_CRON" class="w3-select">
             <option value="">
@@ -589,6 +589,18 @@
     <div>
         <textarea style="width: 100%; height: 30vh; padding: 3px;"
                   name="NGINX_LOG_FORMAT">${adminSetting.NGINX_LOG_FORMAT}</textarea>
+    </div>
+
+    <!-- ---------------------------------------------------------- -->
+    <div class="modal-form-41-row border-top">
+        <div>
+            EXTERNAL_CERT_CHECK_URLS
+        </div>
+    </div>
+
+    <div>
+        <textarea style="width: 100%; height: 30vh; padding: 3px;"
+                  name="EXTERNAL_CERT_CHECK_URLS">${adminSetting.EXTERNAL_CERT_CHECK_URLS}</textarea>
     </div>
 
     <!-- ---------------------------------------------------------- -->

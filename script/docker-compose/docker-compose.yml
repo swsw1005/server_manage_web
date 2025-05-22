@@ -1,34 +1,38 @@
 version: '3'
 
 services:
-    server_manager:
-        image: openjdk:11.0.14.1-jre
-        container_name: "server_manager_ui"
-        volumes:
-            - $PWD/:/usr/local/server-manager
-        environment:
-            - LC_ALL=C.UTF-8
-            - TZ=Asia/Seoul
-        restart: always
-        network_mode: "host"
-        logging:
-            driver: "syslog"
-        entrypoint:
-            - sh
-            - -c
-            - /usr/local/server-manager/start.sh
+#  server_manager:
+#    image: openjdk:11.0.14.1-jre
+#    container_name: "server_manager_ui"
+#    volumes:
+#      - $PWD/:/usr/local/server-manager
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - TZ=Asia/Seoul
+#    restart: always
+#    network_mode: "host"
+#    logging:
+#      driver: "syslog"
+#    entrypoint:
+#      - sh
+#      - -c
+#      - /usr/local/server-manager/start.sh
 
-    postgres-5432:
-        image: "postgres:12"
-        container_name: "server_manager_db"
-        environment:
-            LC_COLLATE: C
-            LC_ALL: C.UTF-8
-            POSTGRES_DB: server_manager
-            POSTGRES_USER: root
-            POSTGRES_PASSWORD: q1w2e3
-        restart: "unless-stopped"
-        ports:
-            - 5433:5432
-        volumes:
-            - ${PWD}/volume/data:/var/lib/postgresql/data
+  postgres-5432:
+    image: "postgres:12"
+    container_name: "server_manager_db"
+    environment:
+      LC_COLLATE: C
+      LC_ALL: C.UTF-8
+      POSTGRES_DB: server_manager
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: q1w2e3
+    restart: "unless-stopped"
+    ports:
+      - 5433:5432
+    volumes:
+      - db_server_manager:/var/lib/postgresql/data
+
+volumes:
+  db_server_manager:
+    driver: local

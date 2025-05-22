@@ -98,8 +98,7 @@ public class NginxPolicyService {
 
             return modelMapper.map(entity_, NginxPolicyEntityDto.class);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception(e.getMessage());
+            throw e;
         }
     }
 

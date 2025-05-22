@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SwimApplication {
 
-    public static void main(String[] args) throws EncodingException, InterruptedException {
-        log.info("Application START (1/2)!!!!");
-        SpringApplication.run(SwimApplication.class, args);
-    }
+	public static void main(String[] args) throws EncodingException, InterruptedException {
+		log.info("Application START (1/2)!!!!");
+		SpringApplication.run(SwimApplication.class, args);
+	}
 
 }

@@ -45,6 +45,8 @@ public class AdminSettingEntityDto implements Serializable {
     private String ADMIN_LOG_MAIL_TITLE = "[관리자 로그] 메일";
     private String ADMIN_LOG_MAIL_CRON = "";
     ////////////////////////////////////////
+    private String CHECK_URLS = "";
+    ////////////////////////////////////////
     private boolean DNS_UPDATE = false;
     ////////////////////////////////////////
     private String DB_BACKUP_CRON = "";
@@ -96,6 +98,8 @@ public class AdminSettingEntityDto implements Serializable {
     private boolean FAIL2BAN = false;
     private boolean FAIL2BAN_NATEON = false;
     private boolean FAIL2BAN_SLACK = false;
+    ////////////////////////////////////////
+    private String EXTERNAL_CERT_CHECK_URLS = "";
     ////////////////////////////////////////
 
 

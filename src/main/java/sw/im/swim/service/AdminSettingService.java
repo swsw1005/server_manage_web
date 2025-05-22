@@ -1,20 +1,6 @@
 package sw.im.swim.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import sw.im.swim.bean.dto.AdminSettingEntityDto;
-import sw.im.swim.bean.entity.AdminSettingEntity;
-import sw.im.swim.component.AdminLogMailJob;
-import sw.im.swim.component.CheckCertJob;
-import sw.im.swim.component.DatabaseBackupJob;
-import sw.im.swim.component.InternetTestJob;
-import sw.im.swim.config.GeneralConfig;
-import sw.im.swim.repository.AdminSettingEntityRepository;
-import sw.im.swim.util.date.DateFormatUtil;
+import static org.quartz.CronScheduleBuilder.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,7 +9,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import sw.im.swim.bean.dto.AdminSettingEntityDto;
+import sw.im.swim.bean.entity.AdminSettingEntity;
+import sw.im.swim.component.AdminLogMailJob;
+import sw.im.swim.component.DatabaseBackupJob;
+import sw.im.swim.component.ExternalCertCheckJob;
+import sw.im.swim.component.InternetTestJob;
+import sw.im.swim.config.GeneralConfig;
+import sw.im.swim.repository.AdminSettingEntityRepository;
+import sw.im.swim.util.date.DateFormatUtil;
 
 @Slf4j
 @Service
@@ -31,208 +38,214 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 @RequiredArgsConstructor
 public class AdminSettingService implements InitializingBean {
 
-    private final Scheduler defaultScheduler;
+	private final Scheduler defaultScheduler;
 
-    private final AdminSettingEntityRepository adminSettingEntityRepository;
+	private final AdminSettingEntityRepository adminSettingEntityRepository;
 
-    public AdminSettingEntityDto getSetting() {
+	public AdminSettingEntityDto getSetting() {
 
-        AdminSettingEntityDto dto = new AdminSettingEntityDto();
+		AdminSettingEntityDto dto = new AdminSettingEntityDto();
 
-        try {
-            List<AdminSettingEntity> list = adminSettingEntityRepository.findAll();
+		try {
+			List<AdminSettingEntity> list = adminSettingEntityRepository.findAll();
 
-            HashMap<String, String> map = new HashMap<>();
+			HashMap<String, String> map = new HashMap<>();
 
-            for (int i = 0; i < list.size(); i++) {
-                AdminSettingEntity temp = list.get(i);
-                map.put(temp.getKey(), temp.getValue());
-            } // for list end
+			for (int i = 0; i < list.size(); i++) {
+				AdminSettingEntity temp = list.get(i);
+				map.put(temp.getKey(), temp.getValue());
+			} // for list end
 
-            Field[] fields = dto.getClass().getDeclaredFields();
+			Field[] fields = dto.getClass().getDeclaredFields();
 
-            for (int j = 0; j < fields.length; j++) {
-                Field tempField = fields[j];
-                Class<?> type = tempField.getType();
-                final String fieldName = tempField.getName();
-                final String typeName = type.getSimpleName().toLowerCase();
+			for (int j = 0; j < fields.length; j++) {
+				Field tempField = fields[j];
+				Class<?> type = tempField.getType();
+				final String fieldName = tempField.getName();
+				final String typeName = type.getSimpleName().toLowerCase();
 
-                final String newFieldValue = (map.get(fieldName) == null ? "" : map.get(fieldName));
+				final String newFieldValue = (map.get(fieldName) == null ? "" : map.get(fieldName));
 
-                log.debug("" + "fieldName : " + fieldName
-                        + " \t " + "typeName : " + typeName
-                        + " \t " + "newFieldValue : " + newFieldValue
-                );
+				log.debug("" + "fieldName : " + fieldName
+						  + " \t " + "typeName : " + typeName
+						  + " \t " + "newFieldValue : " + newFieldValue
+				);
 
-                Field updateField = dto.getClass().getDeclaredField(fieldName);
-                updateField.setAccessible(true);
+				Field updateField = dto.getClass().getDeclaredField(fieldName);
+				updateField.setAccessible(true);
 
-                try {
-                    switch (typeName) {
-                        case "boolean":
-                            updateField.setBoolean(dto, Boolean.parseBoolean(newFieldValue));
-                            GeneralConfig.NOTI_SETTING_MAP.put(fieldName, Boolean.parseBoolean(newFieldValue));
-                            break;
+				try {
+					switch (typeName) {
+						case "boolean":
+							updateField.setBoolean(dto, Boolean.parseBoolean(newFieldValue));
+							GeneralConfig.NOTI_SETTING_MAP.put(fieldName, Boolean.parseBoolean(newFieldValue));
+							break;
 
-                        case "int":
-                            updateField.setInt(dto, Integer.parseInt(newFieldValue));
-                            break;
+						case "int":
+							updateField.setInt(dto, Integer.parseInt(newFieldValue));
+							break;
 
-                        case "double":
-                            updateField.setDouble(dto, Double.parseDouble(newFieldValue));
-                            break;
+						case "double":
+							updateField.setDouble(dto, Double.parseDouble(newFieldValue));
+							break;
 
-                        case "float":
-                            updateField.setFloat(dto, Float.parseFloat(newFieldValue));
-                            break;
+						case "float":
+							updateField.setFloat(dto, Float.parseFloat(newFieldValue));
+							break;
 
-                        case "long":
-                            updateField.setLong(dto, Long.parseLong(newFieldValue));
-                            break;
+						case "long":
+							updateField.setLong(dto, Long.parseLong(newFieldValue));
+							break;
 
-                        default:
-                            if (fieldName.contains("TOKEN") && (newFieldValue == null || newFieldValue.length() < 3)) {
-                                updateField.set(dto, UUID.randomUUID().toString().substring(0, 20));
-                            } else if (fieldName.contains("NGINX_LOG_FORMAT") && (newFieldValue == null || newFieldValue.length() < 3)) {
-                                updateField.set(dto, GeneralConfig.NGINX_LOG_FORMAT_DEFAULT);
-                            } else {
-                                updateField.set(dto, newFieldValue);
-                            }
+						default:
+							if (fieldName.contains("TOKEN") && (newFieldValue == null || newFieldValue.length() < 3)) {
+								updateField.set(dto, UUID.randomUUID().toString().substring(0, 20));
+							} else if (fieldName.contains("NGINX_LOG_FORMAT") && (newFieldValue == null
+																				  || newFieldValue.length() < 3)) {
+								updateField.set(dto, GeneralConfig.NGINX_LOG_FORMAT_DEFAULT);
+							} else {
+								updateField.set(dto, newFieldValue);
+							}
 
-                            break;
-                    } // switch case end
+							break;
+					} // switch case end
 
-                } catch (Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.error(e + "  " + e.getMessage() + "__________", e);
-                    } else {
-                        log.warn(e + "  " + e.getMessage() + "__");
-                    }
-                } // try catch end
+				} catch (Exception e) {
+					if (log.isDebugEnabled()) {
+						log.error(e + "  " + e.getMessage() + "__________", e);
+					} else {
+						log.warn(e + "  " + e.getMessage() + "__");
+					}
+				} // try catch end
 
-            } // for i end
+			} // for i end
 
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 
-        GeneralConfig.ADMIN_SETTING = dto;
+		GeneralConfig.ADMIN_SETTING = dto;
 
-        return dto;
-    }
+		return dto;
+	}
 
-    public synchronized void update(AdminSettingEntityDto dto) {
+	public synchronized void update(AdminSettingEntityDto dto) {
 
-        AdminSettingEntityDto newDto = null;
+		AdminSettingEntityDto newDto = null;
 
-        try {
-            List<AdminSettingEntity> list = adminSettingEntityRepository.findAll();
+		try {
+			List<AdminSettingEntity> list = adminSettingEntityRepository.findAll();
 
-            HashMap<String, AdminSettingEntity> entityHashMap = new HashMap<>();
+			HashMap<String, AdminSettingEntity> entityHashMap = new HashMap<>();
 
-            list.stream().forEach(v -> entityHashMap.put(v.getKey(), v));
+			list.stream().forEach(v -> entityHashMap.put(v.getKey(), v));
 
-            Field[] fields = dto.getClass().getDeclaredFields();
+			Field[] fields = dto.getClass().getDeclaredFields();
 
-            Method[] methods = dto.getClass().getMethods();
+			Method[] methods = dto.getClass().getMethods();
 
-            HashMap<String, Method> methodMap = new HashMap<>();
+			HashMap<String, Method> methodMap = new HashMap<>();
 
-            for (int i = 0; i < methods.length; i++) {
-                Method temp_ = methods[i];
-                methodMap.put(temp_.getName().toLowerCase(), temp_);
-            }
+			for (int i = 0; i < methods.length; i++) {
+				Method temp_ = methods[i];
+				methodMap.put(temp_.getName().toLowerCase(), temp_);
+			}
 
-            for (int j = 0; j < fields.length; j++) {
-                Field tempField = fields[j];
-                Class<?> type = tempField.getType();
-                final String fieldName = tempField.getName();
-                final String typeName = type.getSimpleName().toLowerCase();
+			for (int j = 0; j < fields.length; j++) {
+				Field tempField = fields[j];
+				Class<?> type = tempField.getType();
+				final String fieldName = tempField.getName();
+				final String typeName = type.getSimpleName().toLowerCase();
 
-                final boolean isExist = entityHashMap.keySet().contains(fieldName);
+				final boolean isExist = entityHashMap.keySet().contains(fieldName);
 
-                Field updateField = dto.getClass().getDeclaredField(fieldName);
+				Field updateField = dto.getClass().getDeclaredField(fieldName);
 
-                Method getter = methodMap.get("get" + fieldName.toLowerCase());
+				Method getter = methodMap.get("get" + fieldName.toLowerCase());
 
-                if (getter == null) {
-                    getter = methodMap.get("is" + fieldName.toLowerCase());
-                }
+				if (getter == null) {
+					getter = methodMap.get("is" + fieldName.toLowerCase());
+				}
 
-                String updateValue = null;
+				String updateValue = null;
 
-                for (int i = 0; i < 1; i++) {
-                    try {
-                        updateValue = String.valueOf(updateField.get(dto));
-                    } catch (Exception e) {
-                    }
-                    try {
-                        updateValue = String.valueOf(getter.invoke(dto));
-                    } catch (Exception e) {
-                    }
-                }
+				for (int i = 0; i < 1; i++) {
+					try {
+						updateValue = String.valueOf(updateField.get(dto));
+					} catch (Exception e) {
+					}
+					try {
+						updateValue = String.valueOf(getter.invoke(dto));
+					} catch (Exception e) {
+					}
+				}
 
-                log.debug("" + "fieldName : " + fieldName
-                        + " \t " + "typeName : " + typeName
-                        + " \t " + "isExist : " + isExist
-                        + " \t " + "updateValue : " + updateValue
-                );
+				log.debug("" + "fieldName : " + fieldName
+						  + " \t " + "typeName : " + typeName
+						  + " \t " + "isExist : " + isExist
+						  + " \t " + "updateValue : " + updateValue
+				);
 
-                AdminSettingEntity entity;
-                if (isExist) {
-                    entity = entityHashMap.get(fieldName);
-                    entity.setValue(updateValue);
-                } else {
-                    entity = AdminSettingEntity.builder().key(fieldName).value(updateValue).build();
-                }
-                adminSettingEntityRepository.save(entity);
-            } // for i end
+				AdminSettingEntity entity;
+				if (isExist) {
+					entity = entityHashMap.get(fieldName);
+					entity.setValue(updateValue);
+				} else {
+					entity = AdminSettingEntity.builder().key(fieldName).value(updateValue).build();
+				}
+				adminSettingEntityRepository.save(entity);
+			} // for i end
 
-        } catch (Exception e) {
-            log.error(e.getMessage() + "-----------------\n", e);
-        }
-        getSetting();
+		} catch (Exception e) {
+			log.error(e.getMessage() + "-----------------\n", e);
+		}
+		getSetting();
 
-        newDto = GeneralConfig.ADMIN_SETTING;
+		newDto = GeneralConfig.ADMIN_SETTING;
 
-        cronSetting("DB_BACKUP", newDto.getDB_BACKUP_CRON(), DatabaseBackupJob.class);
-        cronSetting("ADMIN_LOG_MAIL", newDto.getADMIN_LOG_MAIL_CRON(), AdminLogMailJob.class);
-        cronSetting("INTERNET_TEST", newDto.getINTERNET_TEST_CRON(), InternetTestJob.class);
-        cronSetting("CERT_CHECK", newDto.getCERT_NOTI_CRON(), CheckCertJob.class);
-    }
+		cronSetting("DB_BACKUP", newDto.getDB_BACKUP_CRON(), DatabaseBackupJob.class);
+		cronSetting("ADMIN_LOG_MAIL", newDto.getADMIN_LOG_MAIL_CRON(), AdminLogMailJob.class);
+		cronSetting("INTERNET_TEST", newDto.getINTERNET_TEST_CRON(), InternetTestJob.class);
+		cronSetting("CERT_CHECK", newDto.getCERT_NOTI_CRON(), ExternalCertCheckJob.class);
+	}
 
-    public void cronSetting(final String CRON_PREFIX, final String cron, Class<? extends Job> jobClass) {
-        try {
-            log.warn(CRON_PREFIX + " => try cron => " + cron);
-            if (cron == null || cron.length() < 10) {
-                log.warn("no cron ,bye");
-                return;
-            }
-            CronScheduleBuilder cronSchedule = null;
-            cronSchedule = cronSchedule(cron);
+	public void cronSetting(final String CRON_PREFIX, final String cron, Class<? extends Job> jobClass) {
+		try {
+			log.warn(CRON_PREFIX + " => try cron => " + cron);
+			if (cron == null || cron.length() < 10) {
+				log.warn("no cron ,bye");
+				return;
+			}
+			CronScheduleBuilder cronSchedule = null;
+			cronSchedule = cronSchedule(cron);
 
-            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity("jobName", CRON_PREFIX + "_JOB").build();
+			JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity("jobName", CRON_PREFIX + "_JOB").build();
 
-            Trigger trigger = TriggerBuilder.newTrigger().withIdentity("triggerName", CRON_PREFIX + "_TRIGGER").withSchedule(cronSchedule).build();
+			Trigger trigger = TriggerBuilder.newTrigger()
+				.withIdentity("triggerName", CRON_PREFIX + "_TRIGGER")
+				.withSchedule(cronSchedule)
+				.build();
 
-            if (defaultScheduler.checkExists(jobDetail.getKey())) {
-                defaultScheduler.deleteJob(jobDetail.getKey());
-            }
+			if (defaultScheduler.checkExists(jobDetail.getKey())) {
+				defaultScheduler.deleteJob(jobDetail.getKey());
+			}
 
-            Date time = defaultScheduler.scheduleJob(jobDetail, trigger);
-            log.warn("NEXT [" + CRON_PREFIX + "_JOB]  TIME => " + DateFormatUtil.DATE_FORMAT_yyyyMMdd_T_HHmmssXXX.format(time));
-            defaultScheduler.start();
+			Date time = defaultScheduler.scheduleJob(jobDetail, trigger);
+			log.warn(
+				"NEXT [" + CRON_PREFIX + "_JOB]  TIME => " + DateFormatUtil.DATE_FORMAT_yyyyMMdd_T_HHmmssXXX.format(
+					time));
+			defaultScheduler.start();
 
-        } catch (RuntimeException e) {
-            log.error("Maybe  [" + CRON_PREFIX + "]  Cron Expression ERROR.... [" + cron + "]");
-        } catch (Exception e) {
-            log.error(e.toString() + "\t" + e.getMessage() + " =====", e);
-        }
-    }
+		} catch (RuntimeException e) {
+			log.error("Maybe  [" + CRON_PREFIX + "]  Cron Expression ERROR.... [" + cron + "]");
+		} catch (Exception e) {
+			log.error(e.toString() + "\t" + e.getMessage() + " =====", e);
+		}
+	}
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+	}
 
-    }
 }
