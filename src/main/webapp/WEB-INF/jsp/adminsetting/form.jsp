@@ -23,15 +23,6 @@
         <input type="text" name="ROOT_DOMAIN" value="${adminSetting.ROOT_DOMAIN}">
     </div>
 
-    <div class="modal-form-41-row border-top">
-        <div>
-            인증서 만료 알림 (n일전)
-        </div>
-        <div>
-            <input type="text" name="CERT_EXPIRE_NOTI" value="${adminSetting.CERT_EXPIRE_NOTI}">
-        </div>
-    </div>
-
     <!-- ---------------------------------------------------------- -->
 
     <div class="modal-form-half-row border-top">
@@ -42,6 +33,16 @@
     </div>
 
     <!-- ---------------------------------------------------------- -->
+
+    <div class="modal-form-41-row border-top">
+        <div>
+            인증서 만료 알림 (n일전)
+        </div>
+        <div>
+            <input type="text" name="CERT_EXPIRE_NOTI" value="${adminSetting.CERT_EXPIRE_NOTI}">
+        </div>
+    </div>
+
     <div class="modal-form-half-row border-top">
         <div>
             인증서 만료 알림(CERT_NOTI_CRON)
